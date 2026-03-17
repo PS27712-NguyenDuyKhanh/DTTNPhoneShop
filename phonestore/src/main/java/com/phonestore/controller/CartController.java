@@ -10,10 +10,14 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CartController {
 
     private final CartService cartService;
 
+    // =========================
+    // ADD TO CART
+    // =========================
     @PostMapping("/add")
     public void add(@RequestParam Long variantId,
                     @RequestParam int quantity,
@@ -26,19 +30,58 @@ public class CartController {
         cartService.addToCart(principal.getName(), variantId, quantity);
     }
 
+    // =========================
+    // GET CART
+    // =========================
     @GetMapping
     public CartDTO get(Principal principal) {
+
+        if (principal == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
         return cartService.getCart(principal.getName());
     }
 
-    @PutMapping("/{id}")
-    public void update(@PathVariable Long id,
-                       @RequestParam int quantity) {
-        cartService.updateQuantity(id, quantity);
+    // =========================
+    // UPDATE QUANTITY (🔥 đổi URL cho rõ)
+    // =========================
+    @PutMapping("/item/{itemId}")
+    public void updateItem(@PathVariable Long itemId,
+                           @RequestParam int quantity,
+                           Principal principal) {
+
+        if (principal == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        cartService.updateQuantity(itemId, quantity);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        cartService.removeItem(id);
+    // =========================
+    // DELETE ITEM (🔥 đổi URL cho rõ)
+    // =========================
+    @DeleteMapping("/item/{itemId}")
+    public void removeItem(@PathVariable Long itemId,
+                           Principal principal) {
+
+        if (principal == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        cartService.removeItem(itemId);
+    }
+
+    // =========================
+    // CLEAR CART (BONUS)
+    // =========================
+    @DeleteMapping("/clear")
+    public void clearCart(Principal principal) {
+
+        if (principal == null) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        cartService.clearCart(principal.getName());
     }
 }

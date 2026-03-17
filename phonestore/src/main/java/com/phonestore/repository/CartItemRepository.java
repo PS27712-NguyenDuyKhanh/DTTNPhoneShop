@@ -15,4 +15,6 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     // 🔥 QUAN TRỌNG: fix duplicate
     Optional<CartItem> findByCartAndVariant(Cart cart, Variant variant);
+
+    void deleteAllByCart(Cart cart);
 }

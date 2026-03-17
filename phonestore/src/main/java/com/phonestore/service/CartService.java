@@ -93,4 +93,15 @@ public class CartService {
     public void removeItem(Long itemId) {
         cartItemRepository.deleteById(itemId);
     }
+
+    // =========================
+// CLEAR CART
+// =========================
+    public void clearCart(String email){
+
+        Cart cart = getOrCreateCart(email);
+
+        // cách 1: xóa tất cả item theo cart
+        cartItemRepository.deleteAllByCart(cart);
+    }
 }

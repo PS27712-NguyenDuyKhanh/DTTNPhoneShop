@@ -28,6 +28,5 @@ public class Cart {
 
     // 1 Cart - many CartItem
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<CartItem> items;
 }

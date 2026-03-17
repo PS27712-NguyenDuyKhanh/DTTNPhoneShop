@@ -9,56 +9,34 @@
     <link rel="stylesheet" href="../css/home.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 </head>
 
 <body>
 
-
+    <!-- HEADER -->
     <header class="header">
-
         <div class="header-container">
-
-            <!-- LOGO -->
 
             <a href="home.html" class="logo">
                 <img src="../img/logo.jpg">
                 <span>PhoneShop</span>
             </a>
 
-            <!-- DANH MỤC -->
-
             <div class="dropdown">
-
                 <button class="dropbtn">
                     Danh mục <i class="fa fa-chevron-down"></i>
                 </button>
-
-                <div class="dropdown-content" id="categoryMenu">
-
-                </div>
-
+                <div class="dropdown-content" id="categoryMenu"></div>
             </div>
-
-            <!-- SEARCH -->
 
             <div class="search-box">
-
                 <input type="text" placeholder="Tìm điện thoại...">
-
-                <button>
-                    <i class="fa fa-search"></i>
-                </button>
-
+                <button><i class="fa fa-search"></i></button>
             </div>
-
-            <!-- CART -->
 
             <a href="cart.html" class="cart">
                 <i class="fa-solid fa-cart-shopping"></i>
             </a>
-
-            <!-- LOGIN -->
 
             <a href="login.html" class="btn-header" id="btnLogin">
                 <i class="fa-solid fa-user"></i> Đăng nhập
@@ -71,163 +49,195 @@
             </button>
 
         </div>
-
     </header>
 
+    <!-- CART -->
     <div class="cart-wrapper">
 
-        <!-- HEADER -->
         <div class="cart-header">
             <a href="home.html" class="back">‹ Về trang chủ PhoneShop</a>
             <span class="title">Giỏ hàng của bạn</span>
         </div>
 
+        <!-- LIST -->
         <div class="cart-box">
 
-            <!-- ITEM -->
-            <div class="cart-item">
-                <img src="../img/dt13.jpg">
+            <div id="cartList"></div>
 
-                <div class="cart-info">
-                    <h4>iPhone 15 Plus 128GB</h4>
-                    <p class="sub">8 Khuyến mãi ▼</p>
-
-                    <div class="row">
-                        <select>
-                            <option>Đen</option>
-                        </select>
-
-                        <span class="remove" onclick="xoa(this)">× Xóa</span>
-                    </div>
-                </div>
-
-                <div class="cart-right">
-                    <div class="price">
-                        <span class="new">18.990.000₫</span>
-                        <span class="old">21.990.000₫</span>
-                    </div>
-
-                    <div class="cart-qty">
-                        <button onclick="giam(this)">-</button>
-                        <input value="1">
-                        <button onclick="tang(this)">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TẠM TÍNH -->
             <div class="summary">
-                <span>Tạm tính (1 sản phẩm):</span>
-                <strong id="tong">18.990.000₫</strong>
+                <span>Tạm tính:</span>
+                <strong id="tong">0₫</strong>
             </div>
-
-        </div>
-
-        <!-- FORM -->
-        <div class="cart-box">
-
-            <h3>Thông tin khách hàng</h3>
-
-            <div class="gender">
-                <label><input type="radio" name="g"> Anh</label>
-                <label><input type="radio" name="g"> Chị</label>
-            </div>
-
-            <div class="form-row">
-                <input placeholder="Họ và Tên">
-                <input placeholder="Số điện thoại">
-            </div>
-
-            <h3>Chọn hình thức nhận hàng</h3>
-
-            <div class="delivery">
-                <label>
-                    <input type="radio" name="deliveryType" checked>
-                    Giao tận nơi
-                </label>
-
-                <label>
-                    <input type="radio" name="deliveryType">
-                    Nhận tại cửa hàng
-                </label>
-            </div>
-
-            <div class="form-row">
-                <select>
-                    <option>Thành phố Hồ Chí Minh</option>
-                </select>
-                <select>
-                    <option>Chọn Phường / Xã</option>
-                </select>
-            </div>
-
-            <input class="full" placeholder="Số nhà, tên đường">
-
-            <textarea placeholder="Nhập ghi chú (nếu có)"></textarea>
-
-            <!-- CHECKBOX -->
-            <div class="checkbox">
-                <label><input type="checkbox"> Gọi người khác nhận hàng</label>
-                <label><input type="checkbox"> Chuyển danh bạ, dữ liệu qua máy mới</label>
-                <label><input type="checkbox"> Xuất hóa đơn công ty</label>
-            </div>
-
-        </div>
-
-        <!-- THANH TOÁN -->
-        <div class="cart-box">
-
-            <div class="voucher-box">
-
-                <div class="voucher-header" onclick="toggleVoucher()">
-                    <span>📄 Sử dụng mã giảm giá</span>
-                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
-                </div>
-
-                <div class="voucher-content" id="voucherContent">
-                    <input type="text" placeholder="Nhập mã giảm giá/ Phiếu mua hàng">
-                    <button>Áp dụng</button>
-                </div>
-
-            </div>
-
-            <div class="total">
-                <span>Tổng tiền:</span>
-                <strong class="red">18.990.000₫</strong>
-            </div>
-
-            <div class="vip">
-                Điểm tích lũy Quà Tặng VIP:
-                <span>37.980 điểm</span>
-            </div>
-
-            <div class="policy">
-                <input type="checkbox" checked>
-                Tôi đồng ý với <a href="#">Chính sách xử lý dữ liệu cá nhân</a>
-            </div>
-
-            <button class="order-btn">Đặt hàng</button>
-
-            <p class="note">Bạn có thể lựa chọn các hình thức thanh toán ở bước sau</p>
 
         </div>
 
     </div>
 
-    <script>
-        function toggleVoucher() {
-            const content = document.getElementById("voucherContent")
-            const arrow = document.getElementById("arrow")
-
-            content.classList.toggle("active")
-            arrow.classList.toggle("rotate")
-        }
-    </script>
-
+    <!-- JS -->
     <script src="../js/home.js"></script>
     <script src="../js/loadCategoriesUser.js"></script>
-    <script src="../js/loadproduct.js"></script>
     <script src="../js/auth-check.js"></script>
+
+    <script>
+
+        function formatPrice(price) {
+            return price.toLocaleString("vi-VN") + "₫";
+        }
+
+        // ==========================
+        // RENDER CART
+        // ==========================
+
+        function renderCart(data) {
+
+            const cartList = document.getElementById("cartList");
+            const tong = document.getElementById("tong");
+
+            cartList.innerHTML = "";
+
+            if (!data || !data.items || data.items.length === 0) {
+                cartList.innerHTML = "<p>Giỏ hàng của bạn đang trống</p>";
+                tong.innerText = "0₫";
+                return;
+            }
+
+            let total = 0;
+
+            data.items.forEach(item => {
+
+                const name = item.productName;
+                const price = item.price;
+                const quantity = item.quantity;
+                const img = item.image;
+
+                total += price * quantity;
+
+                cartList.insertAdjacentHTML("beforeend", `
+    <div class="cart-item">
+
+        <img src="http://localhost:8081${img}">
+
+        <div class="cart-info">
+            <h4>${name}</h4>
+
+            <div class="row">
+                <span class="remove" onclick="removeItem(${item.id})">× Xóa</span>
+            </div>
+        </div>
+
+        <div class="cart-right">
+            <div class="price">
+                <span class="new">${formatPrice(price)}</span>
+            </div>
+
+            <div class="cart-qty">
+                <button onclick="updateQty(${item.id}, ${Math.max(1, quantity - 1)})">-</button>
+                <input value="${quantity}">
+                <button onclick="updateQty(${item.id}, ${quantity + 1})">+</button>
+            </div>
+        </div>
+
+    </div>
+    `);
+
+            });
+
+            tong.innerText = formatPrice(total);
+        }
+
+        // ==========================
+        // LOAD CART
+        // ==========================
+
+        async function loadCart() {
+
+            const token = sessionStorage.getItem("token");
+
+            if (!token) {
+                alert("Vui lòng đăng nhập");
+                window.location.href = "/login.html";
+                return;
+            }
+
+            try {
+
+                const res = await fetch("http://localhost:8081/api/cart", {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!res.ok) {
+
+                    if (res.status === 401) {
+                        alert("Hết phiên đăng nhập!");
+                        window.location.href = "/login.html";
+                        return;
+                    }
+
+                    return;
+                }
+
+                const data = await res.json();
+
+                renderCart(data);
+
+            } catch (err) {
+
+                console.error(err);
+                alert("Lỗi server");
+
+            }
+        }
+
+        // ==========================
+        // REMOVE ITEM
+        // ==========================
+
+        async function removeItem(id) {
+
+            const token = sessionStorage.getItem("token");
+
+            await fetch(`http://localhost:8081/api/cart/remove/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            loadCart();
+        }
+
+        // ==========================
+        // UPDATE QTY
+        // ==========================
+
+        async function updateQty(id, qty) {
+
+            const token = sessionStorage.getItem("token");
+
+            await fetch(`http://localhost:8081/api/cart/update`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    itemId: id,
+                    quantity: qty
+                })
+            });
+
+            loadCart();
+        }
+
+        // ==========================
+        // INIT
+        // ==========================
+
+        document.addEventListener("DOMContentLoaded", loadCart);
+
+    </script>
 
 </body>
 
