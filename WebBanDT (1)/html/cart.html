@@ -6,6 +6,7 @@
     <title>Giỏ Hàng</title>
 
     <link rel="stylesheet" href="../css/cart.css">
+    <link rel="stylesheet" href="../css/home.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -13,211 +14,219 @@
 
 <body>
 
-    <div class="cart-page">
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <!-- LOGO -->
+
+            <a href="home.html" class="logo">
+                <img src="../img/logo.jpg">
+                <span>PhoneShop</span>
+            </a>
+
+            <!-- DANH MỤC -->
+
+            <div class="dropdown">
+
+                <button class="dropbtn">
+                    Danh mục <i class="fa fa-chevron-down"></i>
+                </button>
+
+                <div class="dropdown-content" id="categoryMenu">
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <input type="text" placeholder="Tìm điện thoại...">
+
+                <button>
+                    <i class="fa fa-search"></i>
+                </button>
+
+            </div>
+
+            <!-- CART -->
+
+            <a href="cart.html" class="cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            <!-- LOGIN -->
+
+            <a href="login.html" class="btn-header" id="btnLogin">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
+
+            <span class="user-name" id="userName" style="display:none;"></span>
+
+            <button id="btnLogout" class="btn-logout" style="display:none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+
+        </div>
+
+    </header>
+
+    <div class="cart-wrapper">
+
+        <!-- HEADER -->
+        <div class="cart-header">
+            <a href="home.html" class="back">‹ Về trang chủ PhoneShop</a>
+            <span class="title">Giỏ hàng của bạn</span>
+        </div>
 
         <div class="cart-box">
 
-            <h2>🛒 Giỏ hàng của bạn</h2>
+            <!-- ITEM -->
+            <div class="cart-item">
+                <img src="../img/dt13.jpg">
 
-            <div id="cart-list">
+                <div class="cart-info">
+                    <h4>iPhone 15 Plus 128GB</h4>
+                    <p class="sub">8 Khuyến mãi ▼</p>
 
-                <!-- ITEM -->
-                <div class="cart-item">
+                    <div class="row">
+                        <select>
+                            <option>Đen</option>
+                        </select>
 
-                    <img src="../img/dt13.jpg">
+                        <span class="remove" onclick="xoa(this)">× Xóa</span>
+                    </div>
+                </div>
 
-                    <div class="cart-info">
-                        <h4>iPhone 15 Pro Max</h4>
-                        <p>Giá: <span class="price">30000000</span> ₫</p>
+                <div class="cart-right">
+                    <div class="price">
+                        <span class="new">18.990.000₫</span>
+                        <span class="old">21.990.000₫</span>
                     </div>
 
                     <div class="cart-qty">
                         <button onclick="giam(this)">-</button>
-                        <input type="text" value="1">
+                        <input value="1">
                         <button onclick="tang(this)">+</button>
                     </div>
+                </div>
+            </div>
 
-                    <div class="cart-price">30.000.000 ₫</div>
+            <!-- TẠM TÍNH -->
+            <div class="summary">
+                <span>Tạm tính (1 sản phẩm):</span>
+                <strong id="tong">18.990.000₫</strong>
+            </div>
 
-                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
+        </div>
 
+        <!-- FORM -->
+        <div class="cart-box">
+
+            <h3>Thông tin khách hàng</h3>
+
+            <div class="gender">
+                <label><input type="radio" name="g"> Anh</label>
+                <label><input type="radio" name="g"> Chị</label>
+            </div>
+
+            <div class="form-row">
+                <input placeholder="Họ và Tên">
+                <input placeholder="Số điện thoại">
+            </div>
+
+            <h3>Chọn hình thức nhận hàng</h3>
+
+            <div class="delivery">
+                <label>
+                    <input type="radio" name="deliveryType" checked>
+                    Giao tận nơi
+                </label>
+
+                <label>
+                    <input type="radio" name="deliveryType">
+                    Nhận tại cửa hàng
+                </label>
+            </div>
+
+            <div class="form-row">
+                <select>
+                    <option>Thành phố Hồ Chí Minh</option>
+                </select>
+                <select>
+                    <option>Chọn Phường / Xã</option>
+                </select>
+            </div>
+
+            <input class="full" placeholder="Số nhà, tên đường">
+
+            <textarea placeholder="Nhập ghi chú (nếu có)"></textarea>
+
+            <!-- CHECKBOX -->
+            <div class="checkbox">
+                <label><input type="checkbox"> Gọi người khác nhận hàng</label>
+                <label><input type="checkbox"> Chuyển danh bạ, dữ liệu qua máy mới</label>
+                <label><input type="checkbox"> Xuất hóa đơn công ty</label>
+            </div>
+
+        </div>
+
+        <!-- THANH TOÁN -->
+        <div class="cart-box">
+
+            <div class="voucher-box">
+
+                <div class="voucher-header" onclick="toggleVoucher()">
+                    <span>📄 Sử dụng mã giảm giá</span>
+                    <i id="arrow" class="fa-solid fa-chevron-down"></i>
                 </div>
 
-
-                <div class="cart-item">
-
-                    <img src="../img/dt15.jpg">
-
-                    <div class="cart-info">
-                        <h4>Samsung S24 Ultra</h4>
-                        <p>Giá: <span class="price">28000000</span> ₫</p>
-                    </div>
-
-                    <div class="cart-qty">
-                        <button onclick="giam(this)">-</button>
-                        <input type="text" value="1">
-                        <button onclick="tang(this)">+</button>
-                    </div>
-
-                    <div class="cart-price">28.000.000 ₫</div>
-
-                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
-
-                </div>
-
-
-                <div class="cart-item">
-
-                    <img src="../img/dt16.jpg">
-
-                    <div class="cart-info">
-                        <h4>Xiaomi 14 Pro</h4>
-                        <p>Giá: <span class="price">22000000</span> ₫</p>
-                    </div>
-
-                    <div class="cart-qty">
-                        <button onclick="giam(this)">-</button>
-                        <input type="text" value="1">
-                        <button onclick="tang(this)">+</button>
-                    </div>
-
-                    <div class="cart-price">22.000.000 ₫</div>
-
-                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
-
+                <div class="voucher-content" id="voucherContent">
+                    <input type="text" placeholder="Nhập mã giảm giá/ Phiếu mua hàng">
+                    <button>Áp dụng</button>
                 </div>
 
             </div>
 
-
-            <!-- TỔNG TIỀN -->
-            <div class="cart-total">
-
-                <span>Tổng cộng:</span>
-                <strong id="tong">0 ₫</strong>
-
+            <div class="total">
+                <span>Tổng tiền:</span>
+                <strong class="red">18.990.000₫</strong>
             </div>
 
-
-            <!-- BUTTON -->
-            <div class="cart-actions">
-
-                <a href="home.html" class="btn-back">← Tiếp tục mua</a>
-
-                <button class="btn-login" onclick="thanhToan()">Thanh toán</button>
-
+            <div class="vip">
+                Điểm tích lũy Quà Tặng VIP:
+                <span>37.980 điểm</span>
             </div>
+
+            <div class="policy">
+                <input type="checkbox" checked>
+                Tôi đồng ý với <a href="#">Chính sách xử lý dữ liệu cá nhân</a>
+            </div>
+
+            <button class="order-btn">Đặt hàng</button>
+
+            <p class="note">Bạn có thể lựa chọn các hình thức thanh toán ở bước sau</p>
 
         </div>
 
     </div>
 
-
     <script>
+        function toggleVoucher() {
+            const content = document.getElementById("voucherContent")
+            const arrow = document.getElementById("arrow")
 
-        /* FORMAT TIỀN */
-
-        function formatTien(x) {
-            return x.toLocaleString('vi-VN') + " ₫"
+            content.classList.toggle("active")
+            arrow.classList.toggle("rotate")
         }
-
-
-        /* TÍNH TỔNG */
-
-        function tinhTong() {
-
-            let items = document.querySelectorAll(".cart-item")
-
-            let tong = 0
-
-            items.forEach(item => {
-
-                let price = parseInt(item.querySelector(".price").innerText)
-                let qty = parseInt(item.querySelector("input").value)
-
-                tong += price * qty
-
-            })
-
-            document.getElementById("tong").innerText = formatTien(tong)
-
-        }
-
-        tinhTong()
-
-
-        /* TĂNG */
-
-        function tang(btn) {
-
-            let input = btn.parentElement.querySelector("input")
-
-            input.value = parseInt(input.value) + 1
-
-            tinhTong()
-
-        }
-
-
-        /* GIẢM */
-
-        function giam(btn) {
-
-            let input = btn.parentElement.querySelector("input")
-
-            let val = parseInt(input.value)
-
-            if (val > 1) {
-                input.value = val - 1
-            }
-
-            tinhTong()
-
-        }
-
-
-        /* XÓA */
-
-        function xoa(btn) {
-
-            btn.parentElement.remove()
-
-            tinhTong()
-
-        }
-
-
-        /* THANH TOÁN */
-
-        function thanhToan() {
-
-            let items = document.querySelectorAll(".cart-item")
-
-            let cart = []
-
-            items.forEach(item => {
-
-                let name = item.querySelector("h4").innerText
-                let price = parseInt(item.querySelector(".price").innerText)
-                let qty = parseInt(item.querySelector("input").value)
-                let img = item.querySelector("img").src
-
-                cart.push({
-                    name: name,
-                    price: price,
-                    qty: qty,
-                    img: img
-                })
-
-            })
-
-            localStorage.setItem("cart", JSON.stringify(cart))
-
-            window.location.href = "checkout.html"
-
-        }
-
     </script>
+
+    <script src="../js/home.js"></script>
+    <script src="../js/loadCategoriesUser.js"></script>
+    <script src="../js/loadproduct.js"></script>
 
 </body>
 
