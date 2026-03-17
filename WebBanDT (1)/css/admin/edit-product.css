@@ -1,0 +1,223 @@
+
+/* MAIN CONTENT */
+
+.main{
+background:#f5f7fb;
+padding:25px 30px;
+}
+
+
+/* CARD FORM */
+
+.form-box{
+
+background:#ffffff;
+
+padding:30px;
+
+border-radius:10px;
+
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+
+max-width:1100px;
+
+}
+
+
+/* TITLE */
+
+.form-box h3{
+
+margin-top:20px;
+
+margin-bottom:10px;
+
+font-size:18px;
+
+font-weight:600;
+
+color:#1f2d3d;
+
+}
+
+
+/* INPUT STYLE */
+
+.form-box input,
+.form-box select,
+.form-box textarea{
+
+width:100%;
+
+padding:10px 12px;
+
+border:1px solid #ddd;
+
+border-radius:6px;
+
+margin-bottom:12px;
+
+font-size:14px;
+
+transition:0.2s;
+
+}
+
+.form-box input:focus,
+.form-box textarea:focus,
+.form-box select:focus{
+
+outline:none;
+
+border-color:#1e88e5;
+
+box-shadow:0 0 0 2px rgba(30,136,229,0.1);
+
+}
+
+
+/* TEXTAREA */
+
+#description{
+
+height:220px;
+
+}
+
+
+/* CONFIG GRID */
+
+#cpu,
+#ram,
+#rom,
+#gpu,
+#camera,
+#battery,
+#screen{
+
+width:32%;
+
+display:inline-block;
+
+margin-right:1%;
+
+}
+
+
+/* VARIANT CARD */
+
+.variant-card{
+
+border:1px solid #e6e6e6;
+
+padding:15px;
+
+margin-top:10px;
+
+border-radius:8px;
+
+background:#fafafa;
+
+transition:0.2s;
+
+}
+
+.variant-card:hover{
+
+box-shadow:0 2px 8px rgba(0,0,0,0.05);
+
+}
+
+
+/* VARIANT HEADER */
+
+.variant-header{
+
+font-weight:600;
+
+margin-bottom:10px;
+
+cursor:pointer;
+
+color:#1f2d3d;
+
+}
+
+
+/* VARIANT BODY */
+
+.variant-body input{
+
+display:block;
+
+width:100%;
+
+margin-bottom:8px;
+
+}
+
+
+/* BUTTON ADD VARIANT */
+
+button{
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:14px;
+
+}
+
+
+/* ADD VARIANT BUTTON */
+
+button[onclick="addVariant()"]{
+
+background:#1976d2;
+
+color:#fff;
+
+margin-top:10px;
+
+}
+
+button[onclick="addVariant()"]:hover{
+
+background:#1565c0;
+
+}
+
+
+/* UPDATE PRODUCT BUTTON */
+
+button[onclick="updateProduct()"]{
+
+background:#2e7d32;
+
+color:#fff;
+
+margin-top:20px;
+
+}
+
+button[onclick="updateProduct()"]:hover{
+
+background:#1b5e20;
+
+}
+
+
+/* CKEDITOR */
+
+.ck-editor__editable{
+
+min-height:220px;
+
+border-radius:6px;
+
+}

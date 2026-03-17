@@ -1,0 +1,156 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: 
+        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+        url("../img/hinhnen.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-box {
+    width: 360px;
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.login-box h2 {
+    margin-bottom: 30px;
+    color: #4a235a;
+}
+
+.input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 14px 45px 14px 18px;
+    border-radius: 30px;
+    border: none;
+    background: #f3f3f3;
+    font-size: 14px;
+    outline: none;
+}
+
+.input-box.error input {
+    border: 1px solid #e2884f;
+}
+
+.input-box i {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e2884f;
+}
+
+.forgot{
+    margin-top: 20px;
+    display: inline-block;
+    color: #7f8c8d;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 30px;
+    background: #e2884f;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    background: #a84ad1;
+}
+
+.or {
+    margin: 25px 0 15px;
+    font-size: 14px;
+    color: #999;
+}
+
+.social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social .icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.facebook {
+    color: #1877f2;
+}
+
+.google {
+    color: #db4437;
+}
+
+.signup {
+    margin-top: 20px;
+    display: inline-block;
+    color: #7f8c8d;
+    font-weight: bold;
+    text-decoration: none;
+}
+.link-login {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #7f8c8d;
+    font-weight: bold;
+}
+.signup:hover{
+    text-decoration: underline;
+}
+.link-login:hover {
+    text-decoration: underline;
+}
+
+.status{
+    margin-bottom:20px;
+    color:#666;
+    font-size:14px;
+}
+
+
+

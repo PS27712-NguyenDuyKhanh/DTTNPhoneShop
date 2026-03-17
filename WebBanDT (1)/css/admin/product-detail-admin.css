@@ -1,0 +1,338 @@
+/* ===== KHU VỰC NỘI DUNG BÊN PHẢI ===== */
+.main-content {
+    padding: 30px 40px;
+    background: #f5f7fb;
+}
+
+/* ===== TIÊU ĐỀ ===== */
+.main-content h1 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* ===== CARD CHI TIẾT SẢN PHẨM ===== */
+.product-detail-card {
+    background: #ffffff;
+    padding: 25px 30px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+/* ===== TÊN SẢN PHẨM ===== */
+.product-detail-card h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+/* ===== SKU ===== */
+.product-sku {
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* ===== MÔ TẢ ===== */
+.product-description {
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.product-description img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+/* ===== CẤU HÌNH ===== */
+.product-specs {
+    background: #fafafa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.product-specs ul {
+    padding-left: 18px;
+}
+
+.product-specs li {
+    margin-bottom: 6px;
+}
+
+/* ===== VARIANT TABLE ===== */
+.variant-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.variant-table thead {
+    background: #0f1f3d;
+    color: white;
+}
+
+.variant-table th,
+.variant-table td {
+    padding: 14px;
+    text-align: center;
+}
+
+.variant-table tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+.variant-table tbody tr:hover {
+    background: #f7f9fc;
+}
+
+/* ===== GIÁ ===== */
+.price-old {
+    color: #888;
+    text-decoration: line-through;
+}
+
+.price-sale {
+    color: #e53935;
+    font-weight: 600;
+}
+
+/* ===== ẢNH VARIANT ===== */
+.variant-img {
+    width: 55px;
+    border-radius: 6px;
+}
+
+.product-detail {
+
+    background: #fff;
+
+    padding: 25px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+    margin: 20px;
+
+}
+
+.product-detail h3 {
+
+    font-size: 22px;
+
+    margin-bottom: 10px;
+
+}
+
+.sku {
+
+    color: #777;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* DESCRIPTION */
+
+.desc-box {
+
+    margin-bottom: 25px;
+
+}
+
+#productDesc {
+
+    line-height: 1.6;
+
+}
+
+#productDesc img {
+
+    max-width: 100%;
+
+    border-radius: 6px;
+
+    margin: 10px 0;
+
+}
+
+
+/* SPEC */
+
+.spec-box {
+
+    background: #fafafa;
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    margin-bottom: 25px;
+
+}
+
+.spec-box ul {
+
+    padding-left: 20px;
+
+}
+
+.spec-box li {
+
+    margin-bottom: 6px;
+
+}
+
+
+/* TABLE */
+
+.variant-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 10px;
+
+}
+
+.variant-table th {
+
+    background: #0f1f3d;
+
+    color: #fff;
+
+    padding: 12px;
+
+}
+
+.variant-table td {
+
+    padding: 12px;
+
+    border-bottom: 1px solid #eee;
+
+    text-align: center;
+
+}
+
+.variant-table tr:hover {
+
+    background: #f7f9fc;
+
+}
+
+
+/* PRICE */
+
+.old-price {
+
+    color: #666;
+
+    font-size: 14px;
+
+}
+
+.sale-price {
+
+    color: red;
+
+    font-weight: bold;
+
+}
+
+.sale-time {
+
+    font-size: 12px;
+
+    color: #888;
+
+}
+
+.no-sale {
+
+    color: #888;
+
+}
+
+
+/* IMAGE */
+
+.variant-img {
+
+    width: 55px;
+
+    border-radius: 6px;
+
+}
+
+/* DESCRIPTION BOX */
+
+.desc-box {
+    margin-bottom: 25px;
+}
+
+.desc-wrapper {
+    position: relative;
+    max-height: 200px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+/* khi mở */
+
+.desc-wrapper.open {
+    max-height: none;
+}
+
+.desc-content {
+    line-height: 1.6;
+}
+
+/* ảnh trong mô tả */
+
+.desc-content img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+/* hiệu ứng mờ cuối */
+
+.fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+}
+
+/* khi mở thì ẩn fade */
+
+.desc-wrapper.open .fade {
+    display: none;
+}
+
+
+/* BUTTON */
+
+.btn-desc {
+    display: block;
+    margin: 15px auto;
+    border: none;
+    background: #0f1f3d;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-desc:hover {
+    background: #1a2f55;
+}

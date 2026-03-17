@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ Hàng</title>
+
+    <link rel="stylesheet" href="../css/cart.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="cart-page">
+
+        <div class="cart-box">
+
+            <h2>🛒 Giỏ hàng của bạn</h2>
+
+            <div id="cart-list">
+
+                <!-- ITEM -->
+                <div class="cart-item">
+
+                    <img src="../img/dt13.jpg">
+
+                    <div class="cart-info">
+                        <h4>iPhone 15 Pro Max</h4>
+                        <p>Giá: <span class="price">30000000</span> ₫</p>
+                    </div>
+
+                    <div class="cart-qty">
+                        <button onclick="giam(this)">-</button>
+                        <input type="text" value="1">
+                        <button onclick="tang(this)">+</button>
+                    </div>
+
+                    <div class="cart-price">30.000.000 ₫</div>
+
+                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
+
+                </div>
+
+
+                <div class="cart-item">
+
+                    <img src="../img/dt15.jpg">
+
+                    <div class="cart-info">
+                        <h4>Samsung S24 Ultra</h4>
+                        <p>Giá: <span class="price">28000000</span> ₫</p>
+                    </div>
+
+                    <div class="cart-qty">
+                        <button onclick="giam(this)">-</button>
+                        <input type="text" value="1">
+                        <button onclick="tang(this)">+</button>
+                    </div>
+
+                    <div class="cart-price">28.000.000 ₫</div>
+
+                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
+
+                </div>
+
+
+                <div class="cart-item">
+
+                    <img src="../img/dt16.jpg">
+
+                    <div class="cart-info">
+                        <h4>Xiaomi 14 Pro</h4>
+                        <p>Giá: <span class="price">22000000</span> ₫</p>
+                    </div>
+
+                    <div class="cart-qty">
+                        <button onclick="giam(this)">-</button>
+                        <input type="text" value="1">
+                        <button onclick="tang(this)">+</button>
+                    </div>
+
+                    <div class="cart-price">22.000.000 ₫</div>
+
+                    <i class="fa-solid fa-trash cart-remove" onclick="xoa(this)"></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- TỔNG TIỀN -->
+            <div class="cart-total">
+
+                <span>Tổng cộng:</span>
+                <strong id="tong">0 ₫</strong>
+
+            </div>
+
+
+            <!-- BUTTON -->
+            <div class="cart-actions">
+
+                <a href="home.html" class="btn-back">← Tiếp tục mua</a>
+
+                <button class="btn-login" onclick="thanhToan()">Thanh toán</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* FORMAT TIỀN */
+
+        function formatTien(x) {
+            return x.toLocaleString('vi-VN') + " ₫"
+        }
+
+
+        /* TÍNH TỔNG */
+
+        function tinhTong() {
+
+            let items = document.querySelectorAll(".cart-item")
+
+            let tong = 0
+
+            items.forEach(item => {
+
+                let price = parseInt(item.querySelector(".price").innerText)
+                let qty = parseInt(item.querySelector("input").value)
+
+                tong += price * qty
+
+            })
+
+            document.getElementById("tong").innerText = formatTien(tong)
+
+        }
+
+        tinhTong()
+
+
+        /* TĂNG */
+
+        function tang(btn) {
+
+            let input = btn.parentElement.querySelector("input")
+
+            input.value = parseInt(input.value) + 1
+
+            tinhTong()
+
+        }
+
+
+        /* GIẢM */
+
+        function giam(btn) {
+
+            let input = btn.parentElement.querySelector("input")
+
+            let val = parseInt(input.value)
+
+            if (val > 1) {
+                input.value = val - 1
+            }
+
+            tinhTong()
+
+        }
+
+
+        /* XÓA */
+
+        function xoa(btn) {
+
+            btn.parentElement.remove()
+
+            tinhTong()
+
+        }
+
+
+        /* THANH TOÁN */
+
+        function thanhToan() {
+
+            let items = document.querySelectorAll(".cart-item")
+
+            let cart = []
+
+            items.forEach(item => {
+
+                let name = item.querySelector("h4").innerText
+                let price = parseInt(item.querySelector(".price").innerText)
+                let qty = parseInt(item.querySelector("input").value)
+                let img = item.querySelector("img").src
+
+                cart.push({
+                    name: name,
+                    price: price,
+                    qty: qty,
+                    img: img
+                })
+
+            })
+
+            localStorage.setItem("cart", JSON.stringify(cart))
+
+            window.location.href = "checkout.html"
+
+        }
+
+    </script>
+
+</body>
+
+</html>

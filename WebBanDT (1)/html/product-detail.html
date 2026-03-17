@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm | PhoneShop</title>
+
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/product-detail.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <a href="home.html" class="logo">
+                <img src="../img/logo.jpg">
+                <span>PhoneShop</span>
+            </a>
+
+            <div class="dropdown">
+                <button class="dropbtn">
+                    Danh mục <i class="fa fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content" id="categoryMenu"></div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" placeholder="Tìm điện thoại...">
+                <button>
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+
+            <a href="cart.html" class="cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            <a href="login.html" class="btn-header" id="btnLogin">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
+
+            <span class="user-name" id="userName" style="display:none;"></span>
+
+            <button id="btnLogout" class="btn-logout" style="display:none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+
+        </div>
+    </header>
+
+    <!-- PRODUCT DETAIL -->
+
+    <section class="product-detail">
+
+        <!-- LEFT : PRODUCT INFO -->
+
+        <div class="detail-info">
+
+            <h1 id="name"></h1>
+
+            <span class="sale-badge">-20%</span>
+
+            <h2 class="price" id="price"></h2>
+
+            <div id="description"></div>
+
+            <div class="product-benefits">
+                <p>✔ Bảo hành chính hãng 12 tháng</p>
+                <p>✔ Miễn phí giao hàng toàn quốc</p>
+                <p>✔ Đổi trả trong 7 ngày</p>
+            </div>
+
+            <button class="btn-main">
+                <i class="fa-solid fa-cart-shopping"></i>
+                Thêm vào giỏ
+            </button>
+
+            <button class="btn-buy">
+                Mua ngay
+            </button>
+
+            <a href="home.html" class="btn-back">
+                ⬅ Quay lại
+            </a>
+
+        </div>
+
+        <!-- RIGHT : IMAGE -->
+
+        <div class="detail-image">
+
+            <img id="image">
+
+            <div class="image-gallery" id="gallery"></div>
+
+            <div id="colors" class="product-colors"></div>
+
+        </div>
+
+        <!-- SPECIFICATIONS -->
+
+        <div class="product-tabs">
+
+            <div class="tab-buttons">
+
+                <button class="tab-btn active" onclick="openTab('specTab',this)">
+                    Thông số kỹ thuật
+                </button>
+
+                <button class="tab-btn" onclick="openTab('descTab',this)">
+                    Thông tin sản phẩm
+                </button>
+
+            </div>
+
+            <!-- TAB 1 -->
+
+            <div id="specTab" class="tab-content active">
+
+                <ul id="specs" class="product-specs"></ul>
+
+            </div>
+
+            <!-- TAB 2 -->
+
+            <div id="descTab" class="tab-content">
+
+                <div class="product-description" id="fullDescription"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <div class="footer-grid">
+
+            <div>
+                <h4>PhoneShop</h4>
+                <p>Điện thoại chính hãng 100%</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <a href="home.html">Trang chủ</a>
+                <a href="#">Sản phẩm</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📞 0123 456 789</p>
+                <p>📍 TP. Hồ Chí Minh</p>
+            </div>
+
+        </div>
+
+        <p class="copyright">© 2026 PhoneShop</p>
+
+    </footer>
+
+    <script src="../js/home.js"></script>
+
+    <script src="../js/product-detail.js"></script>
+
+    <script src="../js/loadCategoriesUser.js"></script>
+
+</body>
+
+</html>

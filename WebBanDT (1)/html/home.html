@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PhoneShop | Điện thoại chính hãng</title>
+
+    <link rel="stylesheet" href="../css/home.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <!-- LOGO -->
+
+            <div class="logo">
+                <img src="../img/logo.jpg">
+                <span>PhoneShop</span>
+            </div>
+
+            <!-- DANH MỤC -->
+
+            <div class="dropdown">
+
+                <button class="dropbtn">
+                    Danh mục <i class="fa fa-chevron-down"></i>
+                </button>
+
+                <div class="dropdown-content" id="categoryMenu">
+
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <input type="text" placeholder="Tìm điện thoại...">
+
+                <button>
+                    <i class="fa fa-search"></i>
+                </button>
+
+            </div>
+
+            <!-- CART -->
+
+            <a href="cart.html" class="cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+
+            <!-- LOGIN -->
+
+            <a href="login.html" class="btn-header" id="btnLogin">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
+
+            <span class="user-name" id="userName" style="display:none;"></span>
+
+            <button id="btnLogout" class="btn-logout" style="display:none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="hero-content">
+            <h1>Điện thoại chính hãng</h1>
+            <p>Công nghệ mới – Giá tốt nhất thị trường</p>
+            <a href="#products" class="btn-main">Mua ngay</a>
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORY -->
+    <section class="categories">
+
+        <div class="category-card">
+            <img src="../img/ip17pro_max.jpg">
+            <h3>IPhone 17</h3>
+        </div>
+
+        <div class="category-card">
+            <img src="../img/macpro.jpg">
+            <h3>Mac book</h3>
+        </div>
+
+        <div class="category-card">
+            <img src="../img/watch.jpg">
+            <h3>Watch</h3>
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="products" id="products">
+
+        <h2>Sản phẩm nổi bật</h2>
+
+        <div class="product-list" id="productList"></div>
+    </section>
+
+
+    <!-- FEATURE -->
+    <section class="feature">
+        <div class="feature-content">
+            <h2>Công nghệ đỉnh cao</h2>
+            <p>Sản phẩm chính hãng – Bảo hành 12 tháng</p>
+        </div>
+
+    </section>
+
+    <section class="newsletter">
+
+        <div class="newsletter-box">
+
+            <!-- Hình ảnh -->
+            <div class="newsletter-image">
+                <img src="../img/hinhnen3.jpg" alt="">
+            </div>
+
+            <!-- Nội dung -->
+            <div class="newsletter-content">
+
+                <h2>Đăng ký Bản tin của Chúng tôi</h2>
+
+                <p>
+                    Cập nhật các tính năng sản phẩm và công nghệ luôn thay đổi của chúng tôi. Nhập email của bạn và đăng
+                    ký nhận bản tin.
+                </p>
+
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Nhập email của bạn">
+                    <button>ĐĂNG KÝ</button>
+                </div>
+
+                <div class="social-icons">
+                    <i class="fa-brands fa-facebook-f"></i>
+                    <i class="fa-brands fa-twitter"></i>
+                    <i class="fa-brands fa-pinterest"></i>
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-behance"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-grid">
+
+            <div>
+                <h4>PhoneShop</h4>
+                <p>Điện thoại chính hãng 100%</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <a href="#">Trang chủ</a>
+                <a href="#products">Sản phẩm</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📞 0123 456 789</p>
+                <p>📍 TP. Hồ Chí Minh</p>
+            </div>
+
+        </div>
+
+        <p class="copyright">© 2026 PhoneShop</p>
+
+    </footer>
+
+    <script src="../js/home.js"></script>
+    <script src="../js/loadCategoriesUser.js"></script>
+    <script src="../js/loadproduct.js"></script>
+
+</body>
+
+</html>

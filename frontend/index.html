@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PhoneStore</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="container mt-4">
+
+<h2 class="mb-4">📱 PhoneStore</h2>
+
+<div class="mb-3">
+    <a href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+    <a href="register.html" class="btn btn-outline-success btn-sm">Register</a>
+</div>
+
+<hr>
+
+<div id="products" class="row"></div>
+
+<script>
+
+async function loadProducts(){
+
+    const res = await fetch("http://localhost:8081/api/products");
+
+    const products = await res.json();
+
+    const container = document.getElementById("products");
+
+    container.innerHTML = "";
+
+    products.forEach(p => {
+
+        const image = p.images?.[0]?.imageUrl || "";
+
+        container.innerHTML += `
+<div class="col-md-3 mb-4">
+
+    <div class="card h-100">
+
+        <a href="product.html?id=${p.id}">
+
+            <img src="${image}" class="card-img-top"
+                 style="height:200px;object-fit:cover">
+
+        </a>
+
+        <div class="card-body">
+
+            <h6>${p.name}</h6>
+
+            <p class="text-danger fw-bold">${p.price} đ</p>
+
+        </div>
+
+    </div>
+
+</div>
+`;
+
+    });
+
+}
+
+loadProducts();
+
+</script>
+
+</body>
+</html>

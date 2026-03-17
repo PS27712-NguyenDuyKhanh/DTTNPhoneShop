@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý danh mục</title>
+
+    <link rel="stylesheet" href="../css/admin/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+    <script src="../js/admin/auth-check.js"></script>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <div class="sidebar">
+
+            <div class="logo">ADMIN</div>
+
+            <ul>
+
+                <li class="active">
+                    <a href="admin.html">
+                        <i class="fa fa-chart-line"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="acount.html">
+                        <i class="fa fa-user"></i>
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+                <li>
+                    <a href="product.html">
+                        <i class="fa fa-mobile"></i>
+                        Quản lý sản phẩm
+                    </a>
+                </li>
+
+                <li>
+                    <a href="order.html">
+                        <i class="fa fa-box"></i>
+                        Quản lý đơn hàng
+                    </a>
+                </li>
+
+                <li>
+                    <a href="categories.html">
+                        <i class="fa fa-warehouse"></i>
+                        Quản lý danh mục
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coupon.html">
+                        <i class="fa fa-ticket"></i>
+                        Mã giảm giá
+                    </a>
+                </li>
+
+                <li>
+                    <a href="review.html">
+                        <i class="fa-solid fa-star"></i>
+                        Đánh giá
+                    </a>
+                </li>
+
+            </ul>
+
+            <button class="logout" id="btnLogout">
+                <i class="fa fa-sign-out"></i>
+                Đăng xuất
+            </button>
+
+        </div>
+
+
+        <!-- MAIN -->
+
+        <div class="main">
+
+            <div class="topbar">
+
+                <h2 style="margin-bottom:20px;">Quản lý danh mục</h2>
+
+                <div class="admin-user">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+
+            </div>
+
+            <!-- TOOLBAR -->
+
+            <div class="toolbar">
+
+                <div class="search-box">
+
+                    <input type="text" placeholder="Tìm theo tên danh mục...">
+
+                    <button class="btn-search">
+                        <i class="fa fa-search"></i>
+                    </button>
+
+                </div>
+
+                <button class="add-product" onclick="showForm()">
+                    <i class="fa-solid fa-plus"></i>
+                    Nhập thêm danh mục
+                </button>
+
+            </div>
+
+
+            <!-- OVERLAY -->
+
+            <div id="overlay" onclick="closeForm()"></div>
+
+
+            <!-- FORM ADD CATEGORY -->
+
+            <div id="categoryForm" class="popup">
+
+                <h3>Thêm danh mục</h3>
+
+                <input id="name" placeholder="Tên danh mục">
+
+                <select id="parent">
+                    <option value="">Danh mục cha</option>
+                </select>
+
+                <div class="form-buttons">
+
+                    <button onclick="saveCategory()">Lưu</button>
+
+                    <button onclick="closeForm()">Huỷ</button>
+
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="table-box">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên danh mục</th>
+                            <th>Danh mục cha</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="categoryTable"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/admin/loadCategories.js"></script>
+   
+</body>
+
+</html>

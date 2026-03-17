@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Thanh toán</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#f5f5f5;
+margin:0;
+padding:30px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+display:grid;
+grid-template-columns:1fr 400px;
+gap:30px;
+}
+
+.box{
+background:#fff;
+padding:25px;
+border-radius:10px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-top:8px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.cart-item{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:15px;
+border-bottom:1px solid #eee;
+padding-bottom:10px;
+}
+
+.cart-item img{
+width:60px;
+}
+
+.total{
+font-size:20px;
+font-weight:bold;
+color:#e74c3c;
+margin-top:20px;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+background:#8b1d40;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+margin-top:20px;
+}
+
+button:hover{
+opacity:.9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- THÔNG TIN KHÁCH -->
+<div class="box">
+
+<h2>Thông tin nhận hàng</h2>
+
+<label>Họ và tên</label>
+<input type="text" id="name">
+
+<label>Số điện thoại</label>
+<input type="text" id="phone">
+
+<label>Địa chỉ</label>
+<input type="text" id="address">
+
+<label>Phương thức thanh toán</label>
+<select id="payment">
+<option>Thanh toán khi nhận hàng (COD)</option>
+<option>Chuyển khoản ngân hàng</option>
+<option>Ví điện tử</option>
+</select>
+
+<button onclick="datHang()">Đặt hàng</button>
+
+</div>
+
+
+<!-- GIỎ HÀNG -->
+<div class="box">
+
+<h2>Đơn hàng của bạn</h2>
+
+<div id="order-list"></div>
+
+<div class="total">
+Tổng tiền: <span id="total">0 ₫</span>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* LẤY GIỎ HÀNG */
+
+let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+
+function format(x){
+return x.toLocaleString("vi-VN")+" ₫"
+}
+
+
+/* HIỂN THỊ GIỎ */
+
+function loadCart(){
+
+let html=""
+let total=0
+
+cart.forEach(p=>{
+
+total += p.price * p.qty
+
+html += `
+<div class="cart-item">
+
+<img src="${p.img}">
+
+<div>
+<b>${p.name}</b>
+<br>
+${format(p.price)} x ${p.qty}
+</div>
+
+<div>${format(p.price*p.qty)}</div>
+
+</div>
+`
+
+})
+
+document.getElementById("order-list").innerHTML = html
+document.getElementById("total").innerText = format(total)
+
+}
+
+loadCart()
+
+
+
+/* ĐẶT HÀNG */
+
+function datHang(){
+
+let name=document.getElementById("name").value
+let phone=document.getElementById("phone").value
+let address=document.getElementById("address").value
+let payment=document.getElementById("payment").value
+
+if(name==""||phone==""||address==""){
+
+alert("Vui lòng nhập đầy đủ thông tin")
+return
+
+}
+
+let order={
+
+customer:name,
+phone:phone,
+address:address,
+payment:payment,
+items:cart,
+date:new Date().toLocaleString()
+
+}
+
+let orders = JSON.parse(localStorage.getItem("orders")) || []
+
+orders.push(order)
+
+localStorage.setItem("orders",JSON.stringify(orders))
+
+
+alert("🎉 Đặt hàng thành công!")
+
+localStorage.removeItem("cart")
+
+window.location.href="home.html"
+
+}
+
+</script>
+
+</body>
+</html>

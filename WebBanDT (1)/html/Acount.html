@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý tài khoản</title>
+
+    <link rel="stylesheet" href="../css/admin/admin.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <script src="../js/admin/auth-check.js"></script>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <h2 class="logo">PhoneShop</h2>
+
+            <ul>
+
+                <li>
+                    <a href="admin.html">
+                        <i class="fa fa-chart-line"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="active">
+                    <a href="acount.html">
+                        <i class="fa fa-user"></i>
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+                <li>
+                    <a href="product.html">
+                        <i class="fa fa-mobile"></i>
+                        Quản lý sản phẩm
+                    </a>
+                </li>
+
+                <li>
+                    <a href="order.html">
+                        <i class="fa fa-box"></i>
+                        Quản lý đơn hàng
+                    </a>
+                </li>
+
+                <li>
+                    <a href="categories.html">
+                        <i class="fa fa-warehouse"></i>
+                        Quản lý danh mục
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coupon.html">
+                        <i class="fa fa-ticket"></i>
+                        Mã giảm giá
+                    </a>
+                </li>
+
+                <li>
+                    <a href="review.html">
+                        <i class="fa-solid fa-star"></i>
+                        Đánh giá
+                    </a>
+                </li>
+
+            </ul>
+
+            <button class="logout" id="btnLogout">
+                <i class="fa fa-sign-out"></i>
+                Đăng xuất
+            </button>
+
+        </div>
+
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+
+                <h2 style="margin-bottom:20px;">Quản lý tài khoản</h2>
+
+                <div class="admin-user">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+
+            </div>
+
+            <!-- TOOLBAR -->
+
+            <div class="toolbar">
+                <input type="text" placeholder="Tìm kiếm tài khoản...">
+                <button class="add-user">
+                    <i class="fa fa-user-plus"></i>
+                    Thêm tài khoản
+                </button>
+
+            </div>
+
+
+            <!-- TABLE -->
+
+            <div class="table-box">
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+
+        <tbody id="userTable">
+
+        </tbody>
+
+    </table>
+
+</div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/admin/loadUsers.js"></script>
+    <script src="../js/admin/changeStatus.js"></script>
+    <script src="../js/admin/deleteUser.js"></script>
+</body>
+
+</html>

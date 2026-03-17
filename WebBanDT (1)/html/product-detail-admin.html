@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Chi tiết sản phẩm</title>
+
+    <link rel="stylesheet" href="../css/admin/admin.css">
+    <link rel="stylesheet" href="../css/admin/product-detail-admin.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <h2 class="logo">PhoneShop</h2>
+
+            <ul>
+
+                <li class="active">
+                    <a href="../admin/admin.html">
+                        <i class="fa fa-chart-line"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Acount.html">
+                        <i class="fa fa-user"></i>
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+                <li>
+                    <a href="product.html">
+                        <i class="fa fa-mobile"></i>
+                        Quản lý sản phẩm
+                    </a>
+                </li>
+
+                <li>
+                    <a href="order.html">
+                        <i class="fa fa-box"></i>
+                        Quản lý đơn hàng
+                    </a>
+                </li>
+
+                <li>
+                    <a href="inventory.html">
+                        <i class="fa fa-warehouse"></i>
+                        Quản lý danh mục
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coupon.html">
+                        <i class="fa fa-ticket"></i>
+                        Mã giảm giá
+                    </a>
+                </li>
+
+                <li>
+                    <a href="review.html">
+                        <i class="fa-solid fa-star"></i>
+                        Đánh giá
+                    </a>
+                </li>
+
+            </ul>
+
+            <button class="logout" id="btnLogout">
+                <i class="fa fa-sign-out"></i>
+                Đăng xuất
+            </button>
+
+        </div>
+
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <div class="topbar">
+
+                <h2>Chi tiết sản phẩm</h2>
+
+                <div class="admin-user">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCT DETAIL -->
+            <div class="product-detail">
+
+                <h3 id="productName"></h3>
+
+                <p class="sku">
+                    <b>SKU:</b>
+                    <span id="productSku"></span>
+                </p>
+
+
+                <!-- VARIANTS -->
+                <div class="variant-box">
+
+                    <h4>Variants</h4>
+
+                    <table class="variant-table">
+
+                        <thead>
+                            <tr>
+                                <th>Màu</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Ảnh</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="variantTable"></tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- CẤU HÌNH -->
+                <div class="spec-box">
+
+                    <h4>Cấu hình</h4>
+
+                    <ul id="specList"></ul>
+
+                </div>
+
+
+                <!-- MÔ TẢ -->
+                <div class="desc-box">
+
+                    <h4>Mô tả</h4>
+
+                    <div class="desc-wrapper">
+                        <div id="productDesc" class="desc-content"></div>
+                        <div class="fade"></div>
+                    </div>
+
+                    <button id="toggleDesc" class="btn-desc">
+                        Xem thêm
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/admin/product-detail-admin.js"></script>
+
+</body>
+
+</html>

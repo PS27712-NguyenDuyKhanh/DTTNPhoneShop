@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Manage Categories</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+</head>
+
+<body class="container mt-5">
+
+    <h2>Category Management</h2>
+
+    <div class="mt-4">
+
+        <input id="name" class="form-control w-25 d-inline" placeholder="Category name">
+
+        <select id="parent" class="form-control w-25 d-inline">
+            <option value="">Parent Category</option>
+        </select>
+
+        <button onclick="createCategory()" class="btn btn-primary">
+            Add
+        </button>
+
+    </div>
+
+    <table class="table mt-4">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Parent</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="categories"></tbody>
+
+    </table>
+
+    <script>
+
+        const API = "http://localhost:8081/api/admin/categories"
+
+        const token = localStorage.getItem("token")
+
+        let editingId = null
+
+        async function loadCategories() {
+
+            const res = await fetch(API, {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+
+            const data = await res.json()
+
+            let html = ""
+            let parentOptions = '<option value="">Parent Category</option>'
+
+            data.forEach(c => {
+
+                parentOptions += `<option value="${c.id}">${c.name}</option>`
+
+                html += `
+<tr>
+<td>${c.id}</td>
+<td>${c.name}</td>
+<td>${c.parent ? c.parent.name : "-"}</td>
+<td>
+
+<button onclick="editCategory(${c.id},'${c.name}')"
+class="btn btn-warning btn-sm">
+Edit
+</button>
+
+<button onclick="deleteCategory(${c.id})"
+class="btn btn-danger btn-sm">
+Delete
+</button>
+
+</td>
+</tr>
+`
+
+            })
+
+            document.getElementById("categories").innerHTML = html
+            document.getElementById("parent").innerHTML = parentOptions
+
+        }
+
+        async function createCategory() {
+
+            const name = document.getElementById("name").value
+            const parentId = document.getElementById("parent").value
+
+            const body = {
+                name: name,
+                parentId: parentId || null
+            }
+
+            if (editingId) {
+
+                await fetch(API + "/" + editingId, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify(body)
+                })
+
+                editingId = null
+
+            } else {
+
+                await fetch(API, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify(body)
+                })
+
+            }
+
+            document.getElementById("name").value = ""
+            document.getElementById("parent").value = ""
+
+            loadCategories()
+
+        }
+
+        function editCategory(id, name) {
+
+            editingId = id
+            document.getElementById("name").value = name
+
+        }
+
+        async function deleteCategory(id) {
+
+            await fetch(API + "/" + id, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+
+            loadCategories()
+
+        }
+
+        loadCategories()
+
+    </script>
+
+</body>
+
+</html>

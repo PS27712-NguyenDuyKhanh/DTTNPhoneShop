@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+
+    <link rel="stylesheet" href="../css/admin/admin.css">
+    <link rel="stylesheet" href="../css/admin/create-product.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="sidebar">
+
+            <h2 class="logo">PhoneShop</h2>
+
+            <ul>
+
+                <li class="active">
+                    <a href="../admin/admin.html">
+                        <i class="fa fa-chart-line"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Acount.html">
+                        <i class="fa fa-user"></i>
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+                <li>
+                    <a href="product.html">
+                        <i class="fa fa-mobile"></i>
+                        Quản lý sản phẩm
+                    </a>
+                </li>
+
+                <li>
+                    <a href="order.html">
+                        <i class="fa fa-box"></i>
+                        Quản lý đơn hàng
+                    </a>
+                </li>
+
+                <li>
+                    <a href="inventory.html">
+                        <i class="fa fa-warehouse"></i>
+                        Quản lý danh mục
+                    </a>
+                </li>
+
+                <li>
+                    <a href="coupon.html">
+                        <i class="fa fa-ticket"></i>
+                        Mã giảm giá
+                    </a>
+                </li>
+
+                <li>
+                    <a href="review.html">
+                        <i class="fa-solid fa-star"></i>
+                        Đánh giá
+                    </a>
+                </li>
+
+            </ul>
+
+            <button class="logout" id="btnLogout">
+                <i class="fa fa-sign-out"></i>
+                Đăng xuất
+            </button>
+
+        </div>
+
+        <div class="main">
+
+            <div class="topbar">
+                <h2>Thêm sản phẩm</h2>
+
+                <div class="admin-user">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+
+            </div>
+
+            <div class="form-box">
+
+                <h3>Thông tin sản phẩm</h3>
+
+                <input id="name" placeholder="Tên sản phẩm">
+
+                <input id="sku" placeholder="SKU">
+
+                <input id="os" placeholder="Hệ điều hành">
+
+                <textarea id="description" placeholder="Mô tả sản phẩm"></textarea>
+
+                <select id="categoryId">
+                    <option value="">-- Chọn danh mục --</option>
+                </select>
+
+                <h3>Cấu hình</h3>
+
+                <input id="cpu" placeholder="CPU">
+                <input id="ram" placeholder="RAM">
+                <input id="rom" placeholder="ROM">
+                <input id="gpu" placeholder="GPU">
+                <input id="camera" placeholder="Camera">
+                <input id="battery" placeholder="Pin">
+                <input id="screen" placeholder="Màn hình">
+
+                <h3>Thông tin màu sắc và giá sản phẩm</h3>
+
+                <div id="variantContainer"></div>
+
+                <button onclick="addVariant()">+ Thêm màu sắc sản phẩm</button>
+
+                <br><br>
+
+                <button onclick="createProduct()">Tạo sản phẩm</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    <script src="../js/admin/create-product.js"></script>
+</body>
+
+</html>

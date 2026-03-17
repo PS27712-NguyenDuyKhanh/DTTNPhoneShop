@@ -1,0 +1,237 @@
+
+/* ===== MAIN CONTENT ===== */
+
+.main{
+padding:40px 50px;
+background:#f5f7fb;
+min-height:100vh;
+}
+
+
+/* ===== TITLE ===== */
+
+.topbar h2{
+
+font-size:28px;
+
+font-weight:700;
+
+margin-bottom:25px;
+
+color:#111;
+
+}
+
+
+/* ===== FORM CARD ===== */
+
+.form-box{
+
+background:#fff;
+
+padding:35px 40px;
+
+border-radius:14px;
+
+box-shadow:0 8px 30px rgba(0,0,0,0.08);
+
+max-width:1100px;
+
+}
+
+
+/* section title */
+
+.form-box h3{
+
+font-size:18px;
+
+font-weight:600;
+
+margin-top:25px;
+
+margin-bottom:15px;
+
+color:#222;
+
+}
+
+
+/* ===== INPUT GROUP ===== */
+
+.form-box input,
+.form-box textarea,
+.form-box select{
+
+width:100%;
+
+padding:10px 12px;
+
+margin-bottom:12px;
+
+border-radius:6px;
+
+border:1px solid #ddd;
+
+font-size:14px;
+
+transition:0.2s;
+
+background:#fafafa;
+
+}
+
+
+/* focus effect */
+
+.form-box input:focus,
+.form-box textarea:focus,
+.form-box select:focus{
+
+border:1px solid #4f6ef7;
+
+outline:none;
+
+background:#fff;
+
+box-shadow:0 0 0 2px rgba(79,110,247,0.1);
+
+}
+
+
+/* textarea */
+
+.form-box textarea{
+
+min-height:60px;
+
+resize:vertical;
+
+}
+
+
+/* ===== CONFIG GRID ===== */
+
+.form-box .config-grid{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:10px;
+
+}
+
+
+/* ===== BUTTONS ===== */
+
+.form-box button{
+
+background:#4f6ef7;
+
+color:white;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-weight:500;
+
+transition:0.2s;
+
+}
+
+.form-box button:hover{
+
+background:#3b55d9;
+
+}
+
+
+/* ===== VARIANT CARD ===== */
+
+.variant-card{
+
+border:1px solid #e5e7eb;
+
+padding:15px;
+
+margin-top:12px;
+
+border-radius:10px;
+
+background:#fafafa;
+
+transition:0.2s;
+
+}
+
+.variant-card:hover{
+
+box-shadow:0 4px 14px rgba(0,0,0,0.05);
+
+}
+
+
+/* variant header */
+
+.variant-header{
+
+font-weight:600;
+
+cursor:pointer;
+
+margin-bottom:10px;
+
+color:#333;
+
+}
+
+
+/* variant body */
+
+.variant-body input{
+
+width:100%;
+
+margin-bottom:8px;
+
+}
+
+
+/* ===== ADD VARIANT BUTTON ===== */
+
+.form-box button:nth-of-type(1){
+
+margin-top:5px;
+
+background:#22c55e;
+
+}
+
+.form-box button:nth-of-type(1):hover{
+
+background:#16a34a;
+
+}
+
+
+/* ===== CREATE PRODUCT BUTTON ===== */
+
+.form-box button:last-of-type{
+
+margin-top:20px;
+
+background:#ef4444;
+
+}
+
+.form-box button:last-of-type:hover{
+
+background:#dc2626;
+
+}
