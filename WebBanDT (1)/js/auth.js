@@ -19,11 +19,10 @@ async function login() {
 
             const data = await res.json();
 
-            // lưu token
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("role", data.role);
-            localStorage.setItem("name", data.username);
-            
+            // ✅ FIX: dùng sessionStorage
+            sessionStorage.setItem("token", data.token);
+            sessionStorage.setItem("role", data.role);
+            sessionStorage.setItem("name", data.username);
 
             showMessage("Đăng nhập thành công", "success");
 
@@ -52,15 +51,15 @@ async function login() {
 
 }
 
-
 function showMessage(text, type) {
 
     const box = document.getElementById("message");
+
+    if (!box) return;
 
     box.innerHTML = `
         <div class="alert alert-${type}">
             ${text}
         </div>
     `;
-
 }

@@ -1,7 +1,21 @@
 const API_ADMIN = "http://localhost:8081/api/admin/categories";
-const token = localStorage.getItem("token");
 
 let editingId = null;
+
+// ==========================
+// AUTH
+// ==========================
+
+function getToken() {
+    return sessionStorage.getItem("token");
+}
+
+function getAuthHeader() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + getToken()
+    };
+}
 
 // ==========================
 // LOAD CATEGORIES
@@ -12,13 +26,17 @@ async function loadAdminCategories() {
     try {
 
         const res = await fetch(API_ADMIN, {
-            headers: {
-                Authorization: "Bearer " + token
-            }
+            headers: getAuthHeader()
         });
 
         if (!res.ok) {
-            console.error("Không load được danh mục");
+
+            if (res.status === 401) {
+                alert("Hết phiên đăng nhập!");
+                window.location.href = "login.html";
+            }
+
+            console.error("Không load được danh mục:", res.status);
             return;
         }
 
@@ -27,19 +45,21 @@ async function loadAdminCategories() {
         const table = document.getElementById("categoryTable");
         const parent = document.getElementById("parent");
 
+        if (!table || !parent) return;
+
         table.innerHTML = "";
         parent.innerHTML = `<option value="">Danh mục cha</option>`;
 
         categories.forEach(c => {
 
-            // dropdown danh mục cha
-            parent.innerHTML += `
+            // dropdown
+            parent.insertAdjacentHTML("beforeend", `
                 <option value="${c.id}">
                     ${c.name}
                 </option>
-            `;
+            `);
 
-            // bảng danh mục
+            // table
             table.insertAdjacentHTML("beforeend", `
                 <tr>
 
@@ -80,28 +100,29 @@ async function loadAdminCategories() {
 // SHOW FORM
 // ==========================
 
-function showForm(){
-
+function showForm() {
     document.getElementById("categoryForm").style.display = "block";
     document.getElementById("overlay").style.display = "block";
-
 }
 
-function closeForm(){
-
+function closeForm() {
     document.getElementById("categoryForm").style.display = "none";
     document.getElementById("overlay").style.display = "none";
-
 }
 
 // ==========================
 // SAVE CATEGORY
 // ==========================
 
-async function saveCategory(){
+async function saveCategory() {
 
     const name = document.getElementById("name").value;
     const parentId = document.getElementById("parent").value;
+
+    if (!name.trim()) {
+        alert("Tên danh mục không được để trống!");
+        return;
+    }
 
     const body = {
         name: name,
@@ -110,34 +131,31 @@ async function saveCategory(){
 
     try {
 
-        if(editingId){
+        let res;
 
-            await fetch(API_ADMIN + "/" + editingId, {
+        if (editingId) {
 
+            res = await fetch(API_ADMIN + "/" + editingId, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                },
+                headers: getAuthHeader(),
                 body: JSON.stringify(body)
-
             });
 
             editingId = null;
 
-        }else{
+        } else {
 
-            await fetch(API_ADMIN, {
-
+            res = await fetch(API_ADMIN, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: "Bearer " + token
-                },
+                headers: getAuthHeader(),
                 body: JSON.stringify(body)
-
             });
 
+        }
+
+        if (!res.ok) {
+            alert("Lỗi khi lưu danh mục!");
+            return;
         }
 
         // reset form
@@ -147,7 +165,7 @@ async function saveCategory(){
         closeForm();
         loadAdminCategories();
 
-    } catch(err){
+    } catch (err) {
 
         console.error("Lỗi lưu danh mục:", err);
 
@@ -156,41 +174,43 @@ async function saveCategory(){
 }
 
 // ==========================
-// EDIT CATEGORY
+// EDIT
 // ==========================
 
-function editCategory(id, name){
+function editCategory(id, name) {
 
     editingId = id;
 
     document.getElementById("name").value = name;
 
     showForm();
-
 }
 
 // ==========================
-// DELETE CATEGORY
+// DELETE
 // ==========================
 
-async function deleteCategory(id){
+async function deleteCategory(id) {
 
-    if(!confirm("Xóa danh mục này?")) return;
+    if (!confirm("Xóa danh mục này?")) return;
 
-    try{
+    try {
 
-        await fetch(API_ADMIN + "/" + id, {
-
+        const res = await fetch(API_ADMIN + "/" + id, {
             method: "DELETE",
             headers: {
-                Authorization: "Bearer " + token
+                "Authorization": "Bearer " + getToken()
             }
-
         });
+
+        if (!res.ok) {
+            alert("Xóa thất bại!");
+            return;
+        }
 
         loadAdminCategories();
 
-    }catch(err){
+    } catch (err) {
 
         console.error("Lỗi xóa danh mục:", err);
 
@@ -202,4 +222,14 @@ async function deleteCategory(id){
 // INIT
 // ==========================
 
-loadAdminCategories();
+document.addEventListener("DOMContentLoaded", () => {
+
+    const token = getToken();
+
+    if (!token) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    loadAdminCategories();
+});
