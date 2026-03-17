@@ -1,48 +1,77 @@
 const API = "http://localhost:8081/api/admin/users";
 
-async function loadUsers() {
+// ==========================
+// AUTH
+// ==========================
 
-    const token = localStorage.getItem("token");
+function getToken() {
+    return sessionStorage.getItem("token");
+}
+
+function getAuthHeader() {
+    return {
+        "Authorization": "Bearer " + getToken()
+    };
+}
+
+// ==========================
+// LOAD USERS
+// ==========================
+
+async function loadUsers() {
 
     try {
 
         const res = await fetch(API, {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
+            headers: getAuthHeader()
         });
+
+        // 🔥 handle lỗi
+        if (!res.ok) {
+
+            if (res.status === 401) {
+                alert("Hết phiên đăng nhập!");
+                window.location.href = "../login.html";
+            }
+
+            console.error("API lỗi:", res.status);
+            return;
+        }
 
         const users = await res.json();
 
         const table = document.getElementById("userTable");
+
+        if (!table) return;
+
         table.innerHTML = "";
 
         users.forEach(u => {
 
-            table.innerHTML += `
-            <tr>
-                <td>${u.id}</td>
-                <td>${u.username}</td>
-                <td>${u.email}</td>
-                <td>${u.role}</td>
-                <td class="${u.status ? 'active' : 'locked'}">
-                    ${u.status ? 'Hoạt động' : 'Bị khóa'}
-                </td>
-                <td>
+    table.insertAdjacentHTML("beforeend", `
+    <tr>
+        <td>${u.id}</td>
+        <td>${u.username}</td>
+        <td>${u.email}</td>
+        <td>${u.role}</td>
 
-                    <button onclick="changeStatus(${u.id})">
-                        <i class="fa fa-lock"></i>
-                    </button>
+        <td class="${u.active ? 'active' : 'locked'}">
+            ${u.active ? 'Hoạt động' : 'Bị khóa'}
+        </td>
 
-                    <button onclick="deleteUser(${u.id})">
-                        <i class="fa fa-trash"></i>
-                    </button>
+        <td>
+            <button onclick="changeStatus(${u.id})">
+                <i class="fa ${u.active ? 'fa-lock-open' : 'fa-lock'}"></i>
+            </button>
 
-                </td>
-            </tr>
-            `;
+            <button onclick="deleteUser(${u.id})">
+                <i class="fa fa-trash"></i>
+            </button>
+        </td>
+    </tr>
+    `);
 
-        });
+});
 
     } catch (error) {
 
@@ -52,4 +81,19 @@ async function loadUsers() {
 
 }
 
-loadUsers();
+// ==========================
+// INIT
+// ==========================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const token = getToken();
+
+    if (!token) {
+        window.location.href = "../login.html";
+        return;
+    }
+
+    loadUsers();
+
+});

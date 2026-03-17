@@ -116,6 +116,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
         user.setVerified(true);
+        user.setActive(true);
 
         userRepository.save(user);
 
@@ -136,6 +137,13 @@ public class AuthController {
 
         if(!passwordEncoder.matches(request.getPassword(), user.get().getPassword())){
             return ResponseEntity.badRequest().body("Sai mật khẩu");
+        }
+
+        // 🔥 CHECK KHÓA
+        if (Boolean.FALSE.equals(user.get().getActive())) {
+            return ResponseEntity
+                    .status(403)
+                    .body("Tài khoản đã bị khóa");
         }
 
         String token = jwtService.generateToken(

@@ -34,6 +34,8 @@ public class User {
     private Boolean verified;
 
     // khóa / mở tài khoản
-    private Boolean active;
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean active = true;
 
 }

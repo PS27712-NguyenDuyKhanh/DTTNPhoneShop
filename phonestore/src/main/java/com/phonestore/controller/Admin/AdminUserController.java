@@ -35,11 +35,11 @@ public class AdminUserController {
 
         User user = userRepository.findById(id).orElseThrow();
 
-        if (user.getVerified() == null) {
-            user.setVerified(false);
+        if (user.getActive() == null) {
+            user.setActive(true);
         }
 
-        user.setVerified(!user.getVerified());
+        user.setActive(!user.getActive()); // ✅ đúng
 
         return userRepository.save(user);
     }
