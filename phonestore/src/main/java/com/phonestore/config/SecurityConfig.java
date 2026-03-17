@@ -36,6 +36,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/cart/**").hasAnyRole("USER","ADMIN")
 
                         // USER API
                         .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN")
