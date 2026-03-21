@@ -19,12 +19,11 @@ public class OrderMapper {
         dto.setVariantId(item.getVariant().getId());
         dto.setQuantity(item.getQuantity());
 
-        // 🔥 LƯU Ý: lấy giá từ OrderItem (đã chốt)
+        // giá đã chốt
         dto.setPrice(item.getPrice());
 
         dto.setProductName(item.getVariant().getProduct().getName());
 
-        // lấy ảnh từ Image entity
         if (item.getVariant().getImages() != null &&
                 !item.getVariant().getImages().isEmpty()) {
 
@@ -39,13 +38,9 @@ public class OrderMapper {
     }
 
     // =========================
-    // Order → DTO
+    // Order → DTO (CHUẨN)
     // =========================
-    public static OrderDTO toDTO(Order order, List<OrderItem> items) {
-
-        List<OrderItemDTO> itemDTOs = items.stream()
-                .map(OrderMapper::toDTO)
-                .toList();
+    public static OrderDTO toDTO(Order order) {
 
         OrderDTO dto = new OrderDTO();
 
@@ -56,7 +51,23 @@ public class OrderMapper {
         dto.setNote(order.getNote());
         dto.setTotal(order.getTotal());
 
-        dto.setItems(itemDTOs);
+        // 🔥 NEW (ADMIN)
+        dto.setStatus(order.getStatus());
+        dto.setCreatedAt(order.getCreatedAt());
+
+        if (order.getUser() != null) {
+            dto.setUsername(order.getUser().getUsername());
+        }
+
+        // items
+        if (order.getItems() != null) {
+            List<OrderItemDTO> itemDTOs = order.getItems()
+                    .stream()
+                    .map(OrderMapper::toDTO)
+                    .toList();
+
+            dto.setItems(itemDTOs);
+        }
 
         return dto;
     }

@@ -1,7 +1,9 @@
 package com.phonestore.dto;
 
+import com.phonestore.entity.OrderStatus;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,6 +23,12 @@ public class OrderDTO {
     private String note;
 
     private double total;
+
+    private OrderStatus status;
+
+    private LocalDateTime createdAt;
+
+    private String username;
 
     private List<OrderItemDTO> items;
 }
