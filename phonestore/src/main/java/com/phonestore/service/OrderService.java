@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 
 @Service
@@ -20,6 +21,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
+    private final VoucherService voucherService;
 
     // =========================
     // CHECKOUT (USER)
@@ -40,6 +42,23 @@ public class OrderService {
         }
 
         // 🔥 CREATE ORDER
+        String code = request.getVoucherCode();
+
+        double total = 0;
+
+// tính total
+        for (CartItem ci : cartItems) {
+            total += ci.getVariant().getPrice() * ci.getQuantity();
+        }
+
+// apply voucher
+        double discount = 0;
+
+        if(code != null && !code.isEmpty()){
+            discount = voucherService.apply(email, code, total);
+        }
+
+// create order
         Order order = new Order();
         order.setUser(user);
         order.setFullName(request.getFullName());
@@ -47,13 +66,15 @@ public class OrderService {
         order.setAddress(request.getAddress());
         order.setNote(request.getNote());
 
-        // status + createdAt đã auto bởi @PrePersist
+// 🔥 THÊM 2 DÒNG
+        order.setVoucherCode(code);
+        order.setDiscount(discount);
+
+        order.setTotal(total - discount);
 
         order = orderRepository.save(order);
 
-        double total = 0;
-
-        // 🔥 CREATE ORDER ITEMS
+// 🔥 CREATE ITEMS
         for (CartItem ci : cartItems) {
 
             OrderItem oi = new OrderItem();
@@ -61,20 +82,17 @@ public class OrderService {
             oi.setOrder(order);
             oi.setVariant(ci.getVariant());
             oi.setQuantity(ci.getQuantity());
-
-            double price = ci.getVariant().getPrice();
-            oi.setPrice(price);
-
-            total += price * ci.getQuantity();
+            oi.setPrice(ci.getVariant().getPrice());
 
             orderItemRepository.save(oi);
         }
 
-        // 🔥 SET TOTAL
-        order.setTotal(total);
-        orderRepository.save(order);
+// 🔥 MARK USED
+        if(code != null && !code.isEmpty()){
+            voucherService.markUsed(email, code);
+        }
 
-        // 🔥 CLEAR CART
+// 🔥 CLEAR CART
         cartItemRepository.deleteAll(cartItems);
 
         // 🔥 RETURN DTO (FIX)
@@ -114,5 +132,38 @@ public class OrderService {
         order.setStatus(status);
 
         orderRepository.save(order);
+    }
+
+    // =========================
+// USER - GET MY ORDERS
+// =========================
+    public List<OrderDTO> getMyOrders(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return orderRepository.findByUser(user)
+                .stream()
+                .map(OrderMapper::toDTO)
+                .toList();
+    }
+
+    // =========================
+// USER - GET ORDER DETAIL
+// =========================
+    public OrderDTO getMyOrderDetail(String email, Long id) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // 🔥 CHẶN xem đơn người khác
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Không có quyền");
+        }
+
+        return OrderMapper.toDTO(order);
     }
 }

@@ -15,4 +15,6 @@ public class OrderRequest {
     private String address;
 
     private String note;
+
+    private String voucherCode;
 }
