@@ -22,7 +22,7 @@ public class OrderService {
     private final UserRepository userRepository;
 
     // =========================
-    // CHECKOUT
+    // CHECKOUT (USER)
     // =========================
     @Transactional
     public OrderDTO checkout(String email, OrderRequest request) {
@@ -39,7 +39,7 @@ public class OrderService {
             throw new RuntimeException("Cart is empty");
         }
 
-        // 🔥 TẠO ORDER
+        // 🔥 CREATE ORDER
         Order order = new Order();
         order.setUser(user);
         order.setFullName(request.getFullName());
@@ -47,11 +47,13 @@ public class OrderService {
         order.setAddress(request.getAddress());
         order.setNote(request.getNote());
 
-        double total = 0;
+        // status + createdAt đã auto bởi @PrePersist
 
         order = orderRepository.save(order);
 
-        // 🔥 TẠO ORDER ITEM
+        double total = 0;
+
+        // 🔥 CREATE ORDER ITEMS
         for (CartItem ci : cartItems) {
 
             OrderItem oi = new OrderItem();
@@ -60,7 +62,6 @@ public class OrderService {
             oi.setVariant(ci.getVariant());
             oi.setQuantity(ci.getQuantity());
 
-            // 🔥 CHỐT GIÁ
             double price = ci.getVariant().getPrice();
             oi.setPrice(price);
 
@@ -76,9 +77,42 @@ public class OrderService {
         // 🔥 CLEAR CART
         cartItemRepository.deleteAll(cartItems);
 
-        // 🔥 TRẢ DTO
-        List<OrderItem> items = orderItemRepository.findByOrder(order);
+        // 🔥 RETURN DTO (FIX)
+        return OrderMapper.toDTO(order);
+    }
 
-        return OrderMapper.toDTO(order, items);
+    // =========================
+    // ADMIN - GET ALL
+    // =========================
+    public List<OrderDTO> getAll() {
+
+        return orderRepository.findAll()
+                .stream()
+                .map(OrderMapper::toDTO)
+                .toList();
+    }
+
+    // =========================
+    // ADMIN - GET DETAIL
+    // =========================
+    public OrderDTO getById(Long id) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return OrderMapper.toDTO(order);
+    }
+
+    // =========================
+    // ADMIN - UPDATE STATUS
+    // =========================
+    public void updateStatus(Long id, OrderStatus status) {
+
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
+
+        orderRepository.save(order);
     }
 }

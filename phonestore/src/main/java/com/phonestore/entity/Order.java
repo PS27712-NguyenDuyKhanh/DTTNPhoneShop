@@ -1,9 +1,16 @@
 package com.phonestore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.phonestore.entity.OrderItem;
+import com.phonestore.entity.OrderStatus;
+import com.phonestore.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,13 +35,23 @@ public class Order {
 
     private double total;
 
-    // many Order - 1 User
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // 1 Order - many OrderItem
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<OrderItem> items;
+
+    // 🔥 AUTO SET
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.status = OrderStatus.PENDING;
+    }
 }
