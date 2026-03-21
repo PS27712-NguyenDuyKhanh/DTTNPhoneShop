@@ -180,6 +180,7 @@ async function checkout(){
     const phone = document.getElementById("phone").value;
     const address = document.getElementById("address").value;
     const note = document.getElementById("note").value;
+    const voucherCode = document.getElementById("voucher").value; // 🔥 NEW
 
     if(!fullName || !phone || !address){
         alert("Vui lòng nhập đầy đủ thông tin");
@@ -198,7 +199,8 @@ async function checkout(){
                 fullName,
                 phone,
                 address,
-                note
+                note,
+                voucherCode // 🔥 NEW
             })
         });
 
@@ -208,7 +210,6 @@ async function checkout(){
 
         alert("Đặt hàng thành công 🎉");
 
-        // reload cart
         loadCart();
 
     }catch(err){
@@ -216,9 +217,5 @@ async function checkout(){
         alert("Lỗi đặt hàng");
     }
 }
-
-// ==========================
-// INIT
-// ==========================
 
 document.addEventListener("DOMContentLoaded", loadCart);

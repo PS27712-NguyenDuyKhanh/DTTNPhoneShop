@@ -4,36 +4,59 @@ import com.phonestore.dto.CartDTO;
 import com.phonestore.dto.CartItemDTO;
 import com.phonestore.entity.Cart;
 import com.phonestore.entity.CartItem;
+import com.phonestore.entity.Variant;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CartMapper {
 
-    // map CartItem → DTO
+    // =========================
+    // CartItem → DTO
+    // =========================
     public static CartItemDTO toDTO(CartItem item) {
 
         CartItemDTO dto = new CartItemDTO();
 
+        Variant v = item.getVariant();
+
         dto.setId(item.getId());
         dto.setQuantity(item.getQuantity());
+        dto.setVariantId(v.getId());
+        dto.setProductName(v.getProduct().getName());
 
-        dto.setVariantId(item.getVariant().getId());
-        dto.setProductName(item.getVariant().getProduct().getName());
-        dto.setPrice(item.getVariant().getPrice());
+        // =========================
+        // 🔥 LOGIC GIÁ (SALE)
+        // =========================
+        double price;
 
-        // 🔥 lấy ảnh từ Image entity
-        if (item.getVariant().getImages() != null &&
-                !item.getVariant().getImages().isEmpty()) {
+        if (v.getSalePrice() != null &&
+                v.getSaleStart() != null &&
+                v.getSaleEnd() != null &&
+                LocalDateTime.now().isAfter(v.getSaleStart()) &&
+                LocalDateTime.now().isBefore(v.getSaleEnd())) {
 
-            dto.setImage(item.getVariant().getImages().get(0).getImageUrl());
+            price = v.getSalePrice();
+        } else {
+            price = v.getPrice();
         }
 
-        dto.setTotal(item.getVariant().getPrice() * item.getQuantity());
+        dto.setPrice(price);
+        dto.setTotal(price * item.getQuantity());
+
+        // =========================
+        // 🔥 IMAGE
+        // =========================
+        if (v.getImages() != null && !v.getImages().isEmpty()) {
+            dto.setImage(v.getImages().get(0).getImageUrl());
+        }
 
         return dto;
     }
 
-    // map List CartItem → CartDTO
+    // =========================
+    // Cart → DTO
+    // =========================
     public static CartDTO toCartDTO(Cart cart, List<CartItem> items) {
 
         List<CartItemDTO> itemDTOs = items.stream()
