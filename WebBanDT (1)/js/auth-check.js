@@ -47,15 +47,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================
     // USER PAGE
     // ==========================
-    if (btnLogin && userName && btnLogout) {
+    // USER PAGE
+if (btnLogin && userName && btnLogout) {
 
-        btnLogin.style.display = "none";
+    btnLogin.style.display = "none";
 
-        userName.style.display = "inline-block";
-        userName.innerText = "👋 " + (name || "User");
+    userName.style.display = "inline-block";
+    userName.innerText = "👋 " + (name || "User");
 
-        btnLogout.style.display = "inline-block";
-    }
+    btnLogout.style.display = "inline-block";
+
+    // ✅ thêm đoạn này
+    userName.style.cursor = "pointer";
+    userName.onclick = () => {
+        window.location.href = "profile.html";
+    };
+}
 
     // ==========================
     // LOGOUT
