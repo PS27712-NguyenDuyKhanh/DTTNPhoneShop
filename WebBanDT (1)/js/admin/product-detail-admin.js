@@ -1,4 +1,3 @@
-
 const API = "http://localhost:8081/api/admin/products/";
 
 async function loadProduct() {
@@ -6,111 +5,142 @@ async function loadProduct() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
-    const token = localStorage.getItem("token");
+    // ✅ FIX AUTH (đồng bộ với trang list)
+    const token = sessionStorage.getItem("token");
 
-    const res = await fetch(API + id, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    });
-
-    if (!res.ok) {
-        console.log("API lỗi", res.status);
+    if (!token) {
+        alert("Vui lòng đăng nhập");
+        window.location.href = "../login.html";
         return;
     }
 
-    const p = await res.json();
+    try {
 
+        const res = await fetch(API + id, {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
 
-    document.getElementById("productName").innerText = p.name;
+        if (!res.ok) {
+            console.log("API lỗi", res.status);
+            return;
+        }
 
-    document.getElementById("productSku").innerText = p.sku;
+        const p = await res.json();
 
+        /* =========================
+           THÔNG TIN CHUNG
+        ========================== */
 
-    /* HIỂN THỊ HTML MÔ TẢ */
-    document.getElementById("productDesc").innerHTML = p.description;
+        document.getElementById("productName").innerText = p.name || "";
+        document.getElementById("productSku").innerText = p.sku || "";
+        document.getElementById("productDesc").innerHTML = p.description || "";
 
+        /* =========================
+           SPEC
+        ========================== */
 
-    /* SPEC */
+        const spec = p.specification;
+        const specList = document.getElementById("specList");
 
-    const spec = p.specification;
-
-    const specList = document.getElementById("specList");
-
-    specList.innerHTML = `
-<li>CPU: ${spec.cpu}</li>
-<li>RAM: ${spec.ram}</li>
-<li>ROM: ${spec.rom}</li>
-<li>GPU: ${spec.gpu}</li>
-<li>Camera: ${spec.camera}</li>
-<li>Battery: ${spec.battery}</li>
-<li>Screen: ${spec.screen}</li>
+        if (spec) {
+            specList.innerHTML = `
+<li>CPU: ${spec.cpu || ""}</li>
+<li>RAM: ${spec.ram || ""}</li>
+<li>ROM: ${spec.rom || ""}</li>
+<li>GPU: ${spec.gpu || ""}</li>
+<li>Camera: ${spec.camera || ""}</li>
+<li>Battery: ${spec.battery || ""}</li>
+<li>Screen: ${spec.screen || ""}</li>
 `;
+        } else {
+            specList.innerHTML = "<li>Không có thông tin cấu hình</li>";
+        }
 
+        /* =========================
+           VARIANTS
+        ========================== */
 
-    /* VARIANTS */
+        const table = document.getElementById("variantTable");
+        table.innerHTML = "";
 
-    const table = document.getElementById("variantTable");
+        p.variants?.forEach(v => {
 
-    table.innerHTML = "";
+            const img = v.images?.[0]?.imageUrl || "";
 
-    p.variants.forEach(v => {
+            // ✅ FIX IMAGE FULL LOGIC
+            let imgUrl = "";
 
-        const img = v.images?.[0]?.imageUrl || "";
+            if (img.startsWith("http")) {
+                imgUrl = img;
+            } else if (img.startsWith("/")) {
+                imgUrl = "http://localhost:8081" + img;
+            } else if (img) {
+                imgUrl = "http://localhost:8081/uploads/" + img;
+            } else {
+                imgUrl = "https://via.placeholder.com/60?text=No+Image";
+            }
 
-        const sale = v.salePrice ? `
+            const sale = v.salePrice ? `
 <div class="sale-price">
-Giảm còn: ${v.salePrice}
+    Giảm còn: ${formatPrice(v.salePrice)}
 </div>
-
 <div class="sale-time">
-${v.saleStart?.slice(0, 10)} → ${v.saleEnd?.slice(0, 10)}
+    ${v.saleStart?.slice(0, 10)} → ${v.saleEnd?.slice(0, 10)}
 </div>
 ` : `<div class="no-sale">Không giảm</div>`;
 
-        table.innerHTML += `
-
+            table.innerHTML += `
 <tr>
-
-<td>${v.color}</td>
+<td>${v.color || ""}</td>
 
 <td class="price">
-
-<div class="old-price">
-Giá gốc: ${v.price}
-</div>
-
-${sale}
-
+    <div class="old-price">
+        Giá gốc: ${formatPrice(v.price)}
+    </div>
+    ${sale}
 </td>
 
-<td>${v.stock}</td>
+<td>${v.stock || 0}</td>
 
 <td>
-<img src="http://localhost:8081${img}" class="variant-img">
+    <img src="${imgUrl}" class="variant-img">
 </td>
-
 </tr>
-
 `;
+        });
 
-    });
+    } catch (err) {
+        console.error("Lỗi:", err);
+    }
+}
 
+/* =========================
+   FORMAT GIÁ TIỀN
+========================= */
+function formatPrice(price) {
+    if (!price) return "0₫";
+    return price.toLocaleString("vi-VN") + "₫";
 }
 
 loadProduct();
+
+/* =========================
+   TOGGLE MÔ TẢ
+========================= */
 
 const btn = document.getElementById("toggleDesc");
 const wrapper = document.querySelector(".desc-wrapper");
 
 btn.addEventListener("click", () => {
 
-wrapper.classList.toggle("open");
+    wrapper.classList.toggle("open");
 
-if(wrapper.classList.contains("open")){
-btn.innerText="Thu gọn";
-}else{
-btn.innerText="Xem thêm";
-}
+    if (wrapper.classList.contains("open")) {
+        btn.innerText = "Thu gọn";
+    } else {
+        btn.innerText = "Xem thêm";
+    }
 
 });

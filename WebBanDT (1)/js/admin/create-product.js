@@ -1,94 +1,90 @@
+const API = "http://localhost:8081/api/admin/products";
+const CATEGORY_API = "http://localhost:8081/api/categories";
 
-        const API = "http://localhost:8081/api/admin/products";
-        const CATEGORY_API = "http://localhost:8081/api/categories";
+let variantIndex = 0;
+let editor;
 
-        let variantIndex = 0;
-        let editor;
+/* ================= TOKEN ================= */
+function getToken(){
+    return sessionStorage.getItem("token");
+}
 
+/* ================= IMAGE URL ================= */
+function buildImageUrl(path){
 
-        /* LOAD CATEGORY */
+    if(!path) return "";
 
-        async function loadCategories() {
+    if(path.startsWith("http")) return path;
 
-            const res = await fetch(CATEGORY_API);
-            const data = await res.json();
+    if(path.startsWith("/")) return "http://localhost:8081" + path;
 
-            const select = document.getElementById("categoryId");
+    return "http://localhost:8081/uploads/" + path;
+}
 
-            select.innerHTML = `<option value="">-- Chọn danh mục --</option>`;
+/* ================= LOAD CATEGORY ================= */
 
-            data.forEach(c => {
+async function loadCategories() {
 
-                // chỉ hiển thị category con
-                if (c.parent) {
+    const res = await fetch(CATEGORY_API);
+    const data = await res.json();
 
-                    select.innerHTML += `
-        <option value="${c.id}">
-            ${c.parent.name} > ${c.name}
-        </option>
-        `;
+    const select = document.getElementById("categoryId");
 
-                }
+    select.innerHTML = `<option value="">-- Chọn danh mục --</option>`;
 
-            });
-
+    data.forEach(c => {
+        if (c.parent) {
+            select.innerHTML += `
+<option value="${c.id}">
+${c.parent.name} > ${c.name}
+</option>`;
         }
+    });
+}
 
-        loadCategories();
+loadCategories();
 
+/* ================= CKEDITOR ================= */
 
-        /* CKEDITOR */
+ClassicEditor
+.create(document.querySelector("#description"))
+.then(e => {
+    editor = e;
+})
+.catch(console.error);
 
-        ClassicEditor
-            .create(document.querySelector("#description"))
-            .then(e => {
-                editor = e;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+/* ================= UPLOAD IMAGE ================= */
 
+async function uploadImage(file) {
 
-        /* UPLOAD IMAGE */
+    const token = getToken();
 
-        async function uploadImage(file) {
+    const formData = new FormData();
+    formData.append("file", file);
 
-            const formData = new FormData();
-            formData.append("file", file);
+    const res = await fetch("http://localhost:8081/api/file/upload", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        body: formData
+    });
 
-            const token = localStorage.getItem("token");
+    const path = await res.text();
 
-            const res = await fetch("http://localhost:8081/api/file/upload", {
+    // ✅ CHỈ TRẢ VỀ PATH
+    return path;
+}uildImageUrl(path);
 
-                method: "POST",
+/* ================= ADD VARIANT ================= */
 
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
+function addVariant() {
 
-                body: formData
+    const container = document.getElementById("variantContainer");
 
-            });
+    variantIndex++;
 
-            return await res.text();
-
-        }
-
-
-        /* ADD VARIANT */
-
-        function addVariant() {
-
-            const container = document.getElementById("variantContainer");
-
-            document.querySelectorAll(".variant-body").forEach(v => {
-                v.style.display = "none";
-            });
-
-            variantIndex++;
-
-            const html = `
-
+    const html = `
 <div class="variant-card">
 
 <div class="variant-header" onclick="toggleVariant(${variantIndex})">
@@ -105,137 +101,136 @@ Biến thể ${variantIndex}
 <input placeholder="Tồn kho" id="stock${variantIndex}">
 <input type="file" id="image${variantIndex}">
 
-</div>
+<!-- preview ảnh -->
+<img id="preview${variantIndex}" width="60" style="margin-top:5px;display:none">
 
 </div>
 
+</div>
 `;
 
-            container.insertAdjacentHTML("beforeend", html);
+    container.insertAdjacentHTML("beforeend", html);
 
+    // preview ảnh khi chọn
+    document.getElementById("image"+variantIndex).addEventListener("change", e=>{
+        const file = e.target.files[0];
+        if(file){
+            const preview = document.getElementById("preview"+variantIndex);
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        }
+    });
+}
+
+/* ================= TOGGLE ================= */
+
+function toggleVariant(index){
+    const body = document.getElementById("variantBody"+index);
+    body.style.display = body.style.display === "none" ? "block" : "none";
+}
+
+/* ================= GET VARIANTS ================= */
+
+async function getVariants() {
+
+    let variants = [];
+
+    for (let i = 1; i <= variantIndex; i++) {
+
+        const color = document.getElementById("color" + i)?.value;
+        if (!color) continue;
+
+        const file = document.getElementById("image" + i)?.files[0];
+
+        let imageUrl = "";
+
+        if (file) {
+            imageUrl = await uploadImage(file); // ✅ đã convert URL
         }
 
+        variants.push({
 
-        /* TOGGLE VARIANT */
+            color: color,
 
-        function toggleVariant(index) {
+            price: Number(document.getElementById("price"+i).value) || 0,
 
-            const body = document.getElementById("variantBody" + index);
+            salePrice: Number(document.getElementById("salePrice"+i).value) || null,
 
-            if (body.style.display === "none") {
-                body.style.display = "block";
-            } else {
-                body.style.display = "none";
-            }
+            saleStart: document.getElementById("saleStart"+i).value || null,
 
-        }
+            saleEnd: document.getElementById("saleEnd"+i).value || null,
 
+            stock: Number(document.getElementById("stock"+i).value) || 0,
 
-        /* GET VARIANTS */
+            images: [
+                { imageUrl: imageUrl }
+            ]
 
-        async function getVariants() {
+        });
+    }
 
-            let variants = [];
+    return variants;
+}
 
-            for (let i = 1; i <= variantIndex; i++) {
+/* ================= CREATE PRODUCT ================= */
 
-                const color = document.getElementById("color" + i)?.value;
-                if (!color) continue;
+async function createProduct() {
 
-                const file = document.getElementById("image" + i)?.files[0];
+    const token = getToken();
 
-                let imageUrl = "";
+    if (!token) {
+        alert("Chưa đăng nhập");
+        window.location.href = "../login.html";
+        return;
+    }
 
-                if (file) {
-                    imageUrl = await uploadImage(file);
-                }
+    const name = document.getElementById("name").value;
+    const sku = document.getElementById("sku").value;
 
-                variants.push({
+    if (!name || !sku) {
+        alert("Nhập đầy đủ tên và SKU");
+        return;
+    }
 
-                    color: color,
+    const variants = await getVariants();
 
-                    price: Number(document.getElementById("price" + i).value),
+    if (variants.length === 0) {
+        alert("Phải có ít nhất 1 biến thể");
+        return;
+    }
 
-                    salePrice: Number(document.getElementById("salePrice" + i).value),
+    const data = {
 
-                    saleStart: document.getElementById("saleStart" + i).value,
+        name,
+        sku,
+        os: document.getElementById("os").value,
 
-                    saleEnd: document.getElementById("saleEnd" + i).value,
+        description: editor.getData(),
 
-                    stock: Number(document.getElementById("stock" + i).value),
+        categoryId: Number(document.getElementById("categoryId").value) || null,
 
-                    images: [
-                        {
-                            imageUrl: imageUrl
-                        }
-                    ]
+        specification: {
+            cpu: document.getElementById("cpu").value,
+            ram: document.getElementById("ram").value,
+            rom: document.getElementById("rom").value,
+            gpu: document.getElementById("gpu").value,
+            camera: document.getElementById("camera").value,
+            battery: document.getElementById("battery").value,
+            screen: document.getElementById("screen").value
+        },
 
-                });
+        variants
+    };
 
-            }
+    await fetch(API, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(data)
+    });
 
-            return variants;
-
-        }
-
-
-        /* CREATE PRODUCT */
-
-        async function createProduct() {
-
-            const token = localStorage.getItem("token");
-
-            const variants = await getVariants();
-
-            const data = {
-
-                name: document.getElementById("name").value,
-
-                sku: document.getElementById("sku").value,
-
-                os: document.getElementById("os").value,
-
-                description: editor.getData(),
-
-                categoryId: Number(document.getElementById("categoryId").value),
-
-                specification: {
-
-                    cpu: document.getElementById("cpu").value,
-
-                    ram: document.getElementById("ram").value,
-
-                    rom: document.getElementById("rom").value,
-
-                    gpu: document.getElementById("gpu").value,
-
-                    camera: document.getElementById("camera").value,
-
-                    battery: document.getElementById("battery").value,
-
-                    screen: document.getElementById("screen").value
-
-                },
-
-                variants: variants
-
-            };
-
-            await fetch(API, {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-
-                body: JSON.stringify(data)
-
-            });
-
-            alert("Thêm sản phẩm thành công");
-
-            window.location.href = "product.html";
-
-        }
+    alert("Thêm sản phẩm thành công");
+    window.location.href = "product.html";
+}

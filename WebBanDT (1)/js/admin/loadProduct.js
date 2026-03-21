@@ -2,7 +2,12 @@ const API = "http://localhost:8081/api/admin/products";
 const API_VARIANT = "http://localhost:8081/api/admin/variants";
 const API_CATEGORY = "http://localhost:8081/api/categories";
 
-const token = localStorage.getItem("token");
+/* ================= TOKEN ================= */
+function getToken(){
+    return sessionStorage.getItem("token"); // ✅ FIX
+}
+
+const token = getToken();
 
 if (!token) {
     window.location.href = "../login.html";
@@ -13,9 +18,19 @@ const headers = {
     "Content-Type": "application/json"
 };
 
-// =============================
-// LOAD PRODUCTS
-// =============================
+/* ================= IMAGE URL ================= */
+function buildImageUrl(img){
+
+    if(!img) return "https://via.placeholder.com/50";
+
+    if(img.startsWith("http")) return img;
+
+    if(img.startsWith("/")) return "http://localhost:8081" + img;
+
+    return "http://localhost:8081/uploads/" + img;
+}
+
+/* ================= LOAD PRODUCTS ================= */
 
 async function loadProducts() {
 
@@ -27,12 +42,13 @@ async function loadProducts() {
 
     products.forEach(p => {
 
-        // lấy ảnh từ variant đầu tiên
-        const image = p.variants?.[0]?.images?.[0]?.imageUrl
-            ? "http://localhost:8081/" + p.variants[0].images[0].imageUrl
-            : "";
+        const image = buildImageUrl(
+            p.variants?.[0]?.images?.[0]?.imageUrl
+        );
 
-        const stock = p.variants?.reduce((s,v)=>s+v.stock,0) || 0;
+        const stock = p.variants?.reduce(
+            (s,v)=>s+(v.stock || 0), 0
+        ) || 0;
 
         table.innerHTML += `
         <tr>
@@ -45,7 +61,7 @@ async function loadProducts() {
 
             <td>${p.name}</td>
 
-            <td>${p.variants?.[0]?.price?.toLocaleString() || 0}đ</td>
+            <td>${(p.variants?.[0]?.price || 0).toLocaleString()}đ</td>
 
             <td>${stock}</td>
 
@@ -70,9 +86,7 @@ async function loadProducts() {
     });
 }
 
-// =============================
-// DELETE PRODUCT
-// =============================
+/* ================= DELETE PRODUCT ================= */
 
 async function deleteProduct(id) {
 
@@ -86,9 +100,7 @@ async function deleteProduct(id) {
     loadProducts();
 }
 
-// =============================
-// LOAD CATEGORY
-// =============================
+/* ================= LOAD CATEGORY ================= */
 
 async function loadCategories() {
 
@@ -113,9 +125,7 @@ async function loadCategories() {
     });
 }
 
-// =============================
-// CREATE PRODUCT
-// =============================
+/* ================= CREATE PRODUCT ================= */
 
 async function createProduct() {
 
@@ -130,6 +140,11 @@ async function createProduct() {
 
     const file = document.getElementById("imageFile").files[0];
 
+    if (!name || !color) {
+        alert("Nhập đầy đủ thông tin");
+        return;
+    }
+
     // 1️⃣ tạo product
     const resProduct = await fetch(API, {
         method: "POST",
@@ -137,12 +152,11 @@ async function createProduct() {
         body: JSON.stringify({
             name,
             description,
-            categoryId
+            categoryId: Number(categoryId) || null
         })
     });
 
     const product = await resProduct.json();
-
 
     // 2️⃣ tạo variant
     const resVariant = await fetch(`${API}/${product.id}/variants`,{
@@ -151,13 +165,12 @@ async function createProduct() {
         body: JSON.stringify({
             color,
             storage,
-            price,
-            stock
+            price: Number(price) || 0,
+            stock: Number(stock) || 0
         })
     });
 
     const variant = await resVariant.json();
-
 
     // 3️⃣ upload image
     if(file){
@@ -180,9 +193,7 @@ async function createProduct() {
     loadProducts();
 }
 
-// =============================
-// ADD VARIANT (popup)
-// =============================
+/* ================= ADD VARIANT ================= */
 
 async function addVariant(){
 
@@ -193,21 +204,19 @@ async function addVariant(){
 
     const file = document.getElementById("variantImage").files[0];
 
-    // tạo variant
     const res = await fetch(`${API}/${currentProductId}/variants`,{
         method:"POST",
         headers,
         body: JSON.stringify({
             color,
             storage,
-            price,
-            stock
+            price: Number(price) || 0,
+            stock: Number(stock) || 0
         })
     });
 
     const variant = await res.json();
 
-    // upload image
     if(file){
 
         const formData = new FormData();
@@ -227,9 +236,7 @@ async function addVariant(){
     closeVariant();
 }
 
-// =============================
-// FORM
-// =============================
+/* ================= FORM ================= */
 
 function clearForm(){
 
@@ -244,9 +251,7 @@ function clearForm(){
     document.getElementById("imageFile").value="";
 }
 
-// =============================
-// POPUP
-// =============================
+/* ================= POPUP ================= */
 
 let currentProductId = null;
 
@@ -261,9 +266,7 @@ function closeVariant(){
     document.getElementById("variantModal").style.display = "none";
 }
 
-// =============================
-// LOAD PAGE
-// =============================
+/* ================= LOAD PAGE ================= */
 
 loadProducts();
 loadCategories();

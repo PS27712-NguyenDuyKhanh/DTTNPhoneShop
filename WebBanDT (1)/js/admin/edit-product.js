@@ -7,6 +7,10 @@ const productId = params.get("id");
 let variantIndex = 0;
 let editor;
 
+/* ================= TOKEN DÙNG CHUNG ================= */
+function getToken() {
+    return sessionStorage.getItem("token"); // ✅ thống nhất
+}
 
 /* ================= CKEDITOR ================= */
 
@@ -21,7 +25,6 @@ ClassicEditor
 
 })
 .catch(error => console.error(error));
-
 
 /* ================= LOAD CATEGORY ================= */
 
@@ -40,32 +43,31 @@ async function loadCategories(){
 
 }
 
-
 /* ================= UPLOAD IMAGE ================= */
 
 async function uploadImage(file){
 
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     const formData = new FormData();
     formData.append("file", file);
 
     const res = await fetch("http://localhost:8081/api/file/upload",{
-
         method:"POST",
-
         headers:{
             Authorization:"Bearer " + token
         },
-
         body:formData
-
     });
 
-    return await res.text();
+    const path = await res.text();
 
+    // ✅ FIX IMAGE URL CHUẨN
+    if (path.startsWith("http")) return path;
+    if (path.startsWith("/")) return "http://localhost:8081" + path;
+
+    return "http://localhost:8081/uploads/" + path;
 }
-
 
 /* ================= ADD VARIANT ================= */
 
@@ -122,19 +124,14 @@ function addVariant(data = null){
 
 }
 
-
 /* ================= FORMAT DATE ================= */
 
 function formatDate(date){
-
     if(!date) return "";
-
     return date.substring(0,16);
-
 }
 
-
-/* ================= TOGGLE VARIANT ================= */
+/* ================= TOGGLE ================= */
 
 function toggleVariant(index){
 
@@ -147,7 +144,6 @@ function toggleVariant(index){
 
 }
 
-
 /* ================= GET VARIANTS ================= */
 
 async function getVariants(){
@@ -157,11 +153,9 @@ async function getVariants(){
     for(let i=1;i<=variantIndex;i++){
 
         const body = document.getElementById("variantBody"+i);
-
         if(!body) continue;
 
         const color = document.getElementById("color"+i)?.value;
-
         if(!color) continue;
 
         const variantId = body.getAttribute("data-id");
@@ -172,9 +166,7 @@ async function getVariants(){
         let imageUrl = oldImage;
 
         if(file){
-
             imageUrl = await uploadImage(file);
-
         }
 
         variants.push({
@@ -183,15 +175,15 @@ async function getVariants(){
 
             color: color,
 
-            price: Number(document.getElementById("price"+i).value),
+            price: Number(document.getElementById("price"+i).value) || 0,
 
-            salePrice: Number(document.getElementById("salePrice"+i).value),
+            salePrice: Number(document.getElementById("salePrice"+i).value) || null,
 
-            saleStart: document.getElementById("saleStart"+i).value,
+            saleStart: document.getElementById("saleStart"+i).value || null,
 
-            saleEnd: document.getElementById("saleEnd"+i).value,
+            saleEnd: document.getElementById("saleEnd"+i).value || null,
 
-            stock: Number(document.getElementById("stock"+i).value),
+            stock: Number(document.getElementById("stock"+i).value) || 0,
 
             images:[
                 { imageUrl:imageUrl }
@@ -202,93 +194,79 @@ async function getVariants(){
     }
 
     return variants;
-
 }
-
 
 /* ================= LOAD PRODUCT ================= */
 
 async function loadProduct(){
 
-    const token = localStorage.getItem("token");
+    const token = getToken();
+
+    if (!token) {
+        alert("Chưa đăng nhập");
+        window.location.href = "../login.html";
+        return;
+    }
 
     const res = await fetch(API + productId,{
-
         headers:{
             Authorization:"Bearer "+token
         }
-
     });
 
     const p = await res.json();
 
-
-    document.getElementById("name").value = p.name;
-    document.getElementById("sku").value = p.sku;
-    document.getElementById("os").value = p.os;
+    document.getElementById("name").value = p.name || "";
+    document.getElementById("sku").value = p.sku || "";
+    document.getElementById("os").value = p.os || "";
 
     editor.setData(p.description || "");
 
-    document.getElementById("categoryId").value = p.categoryId;
+    document.getElementById("categoryId").value = p.categoryId || "";
 
-
-    /* specification */
-
+    /* SPEC */
     if(p.specification){
 
         const s = p.specification;
 
-        document.getElementById("cpu").value = s.cpu;
-        document.getElementById("ram").value = s.ram;
-        document.getElementById("rom").value = s.rom;
-        document.getElementById("gpu").value = s.gpu;
-        document.getElementById("camera").value = s.camera;
-        document.getElementById("battery").value = s.battery;
-        document.getElementById("screen").value = s.screen;
-
+        document.getElementById("cpu").value = s.cpu || "";
+        document.getElementById("ram").value = s.ram || "";
+        document.getElementById("rom").value = s.rom || "";
+        document.getElementById("gpu").value = s.gpu || "";
+        document.getElementById("camera").value = s.camera || "";
+        document.getElementById("battery").value = s.battery || "";
+        document.getElementById("screen").value = s.screen || "";
     }
 
-
     /* RESET VARIANT */
-
     variantIndex = 0;
-
     document.getElementById("variantContainer").innerHTML = "";
 
-
-    /* LOAD VARIANTS */
-
-    const variants = p.variants || [];
-
-    variants.forEach(v=>{
+    (p.variants || []).forEach(v=>{
         addVariant(v);
     });
 
 }
 
-
 /* ================= UPDATE PRODUCT ================= */
 
 async function updateProduct(){
 
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     const variants = await getVariants();
 
     const data = {
 
         name:document.getElementById("name").value,
-
         sku:document.getElementById("sku").value,
-
         os:document.getElementById("os").value,
 
         description:editor.getData(),
 
-        categoryId:Number(document.getElementById("categoryId").value),
+        categoryId:Number(document.getElementById("categoryId").value) || null,
 
         specification:{
-
             cpu:document.getElementById("cpu").value,
             ram:document.getElementById("ram").value,
             rom:document.getElementById("rom").value,
@@ -296,28 +274,20 @@ async function updateProduct(){
             camera:document.getElementById("camera").value,
             battery:document.getElementById("battery").value,
             screen:document.getElementById("screen").value
-
         },
 
         variants:variants
-
     };
 
     await fetch(API + productId,{
-
         method:"PUT",
-
         headers:{
             "Content-Type":"application/json",
             Authorization:"Bearer "+token
         },
-
         body:JSON.stringify(data)
-
     });
 
     alert("Cập nhật sản phẩm thành công");
-
     window.location.href = "product.html";
-
 }
