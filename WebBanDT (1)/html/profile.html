@@ -13,15 +13,18 @@
 
 <body>
 
-    <!-- HEADER (giống home.html) -->
     <header class="header">
 
         <div class="header-container">
 
-            <a href="home.html" class="logo">
+            <!-- LOGO -->
+
+            <div class="logo">
                 <img src="../img/logo.jpg">
                 <span>PhoneShop</span>
-            </a>
+            </div>
+
+            <!-- DANH MỤC -->
 
             <!-- DANH MỤC -->
 
@@ -37,16 +40,25 @@
 
             </div>
 
+            <!-- SEARCH -->
+
             <div class="search-box">
+
                 <input type="text" placeholder="Tìm điện thoại...">
+
                 <button>
                     <i class="fa fa-search"></i>
                 </button>
+
             </div>
+
+            <!-- CART -->
 
             <a href="cart.html" class="cart">
                 <i class="fa-solid fa-cart-shopping"></i>
             </a>
+
+            <!-- LOGIN -->
 
             <a href="login.html" class="btn-header" id="btnLogin">
                 <i class="fa-solid fa-user"></i> Đăng nhập
@@ -54,7 +66,7 @@
 
             <span class="user-name" id="userName" style="display:none;"></span>
 
-            <button id="btnLogout" class="btn-logout">
+            <button id="btnLogout" class="btn-logout" style="display:none;">
                 <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
             </button>
 

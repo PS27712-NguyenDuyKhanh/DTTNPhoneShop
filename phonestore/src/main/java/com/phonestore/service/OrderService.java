@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,24 +41,13 @@ public class OrderService {
             throw new RuntimeException("Cart is empty");
         }
 
-        // 🔥 CREATE ORDER
         String code = request.getVoucherCode();
 
         double total = 0;
 
-// tính total
-        for (CartItem ci : cartItems) {
-            total += ci.getVariant().getPrice() * ci.getQuantity();
-        }
-
-// apply voucher
-        double discount = 0;
-
-        if(code != null && !code.isEmpty()){
-            discount = voucherService.apply(email, code, total);
-        }
-
-// create order
+        // =========================
+        // 🔥 CREATE ORDER TRƯỚC
+        // =========================
         Order order = new Order();
         order.setUser(user);
         order.setFullName(request.getFullName());
@@ -66,36 +55,70 @@ public class OrderService {
         order.setAddress(request.getAddress());
         order.setNote(request.getNote());
 
-// 🔥 THÊM 2 DÒNG
-        order.setVoucherCode(code);
-        order.setDiscount(discount);
-
-        order.setTotal(total - discount);
-
         order = orderRepository.save(order);
 
-// 🔥 CREATE ITEMS
+        // =========================
+        // 🔥 CREATE ITEMS + TÍNH TOTAL (SALE LOGIC)
+        // =========================
         for (CartItem ci : cartItems) {
 
-            OrderItem oi = new OrderItem();
+            Variant v = ci.getVariant();
 
+            double price;
+
+            // 🔥 LOGIC SALE CHUẨN
+            if (v.getSalePrice() != null &&
+                    v.getSaleStart() != null &&
+                    v.getSaleEnd() != null &&
+                    LocalDateTime.now().isAfter(v.getSaleStart()) &&
+                    LocalDateTime.now().isBefore(v.getSaleEnd())) {
+
+                price = v.getSalePrice();
+            } else {
+                price = v.getPrice();
+            }
+
+            OrderItem oi = new OrderItem();
             oi.setOrder(order);
-            oi.setVariant(ci.getVariant());
+            oi.setVariant(v);
             oi.setQuantity(ci.getQuantity());
-            oi.setPrice(ci.getVariant().getPrice());
+            oi.setPrice(price); // 🔥 CHỐT GIÁ
+
+            total += price * ci.getQuantity();
 
             orderItemRepository.save(oi);
         }
 
-// 🔥 MARK USED
-        if(code != null && !code.isEmpty()){
+        // =========================
+        // 🔥 APPLY VOUCHER
+        // =========================
+        double discount = 0;
+
+        if (code != null && !code.isEmpty()) {
+            discount = voucherService.apply(email, code, total);
+        }
+
+        // =========================
+        // 🔥 SET ORDER FINAL
+        // =========================
+        order.setVoucherCode(code);
+        order.setDiscount(discount);
+        order.setTotal(total - discount);
+
+        orderRepository.save(order);
+
+        // =========================
+        // 🔥 MARK VOUCHER USED
+        // =========================
+        if (code != null && !code.isEmpty()) {
             voucherService.markUsed(email, code);
         }
 
-// 🔥 CLEAR CART
+        // =========================
+        // 🔥 CLEAR CART
+        // =========================
         cartItemRepository.deleteAll(cartItems);
 
-        // 🔥 RETURN DTO (FIX)
         return OrderMapper.toDTO(order);
     }
 
@@ -130,13 +153,12 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         order.setStatus(status);
-
         orderRepository.save(order);
     }
 
     // =========================
-// USER - GET MY ORDERS
-// =========================
+    // USER - GET MY ORDERS
+    // =========================
     public List<OrderDTO> getMyOrders(String email) {
 
         User user = userRepository.findByEmail(email)
@@ -149,8 +171,8 @@ public class OrderService {
     }
 
     // =========================
-// USER - GET ORDER DETAIL
-// =========================
+    // USER - GET ORDER DETAIL
+    // =========================
     public OrderDTO getMyOrderDetail(String email, Long id) {
 
         User user = userRepository.findByEmail(email)
@@ -159,7 +181,6 @@ public class OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // 🔥 CHẶN xem đơn người khác
         if (!order.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Không có quyền");
         }
