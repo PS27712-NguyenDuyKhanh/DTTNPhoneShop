@@ -1,60 +1,30 @@
 const API_BASE = "http://localhost:8081/api/voucher";
 
 // ==========================
-// APPLY VOUCHER
+// LOCAL STORAGE (SAVE CLAIM)
 // ==========================
-async function applyVoucher() {
+function getClaimedList() {
+    return JSON.parse(localStorage.getItem("claimedVoucher")) || [];
+}
 
-    const code = document.getElementById("voucherCode").value;
-    const total = 20000000;
+function saveClaimed(id) {
+    let claimed = getClaimedList();
 
-    const token = sessionStorage.getItem("token");
-
-    try {
-
-        const res = await fetch(`${API_BASE}/apply?code=${code}&total=${total}`, {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
-
-        if (!res.ok) {
-
-            if (res.status === 401) {
-                alert("Vui lòng đăng nhập");
-                window.location.href = "login.html";
-                return;
-            }
-
-            if (res.status === 403) {
-                alert("Bạn không có quyền dùng voucher");
-                return;
-            }
-
-            const text = await res.text();
-            throw new Error(text);
-        }
-
-        const data = await res.json();
-
-        document.getElementById("discountResult").innerHTML = `
-            <p style="color:green;">
-                Giảm: ${data.discount.toLocaleString()} đ
-            </p>
-        `;
-
-    } catch (err) {
-        console.error("Apply error:", err);
-        alert("Mã không hợp lệ");
+    if (!claimed.includes(id)) {
+        claimed.push(id);
+        localStorage.setItem("claimedVoucher", JSON.stringify(claimed));
     }
+}
+
+function isClaimed(id) {
+    return getClaimedList().includes(id);
 }
 
 
 // ==========================
 // CLAIM VOUCHER
 // ==========================
-async function claimVoucher(id) {
+async function claimVoucher(id, btn) {
 
     const token = sessionStorage.getItem("token");
 
@@ -79,11 +49,17 @@ async function claimVoucher(id) {
                 return;
             }
 
-            const text = await res.text();
-            throw new Error(text);
+            throw new Error("Claim failed");
         }
 
-        alert("Nhận mã thành công");
+        // ✅ LƯU TRẠNG THÁI
+        saveClaimed(id);
+
+        // ✅ UPDATE UI
+        btn.innerText = "Đã nhận";
+        btn.disabled = true;
+        btn.style.background = "#555";
+        btn.style.cursor = "not-allowed";
 
     } catch (err) {
         console.error("Claim error:", err);
@@ -107,7 +83,6 @@ async function loadVoucher() {
             }
         });
 
-        // 🚨 FIX 403 + JSON CRASH
         if (!res.ok) {
 
             if (res.status === 401) {
@@ -117,12 +92,11 @@ async function loadVoucher() {
             }
 
             if (res.status === 403) {
-                alert("❌ Backend đang chặn USER (cần sửa SecurityConfig)");
+                alert("Backend đang chặn USER");
                 return;
             }
 
-            const text = await res.text();
-            throw new Error(text);
+            throw new Error("API lỗi");
         }
 
         const vouchers = await res.json();
@@ -137,21 +111,40 @@ async function loadVoucher() {
 
         vouchers.forEach(v => {
 
+            const value = v.value || v.discount || 0;
+
             const text = v.type === "PERCENT"
-                ? `Giảm ${v.value}%`
-                : `Giảm ${v.value.toLocaleString()}đ`;
+                ? `Giảm ${value}%`
+                : `Giảm ${value.toLocaleString()}đ`;
+
+            const claimed = isClaimed(v.id);
 
             list.innerHTML += `
                 <div class="voucher-card">
+
                     <div class="voucher-info">
-                        <div class="voucher-code" onclick="selectVoucher('${v.code}')">
-                            ${v.code}
+
+                        <div class="voucher-icon">
+                            <i class="fa-solid fa-ticket"></i>
                         </div>
-                        <div>${text}</div>
+
+                        <div>
+                            <div class="voucher-code">${v.code}</div>
+                            <div>${text}</div>
+                        </div>
+
                     </div>
-                    <button class="claim-btn" onclick="claimVoucher(${v.id})">
-                        Nhận
-                    </button>
+
+                    ${
+                        claimed
+                        ? `<button class="claim-btn" disabled style="background:#555; cursor:not-allowed;">
+                                Đã nhận
+                           </button>`
+                        : `<button class="claim-btn" onclick="claimVoucher(${v.id}, this)">
+                                Nhận
+                           </button>`
+                    }
+
                 </div>
             `;
         });
@@ -164,26 +157,4 @@ async function loadVoucher() {
 
 
 // ==========================
-// CLICK AUTO FILL
-// ==========================
-function selectVoucher(code) {
-    document.getElementById("voucherCode").value = code;
-}
-
-
-// ==========================
 document.addEventListener("DOMContentLoaded", loadVoucher);
-
-list.innerHTML += `
-    <div class="voucher-card">
-        <div class="voucher-info">
-            <div class="voucher-code" onclick="selectVoucher('${v.code}')">
-                ${v.code}
-            </div>
-            <div>${text}</div>
-        </div>
-        <button class="claim-btn" onclick="claimVoucher(${v.id})">
-            Nhận
-        </button>
-    </div>
-`;
