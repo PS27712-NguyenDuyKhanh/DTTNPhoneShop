@@ -22,8 +22,11 @@ public class OrderMapper {
         // giá đã chốt
         dto.setPrice(item.getPrice());
 
-        dto.setProductName(item.getVariant().getProduct().getName());
+        dto.setProductName(
+                item.getVariant().getProduct().getName()
+        );
 
+        // ảnh
         if (item.getVariant().getImages() != null &&
                 !item.getVariant().getImages().isEmpty()) {
 
@@ -32,13 +35,14 @@ public class OrderMapper {
             );
         }
 
+        // tổng item
         dto.setTotal(item.getPrice() * item.getQuantity());
 
         return dto;
     }
 
     // =========================
-    // Order → DTO (CHUẨN)
+    // Order → DTO
     // =========================
     public static OrderDTO toDTO(Order order) {
 
@@ -51,23 +55,34 @@ public class OrderMapper {
         dto.setNote(order.getNote());
         dto.setTotal(order.getTotal());
 
-        // 🔥 NEW (ADMIN)
+        // 🔥 VOUCHER
+        dto.setVoucherCode(order.getVoucherCode());
+        dto.setDiscount(order.getDiscount());
+
+        // 🔥 ADMIN INFO
         dto.setStatus(order.getStatus());
         dto.setCreatedAt(order.getCreatedAt());
 
+        // username
         if (order.getUser() != null) {
             dto.setUsername(order.getUser().getUsername());
         }
 
-        // items
-        if (order.getItems() != null) {
-            List<OrderItemDTO> itemDTOs = order.getItems()
+        // =========================
+        // ITEMS (NULL SAFE)
+        // =========================
+        List<OrderItemDTO> itemDTOs;
+
+        if (order.getItems() == null) {
+            itemDTOs = List.of();
+        } else {
+            itemDTOs = order.getItems()
                     .stream()
                     .map(OrderMapper::toDTO)
                     .toList();
-
-            dto.setItems(itemDTOs);
         }
+
+        dto.setItems(itemDTOs);
 
         return dto;
     }

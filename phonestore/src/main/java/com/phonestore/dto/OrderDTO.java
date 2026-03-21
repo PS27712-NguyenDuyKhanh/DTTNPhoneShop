@@ -31,4 +31,8 @@ public class OrderDTO {
     private String username;
 
     private List<OrderItemDTO> items;
+
+    private String voucherCode;
+
+    private Double discount;
 }

@@ -54,4 +54,8 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.status = OrderStatus.PENDING;
     }
+
+    private String voucherCode;
+
+    private Double discount;
 }
