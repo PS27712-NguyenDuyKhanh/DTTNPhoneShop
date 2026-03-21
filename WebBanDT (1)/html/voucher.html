@@ -13,34 +13,174 @@
 
 <body>
 
-<header class="header">
-    <div class="header-container">
-        <a href="home.html" class="logo">
-            <img src="../img/logo.jpg">
-            <span>PhoneShop</span>
-        </a>
-    </div>
-</header>
+    <header class="header">
 
-<div class="voucher-wrapper">
+        <div class="header-container">
 
-    <h2>Mã giảm giá</h2>
+            <div class="logo">
+                <img src="../img/logo.jpg">
+                <span>PhoneShop</span>
+            </div>
 
-    <!-- APPLY -->
-    <div class="voucher-input-box">
-        <input type="text" id="voucherCode" placeholder="Nhập mã giảm giá">
-        <button onclick="applyVoucher()">Áp dụng</button>
-    </div>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    Danh mục <i class="fa fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content" id="categoryMenu"></div>
+            </div>
 
-    <!-- RESULT -->
-    <div id="discountResult"></div>
+            <div class="search-box">
+                <input type="text" placeholder="Tìm điện thoại...">
+                <button><i class="fa fa-search"></i></button>
+            </div>
 
-    <!-- LIST -->
-    <div id="voucherList"></div>
+            <a href="cart.html" class="cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
 
-</div>
+            <a href="login.html" class="btn-header" id="btnLogin">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
 
-<script src="../js/voucher.js"></script>
+            <span class="user-name" id="userName" style="display:none;"></span>
+
+            <button id="btnLogout" class="btn-logout" style="display:none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- PROFILE PAGE -->
+    <section class="profile-page">
+
+        <div class="profile-header">
+
+            <div class="user-info">
+
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <div class="profile-user-name" id="username"></div>
+                    <div class="member-text">Thành viên PhoneShop</div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-container">
+
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+
+                <a href="profile.html">
+                    <i class="fa-solid fa-house"></i>
+                    Tổng quan
+                </a>
+
+                <a>
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    Lịch sử mua hàng
+                </a>
+
+                <a>
+                    <i class="fa-solid fa-shield"></i>
+                    Tra cứu bảo hành
+                </a>
+
+                <a class="active">
+                    <i class="fa-solid fa-tag"></i>
+                    Mã giảm giá
+                </a>
+
+                <a>
+                    <i class="fa-solid fa-location-dot"></i>
+                    Sổ địa chỉ
+                </a>
+
+                <a href="profile-info.html">
+                    <i class="fa-solid fa-user"></i>
+                    Thông tin tài khoản
+                </a>
+
+                <a>
+                    <i class="fa-solid fa-headset"></i>
+                    Hỗ trợ
+                </a>
+
+            </div>
+
+
+            <!-- 🔥 CONTENT (CHỈ THAY ĐOẠN NÀY) -->
+            <div class="content">
+
+                <div class="card">
+
+                    <h3>Mã giảm giá</h3>
+
+                    <!-- INPUT -->
+                    <div class="voucher-header">
+                        <h4>Danh sách voucher</h4>
+                    </div>
+
+                    <div id="voucherList" class="voucher-list"></div>
+
+                    <!-- RESULT -->
+                    <div id="discountResult"></div>
+
+                    <!-- LIST -->
+                    <div id="voucherList"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-grid">
+
+            <div>
+                <h4>PhoneShop</h4>
+                <p>Điện thoại chính hãng 100%</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <a href="#">Trang chủ</a>
+                <a href="#">Sản phẩm</a>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📞 0123 456 789</p>
+                <p>📍 TP. Hồ Chí Minh</p>
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <script src="../js/home.js"></script>
+    <script src="../js/profile.js"></script>
+    <script src="../js/auth-check.js"></script>
+    <script src="../js/loadCategoriesUser.js"></script>
+
+    <!-- 🔥 voucher -->
+    <script src="../js/voucher.js"></script>
 
 </body>
+
 </html>

@@ -173,3 +173,17 @@ function selectVoucher(code) {
 
 // ==========================
 document.addEventListener("DOMContentLoaded", loadVoucher);
+
+list.innerHTML += `
+    <div class="voucher-card">
+        <div class="voucher-info">
+            <div class="voucher-code" onclick="selectVoucher('${v.code}')">
+                ${v.code}
+            </div>
+            <div>${text}</div>
+        </div>
+        <button class="claim-btn" onclick="claimVoucher(${v.id})">
+            Nhận
+        </button>
+    </div>
+`;

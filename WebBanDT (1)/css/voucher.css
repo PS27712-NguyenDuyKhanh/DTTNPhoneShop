@@ -1,58 +1,152 @@
-.voucher-wrapper{
-    max-width:800px;
-    margin:100px auto;
-    padding:20px;
+/* ===== CONTAINER ===== */
+.container {
+    padding: 30px;
+    color: white;
 }
 
-.voucher-input-box{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
+/* ===== PROFILE HEADER ===== */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: linear-gradient(135deg, #1f2937, #111827);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
-.voucher-input-box input{
-    flex:1;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid #ddd;
+.avatar {
+    width: 60px;
+    height: 60px;
+    background: #ff3b30;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
 }
 
-.voucher-input-box button{
-    padding:12px 20px;
-    background:#1976d2;
-    color:white;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
+/* ===== CONTENT ===== */
+.profile-content {
+    background: linear-gradient(135deg, #1f2937, #111827);
+    padding: 20px;
+    border-radius: 12px;
 }
 
-.voucher-card{
-    background:#fff;
-    border-radius:12px;
-    padding:15px;
-    margin-bottom:15px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+/* ===== INPUT ===== */
+.voucher-input-box {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
 }
 
-.voucher-info{
-    font-size:14px;
+.voucher-input-box input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
 }
 
-.voucher-code{
-    font-weight:bold;
-    color:#e53935;
+.voucher-input-box button {
+    background: #ff3b30;
+    color: white;
+    border: none;
+    padding: 0 20px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.claim-btn{
-    background:#ff5722;
-    color:#fff;
-    border:none;
-    padding:8px 15px;
-    border-radius:8px;
-    cursor:pointer;
+/* ===== LIST ===== */
+.voucher-list {
+    margin-top: 20px;
+}
+
+/* ===== CARD ===== */
+.voucher-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d3748; /* 🔥 FIX: dark giống profile */
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    transition: 0.2s;
+}
+
+.voucher-card:hover {
+    transform: translateY(-2px);
+}
+
+/* ===== TEXT ===== */
+.voucher-code {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff3b30;
+    cursor: pointer;
+}
+
+.voucher-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* ===== BUTTON ===== */
+.claim-btn {
+    background: #ff3b30;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.voucher-header {
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.voucher-list {
+    margin-top: 10px;
+}
+
+/* CARD */
+.voucher-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2d3748;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    color: white;
+    transition: 0.2s;
+}
+
+.voucher-card:hover {
+    transform: translateY(-2px);
+}
+
+/* LEFT */
+.voucher-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.voucher-code {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff3b30;
+}
+
+/* BUTTON */
+.claim-btn {
+    background: #ff3b30;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
 }
