@@ -1,29 +1,108 @@
-const API_CART = "http://localhost:8081/api/cart";
+
+function getToken(){
+    return sessionStorage.getItem("token");
+}
+
+function buildImageUrl(img){
+    if(!img) return "";
+
+    if(img.startsWith("http")) return img;
+
+    if(img.startsWith("/")) return "http://localhost:8081" + img;
+
+    return "http://localhost:8081/uploads/" + img;
+}
+
+function formatPrice(price) {
+    return price.toLocaleString("vi-VN") + "₫";
+}
+
+// ==========================
+// RENDER CART
+// ==========================
+
+function renderCart(data) {
+
+    const cartList = document.getElementById("cartList");
+    const tong = document.getElementById("tong");
+
+    cartList.innerHTML = "";
+
+    if (!data || !data.items || data.items.length === 0) {
+        cartList.innerHTML = "<p>Giỏ hàng của bạn đang trống</p>";
+        tong.innerText = "0₫";
+        return;
+    }
+
+    let total = 0;
+
+    data.items.forEach(item => {
+
+        const name = item.productName;
+        const price = item.price;
+        const quantity = item.quantity;
+        const img = buildImageUrl(item.image);
+
+        total += price * quantity;
+
+        cartList.insertAdjacentHTML("beforeend", `
+<div class="cart-item">
+
+    <img src="${img}">
+
+    <div class="cart-info">
+        <h4>${name}</h4>
+
+        <div class="row">
+            <span class="remove" onclick="removeItem(${item.id})">× Xóa</span>
+        </div>
+    </div>
+
+    <div class="cart-right">
+        <div class="price">
+            <span class="new">${formatPrice(price)}</span>
+        </div>
+
+        <div class="cart-qty">
+            <button onclick="updateQty(${item.id}, ${Math.max(1, quantity - 1)})">-</button>
+            <input value="${quantity}">
+            <button onclick="updateQty(${item.id}, ${quantity + 1})">+</button>
+        </div>
+    </div>
+
+</div>
+        `);
+    });
+
+    tong.innerText = formatPrice(total);
+}
 
 // ==========================
 // LOAD CART
 // ==========================
 
-async function loadCart(){
+async function loadCart() {
 
     const token = getToken();
 
-    if(!token){
+    if (!token) {
         alert("Vui lòng đăng nhập");
         window.location.href = "login.html";
         return;
     }
 
-    try{
+    try {
 
-        const res = await fetch(API_CART, {
-            headers: getAuthHeader()
+        const res = await fetch("http://localhost:8081/api/cart", {
+            headers: {
+                "Authorization": "Bearer " + token
+            }
         });
 
-        if(!res.ok){
+        if (!res.ok) {
 
-            if(res.status === 401){
-                alert("Hết phiên đăng nhập");
+            if (res.status === 401 || res.status === 403) {
+                alert("Hết phiên đăng nhập!");
                 window.location.href = "login.html";
             }
 
@@ -32,105 +111,58 @@ async function loadCart(){
 
         const data = await res.json();
 
-        console.log("Cart:", data);
-
         renderCart(data);
 
-    }catch(err){
-        console.error("Lỗi:", err);
+    } catch (err) {
+
+        console.error(err);
+        alert("Lỗi server");
+
     }
 }
 
 // ==========================
-// RENDER
+// REMOVE ITEM (FIX)
 // ==========================
 
-function renderCart(data){
+async function removeItem(id) {
 
-    const cartList = document.getElementById("cartList");
-    const tong = document.getElementById("tong");
+    const token = getToken();
 
-    cartList.innerHTML = "";
-
-    if(!data || !data.items || data.items.length === 0){
-        cartList.innerHTML = "<p>Giỏ hàng của bạn đang trống</p>";
-        tong.innerText = "0₫";
-        return;
-    }
-
-    data.items.forEach(item => {
-
-        const name = item.productName;
-        const price = item.price;
-        const quantity = item.quantity;
-        const img = item.image;
-
-        cartList.insertAdjacentHTML("beforeend", `
-        <div class="cart-item">
-
-            <img src="http://localhost:8081${img}">
-
-            <div class="cart-info">
-                <h4>${name}</h4>
-
-                <div class="row">
-                    <span class="remove" onclick="removeItem(${item.id})">× Xóa</span>
-                </div>
-            </div>
-
-            <div class="cart-right">
-                <div class="price">
-                    <span class="new">${formatPrice(price)}</span>
-                </div>
-
-                <div class="cart-qty">
-                    <button onclick="updateQty(${item.id}, ${Math.max(1, quantity-1)})">-</button>
-                    <input value="${quantity}">
-                    <button onclick="updateQty(${item.id}, ${quantity+1})">+</button>
-                </div>
-            </div>
-
-        </div>
-        `);
-
-    });
-
-    tong.innerText = formatPrice(data.totalAmount);
-}
-
-// ==========================
-// DELETE
-// ==========================
-
-async function removeItem(id){
-
-    await fetch(`${API_CART}/remove/${id}`, {
+    await fetch(`http://localhost:8081/api/cart/item/${id}`, {
         method: "DELETE",
-        headers: getAuthHeader()
+        headers: {
+            "Authorization": "Bearer " + token
+        }
     });
 
     loadCart();
 }
 
 // ==========================
-// UPDATE
+// UPDATE QTY (FIX CHUẨN)
 // ==========================
 
-async function updateQty(id, quantity){
+async function updateQty(id, qty) {
 
-    if(quantity < 1) return;
+    const token = getToken();
 
-    await fetch(`${API_CART}/update`, {
+    const res = await fetch(`http://localhost:8081/api/cart/item/${id}?quantity=${qty}`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json",
-            ...getAuthHeader()
-        },
-        body: JSON.stringify({
-            itemId: id,
-            quantity: quantity
-        })
+            "Authorization": "Bearer " + token
+        }
     });
+
+    if (!res.ok) {
+
+        if (res.status === 401 || res.status === 403) {
+            alert("Phiên đăng nhập hết hạn!");
+            window.location.href = "login.html";
+        }
+
+        return;
+    }
 
     loadCart();
 }
