@@ -2,243 +2,155 @@
 <html lang="vi">
 
 <head>
-
     <meta charset="UTF-8">
     <title>Quản lý mã giảm giá</title>
 
     <link rel="stylesheet" href="../css/admin/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            width: 350px;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+
+        .popup input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 6px;
+        }
+    </style>
 </head>
 
 <body>
 
-    <script src="../js/admin/auth-check.js"></script>
+<script>
+    if (!sessionStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
 
-    <div class="container">
+<div class="container">
 
-        <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2 class="logo">PhoneShop</h2>
 
-        <div class="sidebar">
+        <ul>
+            <li><a href="admin.html"><i class="fa fa-chart-line"></i>Dashboard</a></li>
+            <li><a href="acount.html"><i class="fa fa-user"></i>Quản lý tài khoản</a></li>
+            <li><a href="product.html"><i class="fa fa-mobile"></i>Quản lý sản phẩm</a></li>
+            <li><a href="order.html"><i class="fa fa-box"></i>Quản lý đơn hàng</a></li>
+            <li><a href="categories.html"><i class="fa fa-warehouse"></i>Quản lý danh mục</a></li>
 
-            <div class="logo">ADMIN</div>
+            <li class="active">
+                <a href="coupon.html">
+                    <i class="fa fa-ticket"></i>Mã giảm giá
+                </a>
+            </li>
 
-            <ul>
+            <li><a href="review.html"><i class="fa-solid fa-star"></i>Đánh giá</a></li>
+        </ul>
 
-                <li class="active">
-                    <a href="admin.html">
-                        <i class="fa fa-chart-line"></i>
-                        Dashboard
-                    </a>
-                </li>
+        <button class="logout" id="btnLogout">
+            <i class="fa fa-sign-out"></i>Đăng xuất
+        </button>
+    </div>
 
-                <li>
-                    <a href="acount.html">
-                        <i class="fa fa-user"></i>
-                        Quản lý tài khoản
-                    </a>
-                </li>
+    <!-- MAIN -->
+    <div class="main">
 
-                <li>
-                    <a href="product.html">
-                        <i class="fa fa-mobile"></i>
-                        Quản lý sản phẩm
-                    </a>
-                </li>
+        <div class="topbar">
+            <h2>Quản lý mã giảm giá</h2>
 
-                <li>
-                    <a href="order.html">
-                        <i class="fa fa-box"></i>
-                        Quản lý đơn hàng
-                    </a>
-                </li>
-
-                <li>
-                    <a href="categories.html">
-                        <i class="fa fa-warehouse"></i>
-                        Quản lý danh mục
-                    </a>
-                </li>
-
-                <li>
-                    <a href="coupon.html">
-                        <i class="fa fa-ticket"></i>
-                        Mã giảm giá
-                    </a>
-                </li>
-
-                <li>
-                    <a href="review.html">
-                        <i class="fa-solid fa-star"></i>
-                        Đánh giá
-                    </a>
-                </li>
-
-            </ul>
-
-            <button class="logout" id="btnLogout">
-                <i class="fa fa-sign-out"></i>
-                Đăng xuất
-            </button>
-
+            <div class="admin-user">
+                <i class="fa-solid fa-user"></i>
+                <span id="adminName">Admin</span>
+            </div>
         </div>
 
+        <div class="toolbar">
+            <!-- 🔥 FIX -->
+            <button class="add-btn" onclick="showForm()">
+                <i class="fa fa-plus"></i>
+                Thêm voucher
+            </button>
+        </div>
 
-        <!-- MAIN -->
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Giảm</th>
+                        <th>Min</th>
+                        <th>Lượt dùng</th>
+                        <th>Hết hạn</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
 
-        <div class="main">
-
-            <!-- TOPBAR -->
-
-            <div class="topbar">
-
-                <h1 class="page-title">Quản lý mã giảm giá</h1>
-
-                <div class="admin-user">
-                    <i class="fa-solid fa-user"></i>
-                    <span id="adminName">Admin</span>
-                </div>
-
-            </div>
-
-            <!-- TOOLBAR -->
-
-            <div class="toolbar">
-
-                <input type="text" placeholder="Tìm mã...">
-
-                <button class="add-product">
-                    <i class="fa-solid fa-plus"></i>
-                    Tạo mã mới
-                </button>
-
-            </div>
-
-
-            <!-- TABLE -->
-
-            <div class="table-box">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Mã</th>
-                            <th>Giảm</th>
-                            <th>Đơn tối thiểu</th>
-                            <th>Lượt dùng</th>
-                            <th>Ngày hết hạn</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-
-                            <td class="coupon-code">SALE10</td>
-                            <td class="discount">10%</td>
-                            <td>500.000₫</td>
-                            <td>45 / 100</td>
-                            <td>30/04/2026</td>
-
-                            <td class="coupon-active">
-                                Đang hoạt động
-                            </td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="edit">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-
-                                    <button class="delete">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="coupon-code">FREESHIP</td>
-                            <td class="discount">20%</td>
-                            <td>300.000₫</td>
-                            <td>70 / 100</td>
-                            <td>20/04/2026</td>
-
-                            <td class="coupon-active">
-                                Đang hoạt động
-                            </td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="edit">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </button>
-
-                                    <button class="delete">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td class="coupon-code">SUMMER25</td>
-                            <td class="discount">25%</td>
-                            <td>700.000₫</td>
-                            <td>100 / 100</td>
-                            <td>01/04/2026</td>
-
-                            <td class="coupon-expired">
-                                Hết hạn
-                            </td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="delete">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
+                <tbody id="voucherTable"></tbody>
+            </table>
         </div>
 
     </div>
 
+</div>
 
-    
+<!-- ================= POPUP ================= -->
+
+<div id="overlay" onclick="closeForm()"></div>
+
+<div id="voucherForm" class="popup">
+
+    <h3>Thêm voucher</h3>
+
+    <input id="code" placeholder="Mã voucher">
+    <input id="discount" placeholder="Giảm">
+
+    <label>
+        <input type="checkbox" id="percent">
+        Giảm theo %
+    </label>
+
+    <input id="min" placeholder="Đơn tối thiểu">
+    <input id="max" placeholder="Giảm tối đa">
+    <input id="quantity" placeholder="Số lượng">
+
+    <input type="datetime-local" id="start">
+    <input type="datetime-local" id="end">
+
+    <div class="form-buttons">
+        <button onclick="saveVoucher()">Lưu</button>
+        <button onclick="closeForm()">Huỷ</button>
+    </div>
+
+</div>
+
+<!-- JS -->
+<script src="../js/auth-check.js"></script>
+<script src="../js/admin/adminLoadVoucher.js"></script>
+
 </body>
-
 </html>

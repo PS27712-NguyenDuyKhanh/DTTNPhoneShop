@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm voucher</title>
+
+    <link rel="stylesheet" href="../css/admin/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<script>
+    if (!sessionStorage.getItem("token")) {
+        window.location.href = "../login.html";
+    }
+</script>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2 class="logo">PhoneShop</h2>
+
+        <ul>
+            <li><a href="admin.html">Dashboard</a></li>
+            <li><a href="product.html">Sản phẩm</a></li>
+            <li class="active"><a href="coupon.html">Voucher</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="topbar">
+            <h2>Thêm voucher</h2>
+        </div>
+
+        <div class="form-box">
+
+            <input id="code" placeholder="Mã voucher">
+            <input id="discount" placeholder="Giảm">
+
+            <label>
+                <input type="checkbox" id="percent">
+                Giảm theo %
+            </label>
+
+            <input id="min" placeholder="Đơn tối thiểu">
+            <input id="max" placeholder="Giảm tối đa">
+            <input id="quantity" placeholder="Số lượng">
+
+            <label>Ngày bắt đầu</label>
+            <input type="datetime-local" id="start">
+
+            <label>Ngày kết thúc</label>
+            <input type="datetime-local" id="end">
+
+            <div class="form-buttons">
+                <button onclick="createVoucher()">Lưu</button>
+                <button onclick="goBack()">Huỷ</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 JS đúng -->
+<script src="../js/admin/adminLoadVoucher.js"></script>
+
+</body>
+</html>
