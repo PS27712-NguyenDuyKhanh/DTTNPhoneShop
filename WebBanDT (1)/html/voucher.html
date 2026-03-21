@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mã giảm giá</title>
+
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/voucher.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-container">
+        <a href="home.html" class="logo">
+            <img src="../img/logo.jpg">
+            <span>PhoneShop</span>
+        </a>
+    </div>
+</header>
+
+<div class="voucher-wrapper">
+
+    <h2>Mã giảm giá</h2>
+
+    <!-- APPLY -->
+    <div class="voucher-input-box">
+        <input type="text" id="voucherCode" placeholder="Nhập mã giảm giá">
+        <button onclick="applyVoucher()">Áp dụng</button>
+    </div>
+
+    <!-- RESULT -->
+    <div id="discountResult"></div>
+
+    <!-- LIST -->
+    <div id="voucherList"></div>
+
+</div>
+
+<script src="../js/voucher.js"></script>
+
+</body>
+</html>

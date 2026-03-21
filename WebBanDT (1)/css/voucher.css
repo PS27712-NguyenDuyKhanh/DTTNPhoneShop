@@ -1,0 +1,58 @@
+.voucher-wrapper{
+    max-width:800px;
+    margin:100px auto;
+    padding:20px;
+}
+
+.voucher-input-box{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.voucher-input-box input{
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+.voucher-input-box button{
+    padding:12px 20px;
+    background:#1976d2;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.voucher-card{
+    background:#fff;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+.voucher-info{
+    font-size:14px;
+}
+
+.voucher-code{
+    font-weight:bold;
+    color:#e53935;
+}
+
+.claim-btn{
+    background:#ff5722;
+    color:#fff;
+    border:none;
+    padding:8px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
