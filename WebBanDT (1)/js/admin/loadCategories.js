@@ -126,7 +126,7 @@ async function saveCategory() {
 
     const body = {
         name: name,
-        parentId: parentId || null
+parentId: parentId || null
     };
 
     try {

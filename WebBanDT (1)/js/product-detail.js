@@ -1,9 +1,60 @@
 const API = "http://localhost:8081/api/products/";
 
-/* =========================
-LOAD PRODUCT DETAIL
-========================= */
+let selectedVariantId = null;
 
+// ==========================
+// CHECK SALE
+// ==========================
+function isSaleActive(start, end) {
+    if (!start || !end) return false;
+    const now = new Date();
+    return now >= new Date(start) && now <= new Date(end);
+}
+
+// ==========================
+// RENDER PRICE (QUAN TRỌNG)
+// ==========================
+function formatDate(dateStr) {
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString("vi-VN");
+}
+
+function renderPrice(v) {
+
+    if (
+        v.salePrice &&
+        v.salePrice < v.price &&
+        isSaleActive(v.saleStart, v.saleEnd)
+    ) {
+
+        const discount = Math.round(100 - (v.salePrice / v.price) * 100);
+
+        return `
+            <div class="price-box">
+
+                <div class="price-main">
+                    <span class="price-new">${v.salePrice.toLocaleString()} đ</span>
+                    <span class="price-old">${v.price.toLocaleString()} đ</span>
+                    <span class="price-percent">-${discount}%</span>
+                </div>
+
+                <div class="sale-time">
+                    ${formatDate(v.saleStart)} - ${formatDate(v.saleEnd)}
+                </div>
+
+            </div>
+        `;
+    }
+
+    return `
+        <div class="price-box">
+            <span class="price-new">${v.price.toLocaleString()} đ</span>
+        </div>
+    `;
+}
+// ==========================
+// LOAD PRODUCT DETAIL
+// ==========================
 async function loadProduct() {
 
     const params = new URLSearchParams(window.location.search);
@@ -16,8 +67,6 @@ async function loadProduct() {
 
     document.getElementById("name").innerText = p.name || "";
 
-    /* HIỂN THỊ HTML DESCRIPTION */
-
     document.getElementById("description").innerHTML = p.description || "";
     document.getElementById("fullDescription").innerHTML = p.description || "";
 
@@ -28,31 +77,27 @@ async function loadProduct() {
 
     const variants = p.variants || [];
 
-    /* =========================
-    SPECIFICATIONS
-    ========================= */
-
+    // ==========================
+    // SPECIFICATIONS
+    // ==========================
     if (p.specification) {
 
         const s = p.specification;
 
         specs.innerHTML = `
-
-<li><span>CPU</span><span>${s.cpu || "-"}</span></li>
-<li><span>RAM</span><span>${s.ram || "-"}</span></li>
-<li><span>ROM</span><span>${s.rom || "-"}</span></li>
-<li><span>GPU</span><span>${s.gpu || "-"}</span></li>
-<li><span>Camera</span><span>${s.camera || "-"}</span></li>
-<li><span>Pin</span><span>${s.battery || "-"}</span></li>
-<li><span>Màn hình</span><span>${s.screen || "-"}</span></li>
-`;
-
+        <li><span>CPU</span><span>${s.cpu || "-"}</span></li>
+        <li><span>RAM</span><span>${s.ram || "-"}</span></li>
+        <li><span>ROM</span><span>${s.rom || "-"}</span></li>
+        <li><span>GPU</span><span>${s.gpu || "-"}</span></li>
+        <li><span>Camera</span><span>${s.camera || "-"}</span></li>
+        <li><span>Pin</span><span>${s.battery || "-"}</span></li>
+        <li><span>Màn hình</span><span>${s.screen || "-"}</span></li>
+        `;
     }
 
-    /* =========================
-    COLORS
-    ========================= */
-
+    // ==========================
+    // COLORS
+    // ==========================
     colors.innerHTML = "";
 
     variants.forEach((v, index) => {
@@ -85,39 +130,37 @@ async function loadProduct() {
 
         btn.onclick = () => {
 
-            selectedVariantId = v.id; // 🔥 THÊM DÒNG NÀY
+            selectedVariantId = v.id;
 
             const img = v.images?.[0]?.imageUrl || "";
             image.src = "http://localhost:8081" + img;
 
-            const finalPrice = v.salePrice || v.price || 0;
-            price.innerText = finalPrice.toLocaleString() + " đ";
-
+            // 👉 render giá
+            price.innerHTML = renderPrice(v);
         };
 
         colors.appendChild(btn);
 
-        /* LOAD FIRST VARIANT */
-
+        // ==========================
+        // LOAD FIRST VARIANT
+        // ==========================
         if (index === 0) {
 
-            selectedVariantId = v.id; // 🔥 THÊM
+            selectedVariantId = v.id;
 
             const img = v.images?.[0]?.imageUrl || "";
             image.src = "http://localhost:8081" + img;
 
-            const finalPrice = v.salePrice || v.price || 0;
-            price.innerText = finalPrice.toLocaleString() + " đ";
+            price.innerHTML = renderPrice(v);
         }
 
     });
 
 }
 
-/* =========================
-TAB SWITCH
-========================= */
-
+// ==========================
+// TAB SWITCH
+// ==========================
 function openTab(tabId, btn) {
 
     document.querySelectorAll(".tab-content")
@@ -129,16 +172,11 @@ function openTab(tabId, btn) {
     document.getElementById(tabId).classList.add("active");
 
     btn.classList.add("active");
-
 }
 
-/* =========================
-LOAD PAGE
-========================= */
-
-window.onload = loadProduct;
-let selectedVariantId = null; // 🔥 phải có
-
+// ==========================
+// ADD TO CART
+// ==========================
 async function addToCart() {
 
     const token = sessionStorage.getItem("token");
@@ -170,3 +208,8 @@ async function addToCart() {
         alert("Lỗi thêm giỏ hàng");
     }
 }
+
+// ==========================
+// INIT
+// ==========================
+window.onload = loadProduct;

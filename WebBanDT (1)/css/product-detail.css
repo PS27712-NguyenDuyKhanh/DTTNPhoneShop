@@ -509,3 +509,47 @@
 #description {
     display: none;
 }
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* ❗ không căn giữa */
+    gap: 6px;
+}
+
+/* dòng giá chính */
+.price-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* giá mới */
+.price-new {
+    color: #e53935;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+/* giá cũ */
+.price-old {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 16px;
+}
+
+/* % giảm */
+.price-percent {
+    background: #ff3b30;
+    color: #fff;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* thời gian sale */
+.sale-time {
+    font-size: 13px;
+    color: #666;
+}

@@ -1,15 +1,12 @@
-const user = localStorage.getItem("name")
+const user = sessionStorage.getItem("name");
 
 if (!user) {
-    window.location.href = "login.html"
+    window.location.href = "login.html";
 }
 
-document.getElementById("username").innerText = user
+document.getElementById("username").innerText = user;
 
 function logout(){
-
-    localStorage.clear()
-
-    window.location.href = "home.html"
-
+    localStorage.clear();
+    window.location.href = "home.html";
 }

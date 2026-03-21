@@ -2,7 +2,7 @@ const USER_API = "http://localhost:8081/api/user";
 
 async function loadProfile() {
 
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!token) {
         window.location.href = "login.html";
