@@ -1,10 +1,12 @@
 package com.phonestore.controller;
 
+import com.phonestore.dto.VoucherDTO;
 import com.phonestore.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/voucher")
@@ -41,4 +43,13 @@ public class VoucherController {
 
         return voucherService.apply(principal.getName(), code, total);
     }
+
+    // =========================
+// GET ALL VOUCHER (USER)
+// =========================
+    @GetMapping
+    public List<VoucherDTO> getAllAvailable(){
+        return voucherService.getAllAvailable();
+    }
+
 }

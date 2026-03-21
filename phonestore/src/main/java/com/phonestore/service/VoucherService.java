@@ -166,4 +166,32 @@ public class VoucherService {
 
         return voucherRepository.save(v);
     }
+    public List<VoucherDTO> getAllAvailable(){
+
+        return voucherRepository.findAll()
+                .stream()
+                .filter(v -> v.isActive()
+                        && LocalDateTime.now().isAfter(v.getStartDate())
+                        && LocalDateTime.now().isBefore(v.getEndDate())
+                        && v.getUsed() < v.getQuantity()
+                )
+                .map(v -> {
+
+                    VoucherDTO dto = new VoucherDTO();
+
+                    dto.setId(v.getId());
+                    dto.setCode(v.getCode());
+                    dto.setDiscount(v.getDiscount());
+                    dto.setPercent(v.isPercent());
+                    dto.setMinOrderValue(v.getMinOrderValue());
+                    dto.setMaxDiscount(v.getMaxDiscount());
+                    dto.setQuantity(v.getQuantity());
+                    dto.setStartDate(v.getStartDate());
+                    dto.setEndDate(v.getEndDate());
+                    dto.setActive(v.isActive());
+
+                    return dto;
+                })
+                .toList();
+    }
 }
