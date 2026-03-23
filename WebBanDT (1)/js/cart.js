@@ -250,8 +250,13 @@ async function checkout() {
 
         if (!res.ok) throw new Error();
 
-        alert("Đặt hàng thành công 🎉");
-        loadCart();
+        const data = await res.json(); // 🔥 QUAN TRỌNG
+
+        // ❌ BỎ alert
+        // alert("Đặt hàng thành công 🎉");
+
+        // 🚀 CHUYỂN TRANG
+        window.location.href = `payment.html?orderId=${data.orderId}`;
 
     } catch {
         alert("Lỗi đặt hàng");
