@@ -17,7 +17,7 @@ public class CartItem {
     private Long id;
 
     private int quantity;
-    private double price;
+    private Double price;
 
     // many CartItem - 1 Cart
     @ManyToOne
