@@ -25,28 +25,13 @@ public class CartMapper {
         dto.setVariantId(v.getId());
         dto.setProductName(v.getProduct().getName());
 
-        // =========================
-        // 🔥 LOGIC GIÁ (SALE)
-        // =========================
-        double price;
-
-        if (v.getSalePrice() != null &&
-                v.getSaleStart() != null &&
-                v.getSaleEnd() != null &&
-                LocalDateTime.now().isAfter(v.getSaleStart()) &&
-                LocalDateTime.now().isBefore(v.getSaleEnd())) {
-
-            price = v.getSalePrice();
-        } else {
-            price = v.getPrice();
-        }
+        // 🔥 FIX QUAN TRỌNG NHẤT
+        double price = item.getPrice();
 
         dto.setPrice(price);
         dto.setTotal(price * item.getQuantity());
 
-        // =========================
-        // 🔥 IMAGE
-        // =========================
+        // IMAGE
         if (v.getImages() != null && !v.getImages().isEmpty()) {
             dto.setImage(v.getImages().get(0).getImageUrl());
         }
