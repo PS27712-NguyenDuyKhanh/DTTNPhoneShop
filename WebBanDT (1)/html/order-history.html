@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử mua hàng</title>
+
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/order-history.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-container">
+
+        <a href="home.html" class="logo">
+            <img src="../img/logo.jpg">
+            <span>PhoneShop</span>
+        </a>
+
+        <div class="dropdown">
+            <button class="dropbtn">
+                Danh mục <i class="fa fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-content" id="categoryMenu"></div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Tìm điện thoại...">
+            <button><i class="fa fa-search"></i></button>
+        </div>
+
+        <a href="cart.html" class="cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+
+        <a href="login.html" class="btn-header" id="btnLogin">
+            <i class="fa-solid fa-user"></i> Đăng nhập
+        </a>
+
+        <span class="user-name" id="userName" style="display:none;"></span>
+
+        <button id="btnLogout" class="btn-logout" style="display:none;">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+        </button>
+
+    </div>
+</header>
+
+<!-- PROFILE PAGE -->
+<section class="profile-page">
+
+    <!-- HEADER -->
+    <div class="profile-header">
+        <div class="user-info">
+
+            <div class="avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div>
+                <div class="profile-user-name" id="username"></div>
+                <div class="member-text">Thành viên PhoneShop</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="profile-container">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+
+            <a href="profile.html">
+                <i class="fa-solid fa-house"></i>
+                Tổng quan
+            </a>
+
+            <a class="active">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Lịch sử mua hàng
+            </a>
+
+            <a>
+                <i class="fa-solid fa-shield"></i>
+                Tra cứu bảo hành
+            </a>
+
+            <a href="voucher.html">
+                <i class="fa-solid fa-tag"></i>
+                Mã giảm giá
+            </a>
+
+            <a>
+                <i class="fa-solid fa-location-dot"></i>
+                Sổ địa chỉ
+            </a>
+
+            <a href="profile-info.html">
+                <i class="fa-solid fa-user"></i>
+                Thông tin tài khoản
+            </a>
+
+            <a>
+                <i class="fa-solid fa-headset"></i>
+                Hỗ trợ
+            </a>
+
+        </div>
+
+        <!-- 🔥 CONTENT (ĐÃ THAY) -->
+        <div class="content">
+
+            <div class="card">
+
+                <h3>Lịch sử mua hàng</h3>
+
+                <div id="orderList"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="orderModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h3>Chi tiết đơn hàng</h3>
+
+        <div id="orderDetailContent"></div>
+    </div>
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div>
+            <h4>PhoneShop</h4>
+            <p>Điện thoại chính hãng 100%</p>
+        </div>
+
+        <div>
+            <h4>Liên kết</h4>
+            <a href="#">Trang chủ</a>
+            <a href="#">Sản phẩm</a>
+        </div>
+
+        <div>
+            <h4>Liên hệ</h4>
+            <p>📞 0123 456 789</p>
+            <p>📍 TP. Hồ Chí Minh</p>
+        </div>
+    </div>
+</footer>
+
+<!-- JS -->
+<script src="../js/home.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/auth-check.js"></script>
+<script src="../js/loadCategoriesUser.js"></script>
+<script src="../js/order-history.js"></script>
+
+</body>
+</html>
