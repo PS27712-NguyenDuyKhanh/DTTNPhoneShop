@@ -4,232 +4,120 @@
 <head>
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng</title>
+
     <link rel="stylesheet" href="../css/admin/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* chỉ thêm nhẹ, không phá layout */
+        .status-pending { color: orange; }
+        .status-shipping { color: #3b82f6; }
+        .status-success { color: #22c55e; }
+        .status-cancel { color: red; }
+
+        .order-detail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+        }
+
+        .order-detail-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 420px;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+        }
+
+        .order-detail-box button {
+            margin-top: 10px;
+            padding: 6px 12px;
+            border: none;
+            background: red;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
 
-    <script src="../js/admin/auth-check.js"></script>
+<script src="../js/auth-check.js"></script>
 
-    <div class="container">
+<div class="container">
 
-        <!-- SIDEBAR -->
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
-        <div class="sidebar">
+        <div class="logo">ADMIN</div>
 
-            <div class="logo">ADMIN</div>
+        <ul>
+            <li><a href="admin.html"><i class="fa fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="acount.html"><i class="fa fa-user"></i> Quản lý tài khoản</a></li>
+            <li><a href="product.html"><i class="fa fa-mobile"></i> Quản lý sản phẩm</a></li>
+            <li class="active"><a href="order.html"><i class="fa fa-box"></i> Quản lý đơn hàng</a></li>
+            <li><a href="categories.html"><i class="fa fa-warehouse"></i> Quản lý danh mục</a></li>
+            <li><a href="coupon.html"><i class="fa fa-ticket"></i> Mã giảm giá</a></li>
+            <li><a href="review.html"><i class="fa fa-star"></i> Đánh giá</a></li>
+        </ul>
 
-            <ul>
+        <button class="logout" id="btnLogout">
+            <i class="fa fa-sign-out"></i> Đăng xuất
+        </button>
+    </div>
 
-                <li class="active">
-                    <a href="admin.html">
-                        <i class="fa fa-chart-line"></i>
-                        Dashboard
-                    </a>
-                </li>
+    <!-- MAIN -->
+    <div class="main">
 
-                <li>
-                    <a href="acount.html">
-                        <i class="fa fa-user"></i>
-                        Quản lý tài khoản
-                    </a>
-                </li>
-
-                <li>
-                    <a href="product.html">
-                        <i class="fa fa-mobile"></i>
-                        Quản lý sản phẩm
-                    </a>
-                </li>
-
-                <li>
-                    <a href="order.html">
-                        <i class="fa fa-box"></i>
-                        Quản lý đơn hàng
-                    </a>
-                </li>
-
-                <li>
-                    <a href="categories.html">
-                        <i class="fa fa-warehouse"></i>
-                        Quản lý danh mục
-                    </a>
-                </li>
-
-                <li>
-                    <a href="coupon.html">
-                        <i class="fa fa-ticket"></i>
-                        Mã giảm giá
-                    </a>
-                </li>
-
-                <li>
-                    <a href="review.html">
-                        <i class="fa-solid fa-star"></i>
-                        Đánh giá
-                    </a>
-                </li>
-
-            </ul>
-
-            <button class="logout" id="btnLogout">
-                <i class="fa fa-sign-out"></i>
-                Đăng xuất
-            </button>
-
+        <div class="topbar">
+            <h2 class="page-title">Quản lý đơn hàng</h2>
         </div>
 
-        <!-- MAIN -->
-
-        <div class="main">
-
-            <!-- TOPBAR -->
-
-            <div class="topbar">
-
-                <h2 class="page-title">Quản lý đơn hàng</h2>
-
-                <div class="admin-user">
-                    <i class="fa-solid fa-user"></i>
-                    <span id="adminName">Admin</span>
-                </div>
-
-            </div>
-
-
-            <!-- TOOLBAR -->
-
-            <div class="toolbar">
-
-                <input type="text" placeholder="Tìm theo mã đơn...">
-
-                <select class="order-filter">
-                    <option>Tất cả trạng thái</option>
-                    <option>Chờ xác nhận</option>
-                    <option>Đang giao</option>
-                    <option>Hoàn thành</option>
-                    <option>Đã hủy</option>
-                </select>
-
-            </div>
-
-            <!-- TABLE -->
-
-            <div class="table-box">
-
-                <table>
-
-                    <thead>
-
-                        <tr>
-                            <th>Mã đơn</th>
-                            <th>Khách hàng</th>
-                            <th>Sản phẩm</th>
-                            <th>Tổng tiền</th>
-                            <th>Ngày đặt</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>#DH1021</td>
-
-                            <td>Nguyễn Văn A</td>
-
-                            <td>2 sản phẩm</td>
-
-                            <td class="price">1.200.000₫</td>
-
-                            <td>20/03/2026</td>
-
-                            <td class="status-pending">Chờ xác nhận</td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="view"><i class="fa-solid fa-eye"></i></button>
-                                    <button class="confirm"><i class="fa-solid fa-check"></i></button>
-                                    <button class="cancel"><i class="fa-solid fa-xmark"></i></button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>#DH1020</td>
-
-                            <td>Trần Minh B</td>
-
-                            <td>1 sản phẩm</td>
-
-                            <td class="price">650.000₫</td>
-
-                            <td>19/03/2026</td>
-
-                            <td class="status-shipping">Đang giao</td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="view"><i class="fa-solid fa-eye"></i></button>
-                                    <button class="complete"><i class="fa-solid fa-truck"></i></button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>#DH1019</td>
-
-                            <td>Lê Văn C</td>
-
-                            <td>3 sản phẩm</td>
-
-                            <td class="price">2.300.000₫</td>
-
-                            <td>18/03/2026</td>
-
-                            <td class="status-success">Hoàn thành</td>
-
-                            <td>
-
-                                <div class="action-buttons">
-
-                                    <button class="view"><i class="fa-solid fa-eye"></i></button>
-
-                                </div>
-
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
+        <!-- TABLE -->
+        <div class="table-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Sản phẩm</th>
+                        <th>Tổng tiền</th>
+                        <th>Ngày đặt</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody id="orderTable"></tbody>
+            </table>
         </div>
 
     </div>
+</div>
 
-    
+<!-- ✅ POPUP (ĐẶT NGOÀI TABLE) -->
+<div class="order-detail" id="orderDetail">
+    <div class="order-detail-box">
+        <h3>Chi tiết đơn hàng</h3>
+        <div id="orderDetailContent"></div>
+        <button onclick="closeDetail()">Đóng</button>
+    </div>
+</div>
+
+<script src="../js/admin/adminLoadOrder.js"></script>
+
 </body>
-
 </html>
