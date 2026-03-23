@@ -4,7 +4,6 @@ let editingId = null;
 // ==========================
 // AUTH
 // ==========================
-
 function getToken(){
     return sessionStorage.getItem("token");
 }
@@ -19,12 +18,10 @@ function getAuthHeader(){
 // ==========================
 // FORM
 // ==========================
-
 function showForm(){
     document.getElementById("voucherForm").style.display = "block";
     document.getElementById("overlay").style.display = "block";
 
-    // đổi title
     document.querySelector("#voucherForm h3").innerText =
         editingId ? "Sửa voucher" : "Thêm voucher";
 }
@@ -41,52 +38,130 @@ function resetForm(){
         if(i.type === "checkbox") i.checked = false;
         else i.value = "";
     });
+    clearAllErrors();
+}
+
+// ==========================
+// ERROR UI
+// ==========================
+function setError(id, message){
+    const input = document.getElementById(id);
+    const err = document.getElementById("err-" + id);
+
+    if(err){
+        err.innerText = message;
+    }
+    input.classList.add("input-error");
+}
+
+function clearError(id){
+    const input = document.getElementById(id);
+    const err = document.getElementById("err-" + id);
+
+    if(err){
+        err.innerText = "";
+    }
+    input.classList.remove("input-error");
+}
+
+function clearAllErrors(){
+    ["code","discount","min","max","quantity","start","end"]
+        .forEach(clearError);
 }
 
 // ==========================
 // CREATE + UPDATE
 // ==========================
-
 async function saveVoucher(){
 
+    clearAllErrors();
+
+    const code = document.getElementById("code").value.trim();
+    const discount = Number(document.getElementById("discount").value);
+    const percent = document.getElementById("percent").checked;
+    const min = Number(document.getElementById("min").value);
+    const max = Number(document.getElementById("max").value);
+    const quantity = Number(document.getElementById("quantity").value);
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+
+    let isValid = true;
+
+    // ===== VALIDATE =====
+    if(!code){
+        setError("code", "Không được để trống");
+        isValid = false;
+    }
+
+    if(isNaN(discount) || discount <= 0){
+        setError("discount", "Giảm phải > 0");
+        isValid = false;
+    }
+
+    if(percent && discount > 100){
+        setError("discount", "Không vượt quá 100%");
+        isValid = false;
+    }
+
+    if(isNaN(min) || min < 0){
+        setError("min", "Không hợp lệ");
+        isValid = false;
+    }
+
+    if(percent && (!max || max <= 0)){
+        setError("max", "Nhập giảm tối đa");
+        isValid = false;
+    }
+
+    if(isNaN(quantity) || quantity <= 0){
+        setError("quantity", "Phải > 0");
+        isValid = false;
+    }
+
+    if(!start){
+        setError("start", "Chọn ngày bắt đầu");
+        isValid = false;
+    }
+
+    if(!end){
+        setError("end", "Chọn ngày kết thúc");
+        isValid = false;
+    }
+
+    if(start && end){
+        if(new Date(start) >= new Date(end)){
+            setError("end", "Phải sau ngày bắt đầu");
+            isValid = false;
+        }
+    }
+
+    if(!isValid) return;
+
+    // ===== DATA =====
     const data = {
-        code: document.getElementById("code").value.trim(),
-        discount: Number(document.getElementById("discount").value),
-        percent: document.getElementById("percent").checked,
-        minOrderValue: Number(document.getElementById("min").value),
-        maxDiscount: Number(document.getElementById("max").value),
-        quantity: Number(document.getElementById("quantity").value),
-        startDate: document.getElementById("start").value,
-        endDate: document.getElementById("end").value,
+        code,
+        discount,
+        percent,
+        minOrderValue: min,
+        maxDiscount: percent ? max : 0,
+        quantity,
+        startDate: start,
+        endDate: end,
         active: true
     };
-
-    // VALIDATE
-    if(!data.code) return alert("Nhập mã voucher!");
-    if(data.discount <= 0) return alert("Giảm phải > 0");
-    if(data.quantity <= 0) return alert("Số lượng phải > 0");
-
-    if(!data.startDate || !data.endDate){
-        return alert("Chọn ngày!");
-    }
-
-    if(new Date(data.startDate) >= new Date(data.endDate)){
-        return alert("Ngày kết thúc phải sau ngày bắt đầu");
-    }
 
     try {
 
         let url = API;
         let method = "POST";
 
-        // 👉 UPDATE
         if(editingId){
             url = API + "/" + editingId;
             method = "PUT";
         }
 
         const res = await fetch(url, {
-            method: method,
+            method,
             headers: getAuthHeader(),
             body: JSON.stringify(data)
         });
@@ -112,7 +187,6 @@ async function saveVoucher(){
 // ==========================
 // LOAD
 // ==========================
-
 async function loadAdminVouchers() {
 
     try {
@@ -156,8 +230,6 @@ async function loadAdminVouchers() {
                     <td>${formatDate(v.endDate)}</td>
                     <td>${status}</td>
                     <td>
-
-                        <!-- 🔥 FIX -->
                         <button onclick='editVoucher(${JSON.stringify(v)})'>
                             <i class="fa fa-pen"></i>
                         </button>
@@ -165,7 +237,6 @@ async function loadAdminVouchers() {
                         <button onclick="deleteVoucher(${v.id})">
                             <i class="fa fa-trash"></i>
                         </button>
-
                     </td>
                 </tr>
             `);
@@ -181,7 +252,6 @@ async function loadAdminVouchers() {
 // ==========================
 // EDIT
 // ==========================
-
 function editVoucher(v){
 
     editingId = v.id;
@@ -202,7 +272,6 @@ function editVoucher(v){
 // ==========================
 // DELETE
 // ==========================
-
 async function deleteVoucher(id) {
 
     if (!confirm("Xóa voucher này?")) return;
@@ -232,7 +301,6 @@ async function deleteVoucher(id) {
 // ==========================
 // UTIL
 // ==========================
-
 function formatMoney(n){
     return n.toLocaleString() + "₫";
 }
@@ -256,7 +324,6 @@ function getStatus(v){
 // ==========================
 // INIT
 // ==========================
-
 document.addEventListener("DOMContentLoaded", () => {
 
     if (!getToken()) {

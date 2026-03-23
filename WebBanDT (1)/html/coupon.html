@@ -6,151 +6,135 @@
     <title>Quản lý mã giảm giá</title>
 
     <link rel="stylesheet" href="../css/admin/admin.css">
+    <link rel="stylesheet" href="../css/admin/coupon.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <style>
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 1000;
-            width: 350px;
-        }
-
-        #overlay {
-            display: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            top: 0;
-            left: 0;
-            z-index: 999;
-        }
-
-        .popup input {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 6px;
-        }
-    </style>
 </head>
 
 <body>
 
-<script>
-    if (!sessionStorage.getItem("token")) {
-        window.location.href = "login.html";
-    }
-</script>
+    <script>
+        if (!sessionStorage.getItem("token")) {
+            window.location.href = "login.html";
+        }
+    </script>
 
-<div class="container">
+    <div class="container">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h2 class="logo">PhoneShop</h2>
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h2 class="logo">PhoneShop</h2>
 
-        <ul>
-            <li><a href="admin.html"><i class="fa fa-chart-line"></i>Dashboard</a></li>
-            <li><a href="acount.html"><i class="fa fa-user"></i>Quản lý tài khoản</a></li>
-            <li><a href="product.html"><i class="fa fa-mobile"></i>Quản lý sản phẩm</a></li>
-            <li><a href="order.html"><i class="fa fa-box"></i>Quản lý đơn hàng</a></li>
-            <li><a href="categories.html"><i class="fa fa-warehouse"></i>Quản lý danh mục</a></li>
+            <ul>
+                <li><a href="admin.html"><i class="fa fa-chart-line"></i>Dashboard</a></li>
+                <li><a href="acount.html"><i class="fa fa-user"></i>Quản lý tài khoản</a></li>
+                <li><a href="product.html"><i class="fa fa-mobile"></i>Quản lý sản phẩm</a></li>
+                <li><a href="order.html"><i class="fa fa-box"></i>Quản lý đơn hàng</a></li>
+                <li><a href="categories.html"><i class="fa fa-warehouse"></i>Quản lý danh mục</a></li>
 
-            <li class="active">
-                <a href="coupon.html">
-                    <i class="fa fa-ticket"></i>Mã giảm giá
-                </a>
-            </li>
+                <li class="active">
+                    <a href="coupon.html">
+                        <i class="fa fa-ticket"></i>Mã giảm giá
+                    </a>
+                </li>
 
-            <li><a href="review.html"><i class="fa-solid fa-star"></i>Đánh giá</a></li>
-        </ul>
+                <li><a href="review.html"><i class="fa-solid fa-star"></i>Đánh giá</a></li>
+            </ul>
 
-        <button class="logout" id="btnLogout">
-            <i class="fa fa-sign-out"></i>Đăng xuất
-        </button>
-    </div>
-
-    <!-- MAIN -->
-    <div class="main">
-
-        <div class="topbar">
-            <h2>Quản lý mã giảm giá</h2>
-
-            <div class="admin-user">
-                <i class="fa-solid fa-user"></i>
-                <span id="adminName">Admin</span>
-            </div>
-        </div>
-
-        <div class="toolbar">
-            <!-- 🔥 FIX -->
-            <button class="add-btn" onclick="showForm()">
-                <i class="fa fa-plus"></i>
-                Thêm voucher
+            <button class="logout" id="btnLogout">
+                <i class="fa fa-sign-out"></i>Đăng xuất
             </button>
         </div>
 
-        <div class="table-box">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã</th>
-                        <th>Giảm</th>
-                        <th>Min</th>
-                        <th>Lượt dùng</th>
-                        <th>Hết hạn</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
+        <!-- MAIN -->
+        <div class="main">
 
-                <tbody id="voucherTable"></tbody>
-            </table>
+            <div class="topbar">
+                <h2>Quản lý mã giảm giá</h2>
+
+                <div class="admin-user">
+                    <i class="fa-solid fa-user"></i>
+                    <span id="adminName">Admin</span>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <!-- 🔥 FIX -->
+                <button class="add-btn" onclick="showForm()">
+                    <i class="fa fa-plus"></i>
+                    Thêm voucher
+                </button>
+            </div>
+
+            <div class="table-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã</th>
+                            <th>Giảm</th>
+                            <th>Min</th>
+                            <th>Lượt dùng</th>
+                            <th>Hết hạn</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="voucherTable"></tbody>
+                </table>
+            </div>
+
         </div>
 
     </div>
 
-</div>
+    <!-- ================= POPUP ================= -->
 
-<!-- ================= POPUP ================= -->
+    <div id="overlay" onclick="closeForm()"></div>
 
-<div id="overlay" onclick="closeForm()"></div>
+    <div id="voucherForm" class="popup">
 
-<div id="voucherForm" class="popup">
+        <h3>Thêm voucher</h3>
 
-    <h3>Thêm voucher</h3>
+        <input id="code" placeholder="Mã voucher">
+        <small class="error" id="err-code"></small>
+        <input id="discount" placeholder="Giảm">
+        <small class="error" id="err-discount"></small>
 
-    <input id="code" placeholder="Mã voucher">
-    <input id="discount" placeholder="Giảm">
+        <div class="checkbox-row">
+            <label class="checkbox-label">
+                <input type="checkbox" id="percent">
+                <span class="checkmark"></span>
+                <span class="text">Giảm theo %</span>
+            </label>
+        </div>
 
-    <label>
-        <input type="checkbox" id="percent">
-        Giảm theo %
-    </label>
+        <input id="min" placeholder="Đơn tối thiểu">
+        <small class="error" id="err-min"></small>
 
-    <input id="min" placeholder="Đơn tối thiểu">
-    <input id="max" placeholder="Giảm tối đa">
-    <input id="quantity" placeholder="Số lượng">
+        <input id="max" placeholder="Giảm tối đa">
+        <small class="error" id="err-max"></small>
 
-    <input type="datetime-local" id="start">
-    <input type="datetime-local" id="end">
+        <input id="quantity" placeholder="Số lượng">
+        <small class="error" id="err-quantity"></small>
 
-    <div class="form-buttons">
-        <button onclick="saveVoucher()">Lưu</button>
-        <button onclick="closeForm()">Huỷ</button>
+        <input type="datetime-local" id="start">
+        <small class="error" id="err-start"></small>
+
+        <input type="datetime-local" id="end">
+        <small class="error" id="err-end"></small>
+
+        <div class="form-buttons">
+            <button onclick="saveVoucher()">Lưu</button>
+            <button onclick="closeForm()">Huỷ</button>
+        </div>
+
     </div>
 
-</div>
-
-<!-- JS -->
-<script src="../js/auth-check.js"></script>
-<script src="../js/admin/adminLoadVoucher.js"></script>
+    <!-- JS -->
+    <script src="../js/auth-check.js"></script>
+    <script src="../js/admin/adminLoadVoucher.js"></script>
 
 </body>
+
 </html>
