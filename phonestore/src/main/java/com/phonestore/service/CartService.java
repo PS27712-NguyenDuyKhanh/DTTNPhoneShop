@@ -7,6 +7,7 @@ import com.phonestore.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,10 +45,24 @@ public class CartService {
         Variant variant = variantRepository.findById(variantId)
                 .orElseThrow(() -> new RuntimeException("Variant not found"));
 
-        // 🔥 FIX DUPLICATE
         CartItem item = cartItemRepository
                 .findByCartAndVariant(cart, variant)
                 .orElse(null);
+
+        // 🔥 TÍNH GIÁ THỰC TẾ
+        double finalPrice = variant.getPrice();
+
+// 🔥 nếu đang trong thời gian sale → dùng salePrice
+        if (variant.getSalePrice() != null
+                && variant.getSaleStart() != null
+                && variant.getSaleEnd() != null) {
+
+            LocalDateTime now = LocalDateTime.now();
+
+            if (now.isAfter(variant.getSaleStart()) && now.isBefore(variant.getSaleEnd())) {
+                finalPrice = variant.getSalePrice();
+            }
+        }
 
         if (item != null) {
             item.setQuantity(item.getQuantity() + quantity);
@@ -56,6 +71,9 @@ public class CartService {
             item.setCart(cart);
             item.setVariant(variant);
             item.setQuantity(quantity);
+
+            // 🔥 QUAN TRỌNG NHẤT (THÊM DÒNG NÀY)
+            item.setPrice(finalPrice);
         }
 
         cartItemRepository.save(item);
