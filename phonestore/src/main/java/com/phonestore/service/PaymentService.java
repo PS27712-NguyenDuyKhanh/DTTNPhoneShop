@@ -2,7 +2,8 @@ package com.phonestore.service;
 
 import com.phonestore.dto.PaymentRequest;
 import com.phonestore.entity.*;
-import com.phonestore.repository.*;
+import com.phonestore.repository.OrderRepository;
+import com.phonestore.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,74 +18,95 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     // =========================
-    // MAIN PAYMENT
+    // USER PAY
     // =========================
     public void pay(PaymentRequest req){
 
-        Order order = getOrder(req.getOrderId());
+        Order order = orderRepository.findById(req.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        validateOrder(order);
+        // ❗ chỉ check đơn tồn tại thôi (không ép status)
+        // vì order PENDING = chờ admin duyệt, không liên quan thanh toán
+
+        // ❗ tránh tạo 2 payment
+        if(paymentRepository.findByOrderId(order.getId()).isPresent()){
+            throw new RuntimeException("Đơn đã có thanh toán");
+        }
 
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setMethod(req.getMethod());
-        payment.setPaidAt(LocalDateTime.now());
 
         // =========================
-        // HANDLE METHOD
+        // COD
         // =========================
-        switch (req.getMethod()) {
+        if(req.getMethod().equals("COD")){
 
-            case "COD" -> handleCOD(payment, order);
+            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setTransactionId("COD-" + UUID.randomUUID());
+            payment.setPaidAt(LocalDateTime.now());
 
-            case "MOMO", "VNPAY" -> handleOnline(payment, order);
+            order.setPaid(true);
+        }
 
-            default -> throw new RuntimeException("Phương thức không hợp lệ");
+        // =========================
+        // BANK
+        // =========================
+        else if(req.getMethod().equals("BANK")){
+
+            payment.setStatus(PaymentStatus.PENDING);
+            payment.setTransactionId("BANK-" + UUID.randomUUID());
+        }
+
+        // =========================
+        // ZALOPAY
+        // =========================
+        else if(req.getMethod().equals("ZALOPAY")){
+
+            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setTransactionId("ZALO-" + UUID.randomUUID());
+            payment.setPaidAt(LocalDateTime.now());
+
+            order.setPaid(true);
+        }
+
+        else{
+            throw new RuntimeException("Phương thức không hợp lệ");
         }
 
         paymentRepository.save(payment);
+    }
+
+    // =========================
+    // ADMIN CONFIRM PAYMENT
+    // =========================
+    public void confirmPayment(Long orderId){
+
+        Payment p = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
+
+        if(p.getStatus() == PaymentStatus.SUCCESS){
+            throw new RuntimeException("Đã thanh toán rồi");
+        }
+
+        p.setStatus(PaymentStatus.SUCCESS);
+        p.setPaidAt(LocalDateTime.now());
+
+        paymentRepository.save(p);
+
+        // ✅ CẬP NHẬT ORDER
+        Order order = p.getOrder();
+        order.setPaid(true);
+
         orderRepository.save(order);
     }
 
     // =========================
-    // GET ORDER
+    // CHECK STATUS
     // =========================
-    private Order getOrder(Long id){
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn"));
-    }
-
-    // =========================
-    // VALIDATE
-    // =========================
-    private void validateOrder(Order order){
-
-        if(order.getStatus() != OrderStatus.PENDING){
-            throw new RuntimeException("Đơn đã thanh toán hoặc xử lý");
-        }
-    }
-
-    // =========================
-    // COD
-    // =========================
-    private void handleCOD(Payment payment, Order order){
-
-        payment.setStatus("SUCCESS");
-        payment.setTransactionId("COD-" + UUID.randomUUID());
-
-        // COD → vẫn chưa giao hàng
-        order.setStatus(OrderStatus.CONFIRMED);
-    }
-
-    // =========================
-    // ONLINE (MOMO / VNPAY DEMO)
-    // =========================
-    private void handleOnline(Payment payment, Order order){
-
-        // giả lập thành công
-        payment.setStatus("SUCCESS");
-        payment.setTransactionId("PAY-" + UUID.randomUUID());
-
-        order.setStatus(OrderStatus.CONFIRMED);
+    public PaymentStatus getStatus(Long orderId){
+        return paymentRepository.findByOrderId(orderId)
+                .map(Payment::getStatus)
+                .orElseThrow();
     }
 }
