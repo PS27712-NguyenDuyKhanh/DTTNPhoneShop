@@ -7,7 +7,6 @@
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 </head>
 
 <body>
@@ -21,13 +20,13 @@
             <div id="message"></div>
 
             <!-- STEP 1 EMAIL -->
-
             <div id="step1">
 
                 <p class="status">Nhập email để đăng ký</p>
 
                 <div class="input-box">
                     <input type="email" id="email" placeholder="Nhập email">
+                    <div class="error" id="errorEmail"></div>
                 </div>
 
                 <button class="btn-login" onclick="sendOtp()">
@@ -36,15 +35,14 @@
 
             </div>
 
-
             <!-- STEP 2 OTP -->
-
             <div id="step2" style="display:none;">
 
                 <p class="status">Nhập mã OTP đã gửi tới email</p>
 
                 <div class="input-box">
                     <input type="text" id="otp" placeholder="Nhập mã OTP">
+                    <div class="error" id="errorOtp"></div>
                 </div>
 
                 <button class="btn-login" onclick="verifyOtp()">
@@ -53,19 +51,19 @@
 
             </div>
 
-
             <!-- STEP 3 PASSWORD -->
-
             <div id="step3" style="display:none;">
 
                 <p class="status">Tạo mật khẩu đăng nhập</p>
 
                 <div class="input-box">
                     <input type="password" id="password" placeholder="Nhập mật khẩu">
+                    <div class="error" id="errorPassword"></div>
                 </div>
 
                 <div class="input-box">
                     <input type="password" id="confirm" placeholder="Xác nhận mật khẩu">
+                    <div class="error" id="errorConfirm"></div>
                 </div>
 
                 <button class="btn-login" onclick="createPassword()">
@@ -83,8 +81,6 @@
     </div>
 
     <script src="../js/register.js"></script>
-    
 
 </body>
-
 </html>

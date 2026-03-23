@@ -291,3 +291,105 @@ async function updateProduct(){
     alert("Cập nhật sản phẩm thành công");
     window.location.href = "product.html";
 }
+
+/* ===================================================== */
+/* 🔥 VALIDATE ADD-ON (KHÔNG ĐỤNG CODE CŨ) */
+/* ===================================================== */
+
+function setError(id, msg){
+    const el = document.getElementById(id);
+    if(el) el.innerText = msg;
+}
+
+function clearError(){
+    document.querySelectorAll(".error").forEach(e => e.innerText = "");
+}
+
+// clear khi nhập
+document.addEventListener("input", e => {
+    if(e.target.tagName === "INPUT" || e.target.tagName === "SELECT"){
+        const error = e.target.parentElement.querySelector(".error");
+        if(error) error.innerText = "";
+    }
+});
+
+// override updateProduct
+const oldUpdateProduct = updateProduct;
+
+updateProduct = async function(){
+
+    clearError();
+
+    let isValid = true;
+
+    const name = document.getElementById("name").value.trim();
+    const sku = document.getElementById("sku").value.trim();
+    const category = document.getElementById("categoryId").value;
+
+    // ==========================
+    // NAME
+    // ==========================
+    if(!name){
+        setError("errorName", "Bạn chưa nhập tên sản phẩm");
+        isValid = false;
+    }
+
+    // ==========================
+    // SKU
+    // ==========================
+    if(!sku){
+        setError("errorSku", "Bạn chưa nhập SKU");
+        isValid = false;
+    }
+
+    // ==========================
+    // CATEGORY
+    // ==========================
+    if(!category){
+        setError("errorCategory", "Bạn chưa chọn danh mục");
+        isValid = false;
+    }
+
+    // ==========================
+    // VARIANT
+    // ==========================
+    let hasValidVariant = false;
+
+    for(let i = 1; i <= variantIndex; i++){
+
+        const price = Number(document.getElementById("price"+i)?.value || 0);
+        const salePrice = Number(document.getElementById("salePrice"+i)?.value || 0);
+
+        if(price <= 0){
+            alert(`Biến thể ${i}: Giá phải > 0`);
+            isValid = false;
+            break;
+        }
+
+        if(price < 0){
+            alert(`Biến thể ${i}: Giá không được âm`);
+            isValid = false;
+            break;
+        }
+
+        if(salePrice && salePrice >= price){
+            alert(`Biến thể ${i}: Giá khuyến mãi phải nhỏ hơn giá bán`);
+            isValid = false;
+            break;
+        }
+
+        if(price > 0){
+            hasValidVariant = true;
+        }
+    }
+
+    if(!hasValidVariant){
+        alert("Phải có ít nhất 1 biến thể hợp lệ");
+        isValid = false;
+    }
+
+    if(!isValid) return;
+
+    // gọi lại hàm gốc
+    await oldUpdateProduct();
+};

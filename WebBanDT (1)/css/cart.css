@@ -66,7 +66,10 @@ body {
 }
 
 .cart-right {
-    text-align: right;
+    display: flex;
+    flex-direction: column;   /* ⬅️ QUAN TRỌNG */
+    align-items: flex-end;
+    gap: 8px;
 }
 
 .price .new {
@@ -81,10 +84,15 @@ body {
 }
 
 /* QTY */
-.cart-qty{
-    display:flex;
-    align-items:center;
-    gap:6px;
+.cart-qty {
+    display: flex;
+    gap: 6px;
+}
+
+.cart-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end;
 }
 
 /* NÚT - + */
@@ -495,3 +503,57 @@ textarea{
     background:#1565c0;
 }
 
+.cart-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+/* DELETE */
+.btn-delete {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 5px;
+    transition: 0.2s;
+}
+
+.btn-delete:hover {
+    color: red;
+    transform: scale(1.2);
+}
+
+/* PRICE */
+.price-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.old-price {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 13px;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+}
+
+.new-price {
+    color: red;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.discount {
+    background: red;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
