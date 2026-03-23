@@ -151,5 +151,10 @@ body {
     font-size:14px;
 }
 
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
 
 

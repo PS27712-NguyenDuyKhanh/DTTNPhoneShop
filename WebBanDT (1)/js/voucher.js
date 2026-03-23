@@ -113,7 +113,7 @@ async function loadVoucher() {
 
             const value = v.value || v.discount || 0;
 
-            const text = v.type === "PERCENT"
+            const text = v.percent
                 ? `Giảm ${value}%`
                 : `Giảm ${value.toLocaleString()}đ`;
 
@@ -135,15 +135,14 @@ async function loadVoucher() {
 
                     </div>
 
-                    ${
-                        claimed
-                        ? `<button class="claim-btn" disabled style="background:#555; cursor:not-allowed;">
+                    ${claimed
+                    ? `<button class="claim-btn" disabled style="background:#555; cursor:not-allowed;">
                                 Đã nhận
                            </button>`
-                        : `<button class="claim-btn" onclick="claimVoucher(${v.id}, this)">
+                    : `<button class="claim-btn" onclick="claimVoucher(${v.id}, this)">
                                 Nhận
                            </button>`
-                    }
+                }
 
                 </div>
             `;

@@ -99,8 +99,10 @@
                 <h3>Thông tin sản phẩm</h3>
 
                 <input id="name" placeholder="Tên sản phẩm">
+                <div class="error" id="errorName"></div>
 
                 <input id="sku" placeholder="SKU">
+                <div class="error" id="errorSku"></div>
 
                 <input id="os" placeholder="Hệ điều hành">
 
@@ -109,6 +111,7 @@
                 <select id="categoryId">
                     <option value="">-- Chọn danh mục --</option>
                 </select>
+                <div class="error" id="errorCategory"></div>
 
                 <h3>Cấu hình</h3>
 
@@ -139,7 +142,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
     <script src="../js/admin/create-product.js"></script>
 
-    
+
 </body>
 
 </html>

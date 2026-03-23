@@ -1,9 +1,63 @@
 const API = "http://localhost:8081/api/auth";
 
+// ==========================
+// MESSAGE
+// ==========================
+function showMessage(text, type) {
+
+    const box = document.getElementById("message");
+
+    if (!box) return;
+
+    box.innerHTML = `
+        <div class="alert alert-${type}">
+            ${text}
+        </div>
+    `;
+}
+
+// ==========================
+// ERROR
+// ==========================
+function setError(id, message){
+    document.getElementById(id).innerText = message;
+}
+
+function clearError(){
+    document.querySelectorAll(".error").forEach(e => e.innerText = "");
+}
+
+// clear lỗi khi nhập lại
+document.addEventListener("input", function(e){
+    if(e.target.tagName === "INPUT"){
+        const error = e.target.parentElement.querySelector(".error");
+        if(error) error.innerText = "";
+    }
+});
+
+// ==========================
+// LOGIN
+// ==========================
 async function login() {
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    clearError();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    let isValid = true;
+
+    if(!email){
+        setError("errorEmail", "Bạn chưa nhập email");
+        isValid = false;
+    }
+
+    if(!password){
+        setError("errorPassword", "Bạn chưa nhập mật khẩu");
+        isValid = false;
+    }
+
+    if(!isValid) return;
 
     try {
 
@@ -19,7 +73,7 @@ async function login() {
 
             const data = await res.json();
 
-            // ✅ FIX: dùng sessionStorage
+            // lưu session
             sessionStorage.setItem("token", data.token);
             sessionStorage.setItem("role", data.role);
             sessionStorage.setItem("name", data.username);
@@ -48,18 +102,4 @@ async function login() {
         showMessage("Không kết nối được server", "danger");
 
     }
-
-}
-
-function showMessage(text, type) {
-
-    const box = document.getElementById("message");
-
-    if (!box) return;
-
-    box.innerHTML = `
-        <div class="alert alert-${type}">
-            ${text}
-        </div>
-    `;
 }

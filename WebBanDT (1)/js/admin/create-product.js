@@ -11,25 +11,18 @@ function getToken(){
 
 /* ================= IMAGE URL ================= */
 function buildImageUrl(path){
-
     if(!path) return "";
-
     if(path.startsWith("http")) return path;
-
     if(path.startsWith("/")) return "http://localhost:8081" + path;
-
     return "http://localhost:8081/uploads/" + path;
 }
 
 /* ================= LOAD CATEGORY ================= */
-
 async function loadCategories() {
-
     const res = await fetch(CATEGORY_API);
     const data = await res.json();
 
     const select = document.getElementById("categoryId");
-
     select.innerHTML = `<option value="">-- Chọn danh mục --</option>`;
 
     data.forEach(c => {
@@ -41,20 +34,15 @@ ${c.parent.name} > ${c.name}
         }
     });
 }
-
 loadCategories();
 
 /* ================= CKEDITOR ================= */
-
 ClassicEditor
 .create(document.querySelector("#description"))
-.then(e => {
-    editor = e;
-})
+.then(e => { editor = e; })
 .catch(console.error);
 
 /* ================= UPLOAD IMAGE ================= */
-
 async function uploadImage(file) {
 
     const token = getToken();
@@ -71,17 +59,13 @@ async function uploadImage(file) {
     });
 
     const path = await res.text();
-
-    // ✅ CHỈ TRẢ VỀ PATH
     return path;
-}uildImageUrl(path);
+}
 
 /* ================= ADD VARIANT ================= */
-
 function addVariant() {
 
     const container = document.getElementById("variantContainer");
-
     variantIndex++;
 
     const html = `
@@ -101,7 +85,6 @@ Biến thể ${variantIndex}
 <input placeholder="Tồn kho" id="stock${variantIndex}">
 <input type="file" id="image${variantIndex}">
 
-<!-- preview ảnh -->
 <img id="preview${variantIndex}" width="60" style="margin-top:5px;display:none">
 
 </div>
@@ -111,7 +94,6 @@ Biến thể ${variantIndex}
 
     container.insertAdjacentHTML("beforeend", html);
 
-    // preview ảnh khi chọn
     document.getElementById("image"+variantIndex).addEventListener("change", e=>{
         const file = e.target.files[0];
         if(file){
@@ -123,14 +105,12 @@ Biến thể ${variantIndex}
 }
 
 /* ================= TOGGLE ================= */
-
 function toggleVariant(index){
     const body = document.getElementById("variantBody"+index);
     body.style.display = body.style.display === "none" ? "block" : "none";
 }
 
 /* ================= GET VARIANTS ================= */
-
 async function getVariants() {
 
     let variants = [];
@@ -143,37 +123,23 @@ async function getVariants() {
         const file = document.getElementById("image" + i)?.files[0];
 
         let imageUrl = "";
-
-        if (file) {
-            imageUrl = await uploadImage(file); // ✅ đã convert URL
-        }
+        if (file) imageUrl = await uploadImage(file);
 
         variants.push({
-
             color: color,
-
             price: Number(document.getElementById("price"+i).value) || 0,
-
             salePrice: Number(document.getElementById("salePrice"+i).value) || null,
-
             saleStart: document.getElementById("saleStart"+i).value || null,
-
             saleEnd: document.getElementById("saleEnd"+i).value || null,
-
             stock: Number(document.getElementById("stock"+i).value) || 0,
-
-            images: [
-                { imageUrl: imageUrl }
-            ]
-
+            images: [{ imageUrl }]
         });
     }
 
     return variants;
 }
 
-/* ================= CREATE PRODUCT ================= */
-
+/* ================= CREATE PRODUCT (CŨ) ================= */
 async function createProduct() {
 
     const token = getToken();
@@ -200,15 +166,11 @@ async function createProduct() {
     }
 
     const data = {
-
         name,
         sku,
         os: document.getElementById("os").value,
-
         description: editor.getData(),
-
         categoryId: Number(document.getElementById("categoryId").value) || null,
-
         specification: {
             cpu: document.getElementById("cpu").value,
             ram: document.getElementById("ram").value,
@@ -218,7 +180,6 @@ async function createProduct() {
             battery: document.getElementById("battery").value,
             screen: document.getElementById("screen").value
         },
-
         variants
     };
 
@@ -234,3 +195,72 @@ async function createProduct() {
     alert("Thêm sản phẩm thành công");
     window.location.href = "product.html";
 }
+
+/* ===================================================== */
+/* 🔥 VALIDATE ADD-ON (KHÔNG ĐỤNG CODE CŨ) */
+/* ===================================================== */
+
+function setError(id, msg){
+    const el = document.getElementById(id);
+    if(el) el.innerText = msg;
+}
+
+function clearError(){
+    document.querySelectorAll(".error").forEach(e => e.innerText = "");
+}
+
+// clear khi nhập
+document.addEventListener("input", e => {
+    if(e.target.tagName === "INPUT" || e.target.tagName === "SELECT"){
+        const error = e.target.parentElement.querySelector(".error");
+        if(error) error.innerText = "";
+    }
+});
+
+// override
+const oldCreateProduct = createProduct;
+
+createProduct = async function(){
+
+    clearError();
+
+    let isValid = true;
+
+    const name = document.getElementById("name").value.trim();
+    const sku = document.getElementById("sku").value.trim();
+    const category = document.getElementById("categoryId").value;
+
+    if(!name){
+        setError("errorName", "Bạn chưa nhập tên sản phẩm");
+        isValid = false;
+    }
+
+    if(!sku){
+        setError("errorSku", "Bạn chưa nhập SKU");
+        isValid = false;
+    }
+
+    if(!category){
+        setError("errorCategory", "Bạn chưa chọn danh mục");
+        isValid = false;
+    }
+
+    let hasVariant = false;
+
+    for(let i = 1; i <= variantIndex; i++){
+        const price = document.getElementById("price"+i)?.value;
+        if(price && Number(price) > 0){
+            hasVariant = true;
+            break;
+        }
+    }
+
+    if(!hasVariant){
+        alert("Phải có ít nhất 1 biến thể hợp lệ");
+        isValid = false;
+    }
+
+    if(!isValid) return;
+
+    await oldCreateProduct();
+};

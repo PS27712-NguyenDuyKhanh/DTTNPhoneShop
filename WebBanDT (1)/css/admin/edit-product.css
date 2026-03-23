@@ -221,3 +221,9 @@ min-height:220px;
 border-radius:6px;
 
 }
+
+.error {
+    color: red;
+    font-size: 13px;
+    margin: 4px 0 8px;
+}

@@ -235,3 +235,9 @@ background:#ef4444;
 background:#dc2626;
 
 }
+
+.error {
+    color: red;
+    font-size: 13px;
+    margin: 4px 0 8px;
+}
