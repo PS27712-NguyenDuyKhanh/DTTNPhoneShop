@@ -557,3 +557,63 @@ textarea{
     border-radius: 4px;
     margin-left: 5px;
 }
+.voucher-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.voucher-list {
+    margin-top: 10px;
+}
+
+.voucher-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.voucher-item:hover {
+    background: #f5f5f5;
+}
+
+.voucher-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px;
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.voucher-item:hover {
+    border-color: #0071e3;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.voucher-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f5f5f5;
+}
+
+.voucher-left strong {
+    font-size: 16px;
+}
+
+.voucher-badge {
+    background: #ff3b30;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
