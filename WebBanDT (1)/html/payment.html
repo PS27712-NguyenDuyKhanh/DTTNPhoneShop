@@ -1,3 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán</title>
+
+    <style>
+        .payment-box{
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: Arial;
+        }
+
+        .payment-box h3{
+            margin-bottom: 15px;
+        }
+
+        .payment-method{
+            display: block;
+            margin: 8px 0;
+        }
+
+        #bankBox{
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px dashed #aaa;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #bankBox img{
+            margin-top: 10px;
+        }
+
+        button{
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:disabled{
+            background: gray;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
 <div class="payment-box">
 
     <h3>Thanh toán đơn hàng</h3>
@@ -6,11 +64,49 @@
 
     <hr>
 
-    <label><input type="radio" name="pay" value="COD" checked> Thanh toán khi nhận hàng</label><br>
-    <label><input type="radio" name="pay" value="MOMO"> Ví MoMo</label><br>
-    <label><input type="radio" name="pay" value="VNPAY"> VNPay</label><br>
+    <!-- METHOD -->
+    <label class="payment-method">
+        <input type="radio" name="method" value="COD" checked>
+        Thanh toán khi nhận hàng
+    </label>
 
-    <button onclick="confirmPayment()">XÁC NHẬN</button>
+    <label class="payment-method">
+        <input type="radio" name="method" value="BANK">
+        Chuyển khoản ngân hàng
+    </label>
+
+    <label class="payment-method">
+        <input type="radio" name="method" value="ZALOPAY">
+        Ví ZaloPay
+    </label>
+
+    <!-- BANK INFO -->
+    <div id="bankBox" style="display:none;">
+        <p><b>Ngân hàng:</b> MB Bank</p>
+        <p><b>STK:</b> 123456789</p>
+        <p><b>Chủ TK:</b> HOANG NAM</p>
+
+        <!-- 🔥 FIX: hiển thị orderId -->
+        <p style="color:red;">⚠ Nội dung: PAY-<span id="orderCode"></span></p>
+
+        <img id="qrImg" width="200">
+    </div>
+
+    <!-- 🔥 FIX: thêm id để JS control -->
+    <button id="payBtn" onclick="confirmPayment()">XÁC NHẬN</button>
 
 </div>
+
 <script src="../js/payment.js"></script>
+
+<!-- 🔥 FIX: hiển thị orderId (KHÔNG khai báo lại biến) -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const id = new URLSearchParams(window.location.search).get("orderId");
+        const el = document.getElementById("orderCode");
+        if(el) el.innerText = id;
+    });
+</script>
+
+</body>
+</html>

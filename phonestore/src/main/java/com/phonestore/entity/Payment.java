@@ -1,7 +1,12 @@
 package com.phonestore.entity;
 
+import com.phonestore.entity.Order;
+import com.phonestore.entity.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -19,14 +24,14 @@ public class Payment {
     // COD, MOMO, VNPAY
     private String method;
 
-    // SUCCESS, FAILED, PENDING
-    private String status;
+    // 🔥 DÙNG ENUM
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
-    private String transactionId; // mã giao dịch (fake hoặc thật)
+    private String transactionId;
 
     private LocalDateTime paidAt;
 
-    // 🔗 liên kết order
     @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
