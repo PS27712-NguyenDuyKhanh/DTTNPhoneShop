@@ -187,11 +187,15 @@ async function saveVoucher(){
 // ==========================
 // LOAD
 // ==========================
-async function loadAdminVouchers() {
+let currentPage = 0;
+const size = 10;
+async function loadAdminVouchers(page = 0) {
+
+    currentPage = page;
 
     try {
 
-        const res = await fetch(API, {
+        const res = await fetch(`${API}?page=${page}&size=${size}`, {
             headers: getAuthHeader()
         });
 
@@ -208,10 +212,22 @@ async function loadAdminVouchers() {
             return alert("Không load được!");
         }
 
-        const vouchers = await res.json();
+        const data = await res.json();
+
+        console.log("DATA:", data);
+
+        const vouchers = data.content || [];
 
         const table = document.getElementById("voucherTable");
         table.innerHTML = "";
+
+        if(vouchers.length === 0){
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center">Không có voucher</td>
+                </tr>
+            `;
+        }
 
         vouchers.forEach(v => {
 
@@ -240,13 +256,52 @@ async function loadAdminVouchers() {
                     </td>
                 </tr>
             `);
-
         });
+
+        // 🔥 thêm dòng này
+        renderPagination(data);
 
     } catch (err) {
         console.error(err);
         alert("Lỗi server!");
     }
+}
+
+function renderPagination(data){
+
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!data.totalPages) return;
+
+    // Prev
+    container.innerHTML += `
+        <button ${data.first ? 'disabled' : ''} 
+            onclick="loadAdminVouchers(${data.number - 1})">
+            ←
+        </button>
+    `;
+
+    // Pages
+    for(let i = 0; i < data.totalPages; i++){
+        container.innerHTML += `
+            <button 
+                onclick="loadAdminVouchers(${i})"
+                class="${i === data.number ? 'active-page' : ''}">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // Next
+    container.innerHTML += `
+        <button ${data.last ? 'disabled' : ''} 
+            onclick="loadAdminVouchers(${data.number + 1})">
+            →
+        </button>
+    `;
 }
 
 // ==========================

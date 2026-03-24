@@ -4,6 +4,7 @@ import com.phonestore.dto.VoucherDTO;
 import com.phonestore.entity.Voucher;
 import com.phonestore.service.VoucherService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,8 +36,11 @@ public class AdminVoucherController {
     // GET ALL VOUCHERS
     // =========================
     @GetMapping
-    public List<Voucher> getAll(){
-        return voucherService.getAll();
+    public Page<Voucher> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return voucherService.getAll(page, size);
     }
 
     // =========================

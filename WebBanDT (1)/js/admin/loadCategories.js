@@ -1,6 +1,8 @@
 const API_ADMIN = "http://localhost:8081/api/admin/categories";
 
 let editingId = null;
+let currentPage = 0;
+const size = 10;
 
 // ==========================
 // AUTH
@@ -21,11 +23,13 @@ function getAuthHeader() {
 // LOAD CATEGORIES
 // ==========================
 
-async function loadAdminCategories() {
+async function loadAdminCategories(page = 0) {
+
+    currentPage = page;
 
     try {
 
-        const res = await fetch(API_ADMIN, {
+        const res = await fetch(`${API_ADMIN}?page=${page}&size=${size}`, {
             headers: getAuthHeader()
         });
 
@@ -40,7 +44,11 @@ async function loadAdminCategories() {
             return;
         }
 
-        const categories = await res.json();
+        const data = await res.json();
+
+        console.log("DATA:", data);
+
+        const categories = Array.isArray(data) ? data : (data.content || []);
 
         const table = document.getElementById("categoryTable");
         const parent = document.getElementById("parent");
@@ -49,6 +57,16 @@ async function loadAdminCategories() {
 
         table.innerHTML = "";
         parent.innerHTML = `<option value="">Danh mục cha</option>`;
+
+        if(categories.length === 0){
+            table.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align:center">
+                        Không có danh mục
+                    </td>
+                </tr>
+            `;
+        }
 
         categories.forEach(c => {
 
@@ -88,12 +106,51 @@ async function loadAdminCategories() {
 
         });
 
+        // 🔥 thêm pagination
+        renderPagination(data);
+
     } catch (err) {
 
         console.error("Lỗi load categories:", err);
 
     }
+}
 
+function renderPagination(data){
+
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!data.totalPages) return;
+
+    // Prev
+    container.innerHTML += `
+        <button ${data.first ? 'disabled' : ''} 
+            onclick="loadAdminCategories(${data.number - 1})">
+            ←
+        </button>
+    `;
+
+    // Pages
+    for(let i = 0; i < data.totalPages; i++){
+        container.innerHTML += `
+            <button 
+                onclick="loadAdminCategories(${i})"
+                class="${i === data.number ? 'active-page' : ''}">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // Next
+    container.innerHTML += `
+        <button ${data.last ? 'disabled' : ''} 
+            onclick="loadAdminCategories(${data.number + 1})">
+            →
+        </button>
+    `;
 }
 
 // ==========================
@@ -208,7 +265,7 @@ async function deleteCategory(id) {
             return;
         }
 
-        loadAdminCategories();
+        loadAdminCategories(currentPage);
 
     } catch (err) {
 
@@ -231,5 +288,5 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    loadAdminCategories();
+    loadAdminCategories(0);
 });

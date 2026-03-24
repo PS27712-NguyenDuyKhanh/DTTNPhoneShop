@@ -1,14 +1,18 @@
+const API = "http://localhost:8081/api/admin/products";
 
+let currentPage = 0;
+const size = 10;
 
-        const API = "http://localhost:8081/api/admin/products";
+/* ================= LOAD PRODUCTS ================= */
+async function loadProducts(page = 0) {
 
-        async function loadProducts() {
+    currentPage = page;
 
-    const token = sessionStorage.getItem("token"); // ✅ FIX
+    const token = sessionStorage.getItem("token");
 
     try {
 
-        const res = await fetch(API, {
+        const res = await fetch(`${API}?page=${page}&size=${size}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
@@ -22,18 +26,27 @@
 
         const data = await res.json();
 
-        const table = document.getElementById("productTable");
+        console.log("DATA:", data);
 
+        const table = document.getElementById("productTable");
         table.innerHTML = "";
 
-        const products = data.content || data;
+        const products = data.content || [];
+
+        if(products.length === 0){
+            table.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center;padding:20px">
+                        Không có sản phẩm
+                    </td>
+                </tr>
+            `;
+        }
 
         products.forEach(p => {
 
             const img = p.variants?.[0]?.images?.[0]?.imageUrl || "";
-
-            const stock = p.variants?.reduce((total, v) => total + (v.stock || 0), 0);
-
+            const stock = p.variants?.reduce((t, v) => t + (v.stock || 0), 0);
             const status = stock > 0 ? "Đang bán" : "Hết hàng";
 
             table.innerHTML += `
@@ -62,35 +75,66 @@
 `;
         });
 
+        // 🔥 RENDER PAGINATION
+        renderPagination(data);
+
     } catch (err) {
         console.error("Lỗi load sản phẩm:", err);
     }
-
 }
 
+/* ================= PAGINATION ================= */
+function renderPagination(data){
 
-        function goCreateProduct() {
+    const container = document.getElementById("pagination");
+    container.innerHTML = "";
 
-            window.location.href = "create-product.html";
+    if (!data.totalPages) return;
 
-        }
+    // Prev
+    container.innerHTML += `
+        <button ${data.first ? 'disabled' : ''} 
+            onclick="loadProducts(${data.number - 1})">
+            ←
+        </button>
+    `;
 
-        function viewProduct(id) {
+    // Pages
+    for(let i = 0; i < data.totalPages; i++){
+        container.innerHTML += `
+            <button 
+                onclick="loadProducts(${i})"
+                class="${i === data.number ? 'active-page' : ''}">
+                ${i + 1}
+            </button>
+        `;
+    }
 
-            window.location.href = "product-detail-admin.html?id=" + id;
+    // Next
+    container.innerHTML += `
+        <button ${data.last ? 'disabled' : ''} 
+            onclick="loadProducts(${data.number + 1})">
+            →
+        </button>
+    `;
+}
 
-        }
+/* ================= ACTION ================= */
+function goCreateProduct() {
+    window.location.href = "create-product.html";
+}
 
-        function editProduct(id){
+function viewProduct(id) {
+    window.location.href = "product-detail-admin.html?id=" + id;
+}
 
+function editProduct(id){
     window.location.href = "edit-product.html?id=" + id;
-
 }
 
+async function deleteProduct(id) {
 
-        async function deleteProduct(id) {
-
-    const token = sessionStorage.getItem("token"); // ✅ FIX
+    const token = sessionStorage.getItem("token");
 
     if (!confirm("Xóa sản phẩm này?")) return;
 
@@ -101,6 +145,8 @@
         }
     });
 
-    loadProducts();
+    loadProducts(currentPage); // 🔥 giữ trang
 }
-loadProducts();
+
+/* ================= INIT ================= */
+loadProducts(0);

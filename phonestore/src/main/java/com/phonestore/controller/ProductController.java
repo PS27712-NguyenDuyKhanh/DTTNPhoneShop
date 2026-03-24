@@ -17,8 +17,11 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductDTO> getAll(){
-        return productService.getAllProducts();
+    public Page<ProductDTO> getProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return productService.getProducts(page, size);
     }
 
     @GetMapping("/{id}")
