@@ -150,6 +150,10 @@ async function showOrderDetail(orderId) {
         });
 
         const order = await res.json();
+        // 🔥 THÊM ĐOẠN NÀY
+        const paymentHtml = order.paid
+            ? `<span class="payment-status payment-paid">Đã thanh toán</span>`
+            : `<span class="payment-status payment-unpaid">Chưa thanh toán</span>`;
 
         let html = `
             <h3>Mã đơn: ${order.id}</h3>
@@ -185,7 +189,16 @@ async function showOrderDetail(orderId) {
         // ===== STATUS =====
         html += `<hr/><h4>Trạng thái</h4>`;
 
-        html += `<div class="status-step">${getStatusText(order.status)}</div>`;
+ const statusHtml = `<span class="status-badge status-${order.status.toLowerCase()}">
+    ${getStatusText(order.status)}
+</span>`;
+
+html += `
+    <div class="status-step">
+        ${statusHtml}
+        ${paymentHtml}
+    </div>
+`;
 
         // ===== TOTAL =====
         html += `
