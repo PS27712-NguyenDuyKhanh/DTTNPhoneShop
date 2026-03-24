@@ -45,8 +45,9 @@ function renderOrder(o){
         btn.disabled = false;
         btn.innerText = "Hoàn tất";
     } else {
-        btn.disabled = true;
-        btn.innerText = "Chờ xác nhận...";
+        // 🔥 KHÔNG disable nữa (fix lỗi VNPAY)
+        btn.disabled = false;
+        btn.innerText = "Thanh toán";
     }
 }
 
@@ -72,10 +73,11 @@ async function createBankPayment(){
 }
 
 // ==========================
-// HANDLE BUTTON CLICK
+// HANDLE PAYMENT
 // ==========================
 async function handlePayment(){
 
+    // check order mới nhất
     const res = await fetch(`${API}/orders/${orderId}`, {
         headers:{
             "Authorization":"Bearer " + sessionStorage.getItem("token")
@@ -84,7 +86,7 @@ async function handlePayment(){
 
     const o = await res.json();
 
-    // 🔥 nếu đã thanh toán → đi luôn
+    // nếu đã thanh toán
     if(o.paid){
         window.location.href = `success.html?orderId=${orderId}`;
         return;
@@ -100,7 +102,7 @@ async function handlePayment(){
     const method = selected.value;
 
     // =========================
-    // COD / ZALO
+    // COD / ZALOPAY
     // =========================
     if(method === "COD" || method === "ZALOPAY"){
 
@@ -108,7 +110,7 @@ async function handlePayment(){
             method:"POST",
             headers:{
                 "Authorization":"Bearer " + sessionStorage.getItem("token"),
-"Content-Type":"application/json"
+                "Content-Type":"application/json"
             },
             body: JSON.stringify({
                 orderId: orderId,
@@ -130,14 +132,45 @@ async function handlePayment(){
         alert("Vui lòng chuyển khoản. Admin sẽ xác nhận!");
         startPolling();
     }
+
+    // =========================
+    // 🔥 VNPAY
+    // =========================
+    else if(method === "VNPAY"){
+
+        try {
+            const res = await fetch(`${API}/payments/vnpay?orderId=${orderId}`, {
+                headers:{
+                    "Authorization":"Bearer " + sessionStorage.getItem("token")
+                }
+            });
+
+            if(!res.ok){
+                return alert("Không tạo được thanh toán VNPAY!");
+            }
+
+            const data = await res.json();
+
+            // redirect sang VNPAY
+            window.location.href = data.url;
+
+        } catch(err){
+            console.error(err);
+            alert("Lỗi kết nối VNPAY!");
+        }
+    }
 }
 
 // ==========================
-// POLLING
+// POLLING (BANK ONLY)
 // ==========================
+let pollingInterval = null;
+
 function startPolling(){
 
-    const interval = setInterval(async () => {
+    if(pollingInterval) return; // tránh chạy nhiều lần
+
+    pollingInterval = setInterval(async () => {
 
         try {
             const res = await fetch(`${API}/orders/${orderId}`, {
@@ -153,7 +186,11 @@ function startPolling(){
             renderOrder(o);
 
             if(o.paid){
-                clearInterval(interval);
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+
+                alert("Đã xác nhận thanh toán!");
+                window.location.href = `success.html?orderId=${orderId}`;
             }
 
         } catch(err){
@@ -171,6 +208,7 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
     radio.addEventListener("change", () => {
 
         const bankBox = document.getElementById("bankBox");
+        const btn = document.getElementById("confirmBtn");
 
         if (radio.value === "BANK" && radio.checked) {
 
@@ -178,12 +216,20 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
 
             createBankPayment();
 
+            // 🔥 chỉ disable khi BANK
+            btn.disabled = true;
+            btn.innerText = "Chờ chuyển khoản...";
+
             document.getElementById("qrImg").src =
                 "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PAY-" + orderId;
 
         } else {
 
             bankBox.style.display = "none";
+
+            // 🔥 mở lại cho VNPAY / COD
+            btn.disabled = false;
+            btn.innerText = "Thanh toán";
         }
     });
 });

@@ -30,7 +30,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        if (path.startsWith("/api/auth")) {
+// 🔥 bypass các API public + VNPAY
+        if (
+                path.startsWith("/api/auth") ||
+                        path.startsWith("/api/products") ||
+                        path.startsWith("/api/categories") ||
+                        path.startsWith("/uploads") ||
+                        path.startsWith("/api/voucher") ||
+
+                        // 🔥 QUAN TRỌNG NHẤT
+                        path.startsWith("/api/payments")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
             return;
         }
 
