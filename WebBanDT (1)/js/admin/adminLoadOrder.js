@@ -6,7 +6,7 @@ const API = "http://localhost:8081/api/admin/orders";
 let allOrders = [];
 
 // ==========================
-// AUTH (GIỐNG VOUCHER)
+// AUTH
 // ==========================
 function getToken(){
     return sessionStorage.getItem("token");
@@ -35,7 +35,8 @@ function getStatusClass(s){
     return {
         PENDING:"status-pending",
         CONFIRMED:"status-shipping",
-        COMPLETED:"status-success",
+        SHIPPING:"status-shipping",
+        DONE:"status-success",
         CANCELLED:"status-cancel"
     }[s];
 }
@@ -47,7 +48,7 @@ function translate(s){
         SHIPPING: "Đang giao",
         DONE: "Hoàn thành",
         CANCELLED: "Đã hủy"
-    }[s] || s; // 🔥 fallback
+    }[s] || s;
 }
 
 // ==========================
@@ -75,7 +76,6 @@ async function loadOrders(){
         }
 
         const data = await res.json();
-
         allOrders = data;
 
         renderOrders(data);
@@ -87,7 +87,7 @@ async function loadOrders(){
 }
 
 // ==========================
-// RENDER TABLE
+// RENDER TABLE (🔥 FIX CHÍNH)
 // ==========================
 function renderOrders(orders){
 
@@ -103,35 +103,88 @@ function renderOrders(orders){
             <td>${o.items.length} sản phẩm</td>
             <td class="price">${formatMoney(o.total)}</td>
             <td>${formatDate(o.createdAt)}</td>
-            <td class="${getStatusClass(o.status)}">${translate(o.status)}</td>
+
+            <!-- ORDER STATUS -->
+            <td class="${getStatusClass(o.status)}">
+                ${translate(o.status)}
+            </td>
+
+            <!-- 🔥 PAYMENT STATUS -->
+            <td style="color:${o.paid ? 'green' : 'red'};">
+                ${o.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+            </td>
+
+            <!-- ACTION -->
             <td>
                 <div class="action-buttons">
 
+                    <!-- VIEW -->
                     <button class="view" onclick="viewOrder(${o.id})">
-                        <i class="fa fa-eye"></i>
+                        👁
                     </button>
 
+                    <!-- 🔥 PAYMENT CONFIRM -->
+                    ${!o.paid ? `
+                        <button onclick="confirmPayment(${o.id})" 
+                            style="background:orange;color:white;">
+                            💰
+                        </button>
+                    ` : ""}
+
+                    <!-- ORDER FLOW -->
                     ${o.status === "PENDING" ? `
-    <button onclick="updateStatus(${o.id}, 'CONFIRMED')">✔</button>
-` : ""}
+                        <button onclick="updateStatus(${o.id}, 'CONFIRMED')">✔</button>
+                    ` : ""}
 
-${o.status === "CONFIRMED" ? `
-    <button onclick="updateStatus(${o.id}, 'SHIPPING')">🚚</button>
-` : ""}
+                    ${o.status === "CONFIRMED" ? `
+                        <button onclick="updateStatus(${o.id}, 'SHIPPING')">🚚</button>
+                    ` : ""}
 
-${o.status === "SHIPPING" ? `
-    <button onclick="updateStatus(${o.id}, 'DONE')">✔✔</button>
-` : ""}
+                    ${o.status === "SHIPPING" ? `
+                        <button onclick="updateStatus(${o.id}, 'DONE')">✔✔</button>
+                    ` : ""}
 
-${o.status !== "DONE" && o.status !== "CANCELLED" ? `
-    <button onclick="updateStatus(${o.id}, 'CANCELLED')">✖</button>
-` : ""}
+                    ${o.status !== "DONE" && o.status !== "CANCELLED" ? `
+                        <button onclick="updateStatus(${o.id}, 'CANCELLED')">✖</button>
+                    ` : ""}
 
                 </div>
             </td>
         </tr>
         `;
     });
+}
+
+// ==========================
+// CONFIRM PAYMENT (🔥 NEW)
+// ==========================
+async function confirmPayment(orderId){
+
+    if(!confirm("Xác nhận đã nhận tiền từ khách?")) return;
+
+    try {
+        const res = await fetch(
+            `http://localhost:8081/api/admin/payments/confirm/${orderId}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + getToken()
+                }
+            }
+        );
+
+        if(!res.ok){
+            return alert("Xác nhận thất bại!");
+        }
+
+        alert("Đã xác nhận thanh toán!");
+
+        loadOrders();
+
+    } catch(err){
+        console.error(err);
+        alert("Lỗi server!");
+    }
 }
 
 // ==========================
@@ -165,13 +218,12 @@ function viewOrder(id){
     document.getElementById("orderDetail").style.display = "flex";
 }
 
-// ==========================
 function closeDetail(){
     document.getElementById("orderDetail").style.display = "none";
 }
 
 // ==========================
-// UPDATE STATUS (FIX LỖI)
+// UPDATE STATUS
 // ==========================
 async function updateStatus(id, status){
 
@@ -188,9 +240,6 @@ async function updateStatus(id, status){
         );
 
         if (!res.ok) {
-            if (res.status === 403) {
-                return alert("Bạn không có quyền!");
-            }
             return alert("Cập nhật thất bại!");
         }
 
