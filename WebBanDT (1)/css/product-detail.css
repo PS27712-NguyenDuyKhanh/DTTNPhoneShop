@@ -553,3 +553,35 @@
     font-size: 13px;
     color: #666;
 }
+
+/* ===== CART BADGE ===== */
+.cart {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+/* ===== FLY IMAGE EFFECT ===== */
+.fly-img {
+    position: fixed;
+    z-index: 9999;
+    width: 200px;
+    pointer-events: none;
+
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-count:empty {
+    display: none;
+}
+

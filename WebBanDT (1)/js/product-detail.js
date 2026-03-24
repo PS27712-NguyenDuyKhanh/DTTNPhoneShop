@@ -213,3 +213,84 @@ async function addToCart() {
 // INIT
 // ==========================
 window.onload = loadProduct;
+
+async function addToCart() {
+
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+        alert("Vui lòng đăng nhập");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!selectedVariantId) {
+        alert("Vui lòng chọn phiên bản");
+        return;
+    }
+
+    try {
+
+        // =========================
+        // EFFECT BAY VÀO GIỎ
+        // =========================
+        const img = document.getElementById("image");
+        const cart = document.querySelector(".cart");
+
+        const flyImg = img.cloneNode(true);
+        flyImg.classList.add("fly-img");
+
+        const rect = img.getBoundingClientRect();
+        flyImg.style.left = rect.left + "px";
+        flyImg.style.top = rect.top + "px";
+
+        document.body.appendChild(flyImg);
+
+        // delay để animate
+        setTimeout(() => {
+            const cartRect = cart.getBoundingClientRect();
+
+            flyImg.style.left = cartRect.left + "px";
+            flyImg.style.top = cartRect.top + "px";
+            flyImg.style.width = "30px";
+            flyImg.style.opacity = "0.5";
+        }, 50);
+
+        // xóa sau khi bay xong
+        setTimeout(() => {
+            flyImg.remove();
+        }, 900);
+
+        // =========================
+        // CALL API
+        // =========================
+        await fetch(`http://localhost:8081/api/cart/add?variantId=${selectedVariantId}&quantity=1`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        // =========================
+        // UPDATE BADGE
+        // =========================
+        const badge = document.getElementById("cartCount");
+
+if (badge) {
+    let count = parseInt(badge.innerText) || 0;
+    count++;
+
+    if (count > 0) {
+        badge.innerText = count;
+        badge.style.display = "inline-block";
+    } else {
+        badge.innerText = "";
+        badge.style.display = "none";
+    }
+}
+
+    } catch (err) {
+        console.error(err);
+        alert("Lỗi thêm giỏ hàng");
+    }
+}
