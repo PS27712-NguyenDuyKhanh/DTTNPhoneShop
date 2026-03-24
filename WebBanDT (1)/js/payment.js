@@ -108,7 +108,7 @@ async function handlePayment(){
             method:"POST",
             headers:{
                 "Authorization":"Bearer " + sessionStorage.getItem("token"),
-                "Content-Type":"application/json"
+"Content-Type":"application/json"
             },
             body: JSON.stringify({
                 orderId: orderId,

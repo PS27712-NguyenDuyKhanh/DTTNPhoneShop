@@ -118,7 +118,7 @@ function updateSummary(total) {
         ${discount > 0 ? `
             <div style="color:#888">Tạm tính: ${formatMoney(total)}</div>
             <div style="color:#0a0">Giảm: -${formatMoney(discount)}</div>
-            <div style="font-size:18px"><strong>${formatMoney(finalTotal)}</strong></div>
+<div style="font-size:18px"><strong>${formatMoney(finalTotal)}</strong></div>
         ` : `
             ${formatMoney(total)}
         `}
@@ -244,14 +244,19 @@ async function checkout() {
                 phone,
                 address,
                 note,
-                voucherCode
+voucherCode
             })
         });
 
         if (!res.ok) throw new Error();
 
-        alert("Đặt hàng thành công 🎉");
-        loadCart();
+        const data = await res.json(); // 🔥 QUAN TRỌNG
+
+        // ❌ BỎ alert
+        // alert("Đặt hàng thành công 🎉");
+
+        // 🚀 CHUYỂN TRANG
+        window.location.href = `payment.html?orderId=${data.orderId}`;
 
     } catch {
         alert("Lỗi đặt hàng");
