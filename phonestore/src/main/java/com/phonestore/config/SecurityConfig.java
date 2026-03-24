@@ -16,6 +16,8 @@ public class SecurityConfig {
         this.jwtFilter = jwtFilter;
     }
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -31,7 +33,8 @@ public class SecurityConfig {
                                 "/api/categories/**",
                                 "/api/products/**",
                                 "/uploads/**",
-                                "/api/voucher/**"
+                                "/api/voucher/**",
+                                "/api/payments/**"
 
 
                         ).permitAll()
