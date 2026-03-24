@@ -32,10 +32,17 @@ function buildImageUrl(img){
 
 /* ================= LOAD PRODUCTS ================= */
 
-async function loadProducts() {
+let currentPage = 0;
+const size = 5;
 
-    const res = await fetch(API, { headers });
-    const products = await res.json();
+async function loadProducts(page = 0) {
+
+    currentPage = page;
+
+    const res = await fetch(`${API}?page=${page}&size=${size}`, { headers });
+    const data = await res.json();
+
+    const products = data.content;
 
     const table = document.getElementById("productTable");
     table.innerHTML = "";
@@ -70,7 +77,6 @@ async function loadProducts() {
             </td>
 
             <td>
-
                 <button class="delete" onclick="deleteProduct(${p.id})">
                     <i class="fa fa-trash"></i>
                 </button>
@@ -78,12 +84,13 @@ async function loadProducts() {
                 <button class="color" onclick="openVariant(${p.id})">
                     🎨
                 </button>
-
             </td>
 
         </tr>
         `;
     });
+
+    renderPagination(data);
 }
 
 /* ================= DELETE PRODUCT ================= */
@@ -264,6 +271,41 @@ function openVariant(productId){
 function closeVariant(){
 
     document.getElementById("variantModal").style.display = "none";
+}
+
+function renderPagination(data){
+
+    const container = document.getElementById("pagination");
+    container.innerHTML = "";
+
+    // Prev
+    if(!data.first){
+        container.innerHTML += `
+            <button onclick="loadProducts(${data.number - 1})">Prev</button>
+        `;
+    }
+
+    // Page numbers
+    for(let i = 0; i < data.totalPages; i++){
+        container.innerHTML += `
+            <button 
+                onclick="loadProducts(${i})"
+                style="
+                    margin:5px;
+                    padding:5px 10px;
+                    ${i === data.number ? 'background:black;color:white;' : ''}
+                ">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // Next
+    if(!data.last){
+        container.innerHTML += `
+            <button onclick="loadProducts(${data.number + 1})">Next</button>
+        `;
+    }
 }
 
 /* ================= LOAD PAGE ================= */
