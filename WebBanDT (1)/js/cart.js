@@ -43,10 +43,18 @@ function renderCart(data) {
     cartList.innerHTML = "";
 
     if (!data || !data.items || data.items.length === 0) {
-        cartList.innerHTML = "<p>Giỏ hàng của bạn đang trống</p>";
-        document.getElementById("tong").innerText = "0₫";
-        return;
-    }
+
+    document.querySelector(".cart-box").innerHTML = `
+        <div class="empty-cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h3>Giỏ hàng trống</h3>
+            <p>Hãy thêm sản phẩm vào giỏ hàng</p>
+            <a href="home.html" class="btn-home">Mua ngay</a>
+        </div>
+    `;
+
+    return;
+}
 
     let total = 0;
 
@@ -369,4 +377,39 @@ function selectVoucher(code) {
 document.addEventListener("DOMContentLoaded", () => {
     loadCart();
     loadVouchers();
+});
+
+function toggleVoucherBox() {
+
+    const content = document.getElementById("voucherContent");
+    const icon = document.getElementById("voucherIcon");
+    const list = document.getElementById("voucherList");
+
+    const isOpen = content.classList.contains("active");
+
+    // toggle input
+    content.classList.toggle("active");
+    icon.classList.toggle("rotate");
+
+    // 🔥 LOAD LIST GIỐNG TOPZONE
+    if (!isOpen) {
+        renderVoucherList(); // 👉 gọi lại list voucher của bạn
+    } else {
+        list.innerHTML = "";
+    }
+}
+
+document.getElementById("voucher").addEventListener("input", () => {
+
+    const code = document.getElementById("voucher").value.trim();
+
+    // nếu user xóa hết
+    if (!code) {
+        selectedVoucher = null;
+
+        let total = 0;
+        cartData.items.forEach(i => total += i.price * i.quantity);
+
+        updateSummary(total);
+    }
 });
