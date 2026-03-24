@@ -3,6 +3,8 @@ package com.phonestore.controller.Admin;
 import com.phonestore.dto.CreateCategoryRequest;
 import com.phonestore.entity.Category;
 import com.phonestore.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,11 @@ public class AdminCategoryController {
 
     // lấy danh sách category
     @GetMapping
-    public List<Category> getAll(){
-        return categoryRepository.findAll();
+    public Page<Category> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return categoryRepository.findAll(PageRequest.of(page, size));
     }
 
     // tạo category

@@ -12,9 +12,6 @@
 </head>
 
 <body>
-
-    <script src="../js/admin/auth-check.js"></script>
-
     <div class="container">
 
         <!-- SIDEBAR -->
@@ -92,8 +89,19 @@
                 <input type="text" placeholder="Tìm kiếm...">
 
                 <div class="admin-user">
+
+                    <!-- 🔔 ICON CHUÔNG -->
+                    <div style="position: relative; margin-right: 15px;">
+                        <i class="fa-solid fa-bell"></i>
+
+                        <!-- 🔴 BADGE -->
+                        <span id="orderBadge" class="badge"></span>
+                    </div>
+
+                    <!-- USER -->
                     <i class="fa-solid fa-user"></i>
                     <span id="adminName">Admin</span>
+
                 </div>
 
             </div>
@@ -188,6 +196,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/admin/admin.js"></script>
+    <script src="../js/auth-check.js"></script>
 
 
 </body>

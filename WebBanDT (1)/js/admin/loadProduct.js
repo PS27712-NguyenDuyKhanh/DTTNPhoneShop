@@ -33,64 +33,33 @@ function buildImageUrl(img){
 /* ================= LOAD PRODUCTS ================= */
 
 let currentPage = 0;
-const size = 5;
+const size = 10;
 
 async function loadProducts(page = 0) {
 
     currentPage = page;
 
-    const res = await fetch(`${API}?page=${page}&size=${size}`, { headers });
+    const url = `${API}?page=${page}&size=${size}`;
+    console.log("CALL API:", url);
+
+    const res = await fetch(url, { headers });
     const data = await res.json();
 
-    const products = data.content;
+    console.log("RESPONSE:", data);
+
+    const products = data.content || data; // 🔥 FIX
 
     const table = document.getElementById("productTable");
     table.innerHTML = "";
 
     products.forEach(p => {
-
-        const image = buildImageUrl(
-            p.variants?.[0]?.images?.[0]?.imageUrl
-        );
-
-        const stock = p.variants?.reduce(
-            (s,v)=>s+(v.stock || 0), 0
-        ) || 0;
-
-        table.innerHTML += `
-        <tr>
-
-            <td>${p.id}</td>
-
-            <td>
-                <img src="${image}" width="50">
-            </td>
-
-            <td>${p.name}</td>
-
-            <td>${(p.variants?.[0]?.price || 0).toLocaleString()}đ</td>
-
-            <td>${stock}</td>
-
-            <td class="${stock > 0 ? "status-active" : "locked"}">
-                ${stock > 0 ? "Đang bán" : "Hết hàng"}
-            </td>
-
-            <td>
-                <button class="delete" onclick="deleteProduct(${p.id})">
-                    <i class="fa fa-trash"></i>
-                </button>
-
-                <button class="color" onclick="openVariant(${p.id})">
-                    🎨
-                </button>
-            </td>
-
-        </tr>
-        `;
+        table.innerHTML += `<tr><td>${p.id}</td><td>${p.name}</td></tr>`;
     });
 
-    renderPagination(data);
+    // chỉ render pagination khi có Page
+    if(data.totalPages !== undefined){
+        renderPagination(data);
+    }
 }
 
 /* ================= DELETE PRODUCT ================= */

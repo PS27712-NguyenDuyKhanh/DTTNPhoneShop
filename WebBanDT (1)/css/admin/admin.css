@@ -502,3 +502,12 @@ box-shadow:0 6px 15px rgba(0,0,0,0.2);
     background: #333;
     color: #fff;
 }
+
+.badge {
+    background: red;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 50%;
+    font-size: 12px;
+    margin-left: 5px;
+}

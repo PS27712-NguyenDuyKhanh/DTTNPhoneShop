@@ -4,6 +4,9 @@ import com.phonestore.dto.VoucherDTO;
 import com.phonestore.entity.*;
 import com.phonestore.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -141,6 +144,13 @@ public class VoucherService {
 
         v.setUsed(v.getUsed() + 1);
         voucherRepository.save(v);
+    }
+
+    public Page<Voucher> getAll(int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return voucherRepository.findAll(pageable);
     }
 
     public void delete(Long id){

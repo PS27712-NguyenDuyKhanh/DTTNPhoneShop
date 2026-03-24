@@ -4,6 +4,7 @@
 const API = "http://localhost:8081/api/admin/orders";
 
 let allOrders = [];
+let lastNewCount = 0;
 
 // ==========================
 // AUTH
@@ -54,11 +55,16 @@ function translate(s){
 // ==========================
 // LOAD ORDERS
 // ==========================
-async function loadOrders(){
+let currentPage = 0;
+const size = 10;
+
+async function loadOrders(page = 0){
+
+    currentPage = page;
 
     try {
 
-        const res = await fetch(API, {
+        const res = await fetch(`${API}?page=${page}&size=${size}`, {
             headers: getAuthHeader()
         });
 
@@ -76,14 +82,60 @@ async function loadOrders(){
         }
 
         const data = await res.json();
-        allOrders = data;
 
-        renderOrders(data);
+        console.log("ORDERS:", data);
+
+        // 🔥 FIX CHUẨN
+        const orders = data.content || [];
+
+        allOrders = orders;
+
+        renderOrders(orders);
+
+        // 🔥 render pagination
+        renderPagination(data);
 
     } catch (err) {
         console.error(err);
         alert("Lỗi server!");
     }
+}
+
+function renderPagination(data){
+
+    const container = document.getElementById("pagination");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!data.totalPages) return;
+
+    // Prev
+    container.innerHTML += `
+        <button ${data.first ? 'disabled' : ''} 
+            onclick="loadOrders(${data.number - 1})">
+            ←
+        </button>
+    `;
+
+    // Pages
+    for(let i = 0; i < data.totalPages; i++){
+        container.innerHTML += `
+            <button 
+                onclick="loadOrders(${i})"
+                class="${i === data.number ? 'active-page' : ''}">
+                ${i + 1}
+            </button>
+        `;
+    }
+
+    // Next
+    container.innerHTML += `
+        <button ${data.last ? 'disabled' : ''} 
+            onclick="loadOrders(${data.number + 1})">
+            →
+        </button>
+    `;
 }
 
 // ==========================
@@ -222,6 +274,44 @@ function closeDetail(){
     document.getElementById("orderDetail").style.display = "none";
 }
 
+async function checkNewOrders(){
+
+    try {
+
+        const res = await fetch(`${API}/new-count`, {
+            headers: getAuthHeader()
+        });
+
+        const count = Number(await res.text());
+
+        // 🔴 update badge
+        updateBadge(count);
+
+        // 🔔 nếu có đơn mới
+        if(count > lastNewCount){
+            toast("🛒 Có đơn hàng mới!");
+        }
+
+        lastNewCount = count;
+
+    } catch (err) {
+        console.error("Lỗi check đơn mới:", err);
+    }
+}
+function updateBadge(count){
+
+    const badge = document.getElementById("orderBadge");
+
+    if(!badge) return;
+
+    if(count > 0){
+        badge.innerText = count;
+        badge.style.display = "inline-block";
+    }else{
+        badge.style.display = "none";
+    }
+}
+
 // ==========================
 // UPDATE STATUS
 // ==========================
@@ -251,6 +341,28 @@ async function updateStatus(id, status){
     }
 }
 
+function toast(msg){
+
+    const t = document.createElement("div");
+
+    t.innerText = msg;
+
+    t.style = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: black;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        z-index: 9999;
+    `;
+
+    document.body.appendChild(t);
+
+    setTimeout(() => t.remove(), 3000);
+}
+
 // ==========================
 // INIT
 // ==========================
@@ -262,4 +374,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     loadOrders();
+
+// 🔥 chạy lần đầu
+checkNewOrders();
+
+// 🔥 chạy mỗi 5 giây
+setInterval(checkNewOrders, 5000);
 });
