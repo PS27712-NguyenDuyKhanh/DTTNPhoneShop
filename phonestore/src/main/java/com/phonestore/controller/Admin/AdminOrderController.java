@@ -7,6 +7,7 @@ import com.phonestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import com.phonestore.entity.OrderStatus;
 
 import java.util.List;
 
@@ -50,6 +51,6 @@ public class AdminOrderController {
 
     @GetMapping("/new-count")
     public long countNewOrders() {
-        return orderRepository.countByStatus("PENDING");
+        return orderRepository.countByStatus(OrderStatus.PENDING);
     }
 }
