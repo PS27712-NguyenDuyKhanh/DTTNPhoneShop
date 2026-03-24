@@ -25,11 +25,8 @@ public class PaymentService {
         Order order = orderRepository.findById(req.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
-        // ❗ chỉ check đơn tồn tại thôi (không ép status)
-        // vì order PENDING = chờ admin duyệt, không liên quan thanh toán
-
         // ❗ tránh tạo 2 payment
-        if(paymentRepository.findByOrderId(order.getId()).isPresent()){
+        if(paymentRepository.findByOrder_Id(order.getId()).isPresent()){
             throw new RuntimeException("Đơn đã có thanh toán");
         }
 
@@ -75,6 +72,9 @@ public class PaymentService {
         }
 
         paymentRepository.save(payment);
+
+        // 🔥 đảm bảo update order khi COD / ZALO
+        orderRepository.save(order);
     }
 
     // =========================
@@ -82,22 +82,24 @@ public class PaymentService {
     // =========================
     public void confirmPayment(Long orderId){
 
-        Payment p = paymentRepository.findByOrderId(orderId)
+        Payment p = paymentRepository.findByOrder_Id(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
 
         if(p.getStatus() == PaymentStatus.SUCCESS){
             throw new RuntimeException("Đã thanh toán rồi");
         }
 
+        // update payment
         p.setStatus(PaymentStatus.SUCCESS);
         p.setPaidAt(LocalDateTime.now());
-
         paymentRepository.save(p);
 
-        // ✅ CẬP NHẬT ORDER
-        Order order = p.getOrder();
-        order.setPaid(true);
+        // 🔥 FIX QUAN TRỌNG NHẤT
+        // load lại order từ DB (không dùng p.getOrder())
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy order"));
 
+        order.setPaid(true);
         orderRepository.save(order);
     }
 
@@ -105,8 +107,8 @@ public class PaymentService {
     // CHECK STATUS
     // =========================
     public PaymentStatus getStatus(Long orderId){
-        return paymentRepository.findByOrderId(orderId)
+        return paymentRepository.findByOrder_Id(orderId)
                 .map(Payment::getStatus)
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
     }
 }

@@ -54,6 +54,7 @@ public class OrderMapper {
         dto.setAddress(order.getAddress());
         dto.setNote(order.getNote());
         dto.setTotal(order.getTotal());
+        dto.setPaid(order.getPaid());
 
         // 🔥 VOUCHER
         dto.setVoucherCode(order.getVoucherCode());

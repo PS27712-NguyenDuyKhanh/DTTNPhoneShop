@@ -35,7 +35,8 @@ public class Order {
 
     private double total;
 
-    private Boolean Paid;
+    @Column(name = "paid")
+    private Boolean paid;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;

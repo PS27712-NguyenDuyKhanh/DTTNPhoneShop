@@ -86,25 +86,24 @@
         <p><b>STK:</b> 123456789</p>
         <p><b>Chủ TK:</b> HOANG NAM</p>
 
-        <!-- 🔥 FIX: hiển thị orderId -->
         <p style="color:red;">⚠ Nội dung: PAY-<span id="orderCode"></span></p>
 
         <img id="qrImg" width="200">
     </div>
 
-    <!-- 🔥 FIX: thêm id để JS control -->
-    <button id="payBtn" onclick="confirmPayment()">XÁC NHẬN</button>
+    <!-- 🔥 BUTTON -->
+    <button id="confirmBtn" onclick="handlePayment()" disabled>
+    Xác nhận thanh toán
+</button>
 
 </div>
 
 <script src="../js/payment.js"></script>
 
-<!-- 🔥 FIX: hiển thị orderId (KHÔNG khai báo lại biến) -->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const id = new URLSearchParams(window.location.search).get("orderId");
-        const el = document.getElementById("orderCode");
-        if(el) el.innerText = id;
+        document.getElementById("orderCode").innerText = id;
     });
 </script>
 

@@ -35,4 +35,6 @@ public class OrderDTO {
     private String voucherCode;
 
     private Double discount;
+
+    private Boolean paid;
 }
