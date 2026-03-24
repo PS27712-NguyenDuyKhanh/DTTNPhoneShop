@@ -3,109 +3,146 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Thanh toán</title>
+    <title>Thanh toán | PhoneShop</title>
 
-    <style>
-        .payment-box{
-            width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-family: Arial;
-        }
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/payment.css">
 
-        .payment-box h3{
-            margin-bottom: 15px;
-        }
-
-        .payment-method{
-            display: block;
-            margin: 8px 0;
-        }
-
-        #bankBox{
-            margin-top: 15px;
-            padding: 10px;
-            border: 1px dashed #aaa;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        #bankBox img{
-            margin-top: 10px;
-        }
-
-        button{
-            margin-top: 15px;
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background: #007bff;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:disabled{
-            background: gray;
-            cursor: not-allowed;
-        }
-    </style>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
 <body>
 
-<div class="payment-box">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-container">
 
-    <h3>Thanh toán đơn hàng</h3>
+            <a href="home.html" class="logo">
+                <img src="../img/logo.jpg">
+                <span>PhoneShop</span>
+            </a>
 
-    <div id="orderInfo"></div>
+            <div class="dropdown">
+                <button class="dropbtn">
+                    Danh mục <i class="fa fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content" id="categoryMenu"></div>
+            </div>
 
-    <hr>
+            <div class="search-box">
+                <input type="text" placeholder="Tìm điện thoại...">
+                <button>
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
 
-    <!-- METHOD -->
-    <label class="payment-method">
-        <input type="radio" name="method" value="COD" checked>
-        Thanh toán khi nhận hàng
-    </label>
+            <a href="cart.html" class="cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="cartCount" class="cart-count" style="display:none;"></span>
+            </a>
 
-    <label class="payment-method">
-        <input type="radio" name="method" value="BANK">
-        Chuyển khoản ngân hàng
-    </label>
+            <a href="login.html" class="btn-header" id="btnLogin">
+                <i class="fa-solid fa-user"></i> Đăng nhập
+            </a>
 
-    <label class="payment-method">
-        <input type="radio" name="method" value="ZALOPAY">
-        Ví ZaloPay
-    </label>
+            <span class="user-name" id="userName" style="display:none;"></span>
 
-    <!-- BANK INFO -->
-    <div id="bankBox" style="display:none;">
-        <p><b>Ngân hàng:</b> MB Bank</p>
-        <p><b>STK:</b> 123456789</p>
-        <p><b>Chủ TK:</b> HOANG NAM</p>
+            <button id="btnLogout" class="btn-logout" style="display:none;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
 
-        <p style="color:red;">⚠ Nội dung: PAY-<span id="orderCode"></span></p>
+        </div>
+    </header>
 
-        <img id="qrImg" width="200">
-    </div>
+    <!-- MAIN -->
+    <main>
 
-    <!-- 🔥 BUTTON -->
-    <button id="confirmBtn" onclick="handlePayment()" disabled>
-    Xác nhận thanh toán
-</button>
+        <div class="payment-box">
 
-</div>
+            <h3>Thanh toán đơn hàng</h3>
 
-<script src="../js/payment.js"></script>
+            <div id="orderInfo"></div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const id = new URLSearchParams(window.location.search).get("orderId");
-        document.getElementById("orderCode").innerText = id;
-    });
-</script>
+            <hr>
+
+            <label class="payment-method">
+                <input type="radio" name="method" value="COD" checked>
+                Thanh toán khi nhận hàng
+            </label>
+
+            <label class="payment-method">
+                <input type="radio" name="method" value="BANK">
+                Chuyển khoản ngân hàng
+            </label>
+
+            <label class="payment-method">
+                <input type="radio" name="method" value="ZALOPAY">
+                Ví ZaloPay
+            </label>
+
+            <div id="bankBox" style="display:none;">
+                <p><b>Ngân hàng:</b> MB Bank</p>
+                <p><b>STK:</b> 123456789</p>
+                <p><b>Chủ TK:</b> HOANG NAM</p>
+
+                <p style="color:red;">
+                    ⚠ Nội dung: PAY-<span id="orderCode"></span>
+                </p>
+
+                <img id="qrImg" width="200">
+            </div>
+
+            <button id="confirmBtn" onclick="handlePayment()" disabled>
+                Xác nhận thanh toán
+            </button>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-grid">
+
+            <div>
+                <h4>PhoneShop</h4>
+                <p>Điện thoại chính hãng 100%</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <a href="home.html">Trang chủ</a>
+                <a href="#">Sản phẩm</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📞 0123 456 789</p>
+                <p>📍 TP. Hồ Chí Minh</p>
+            </div>
+
+        </div>
+
+        <p class="copyright">© 2026 PhoneShop</p>
+    </footer>
+
+    <!-- SCRIPT -->
+    <script src="../js/home.js"></script>
+    <script src="../js/loadCategoriesUser.js"></script>
+    <script src="../js/auth-check.js"></script>
+    <script src="../js/payment.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const id = new URLSearchParams(window.location.search).get("orderId");
+            if (id) {
+                document.getElementById("orderCode").innerText = id;
+            }
+        });
+    </script>
 
 </body>
 </html>

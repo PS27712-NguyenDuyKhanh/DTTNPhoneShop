@@ -1,0 +1,106 @@
+body {
+    background: #f5f6f8;
+    font-family: Arial, sans-serif;
+}
+
+/* tránh header đè */
+main {
+    margin-top: 100px;
+    min-height: 70vh;
+}
+
+/* ===== BOX ===== */
+.payment-box {
+    width: 480px;
+    margin: 40px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* title */
+.payment-box h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+/* order info */
+#orderInfo {
+    background: #f9fafb;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+#orderInfo p {
+    margin: 6px 0;
+}
+
+/* divider */
+hr {
+    border: none;
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+}
+
+/* method */
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.payment-method:hover {
+    background: #f3f4f6;
+}
+
+.payment-method input {
+    accent-color: #007bff;
+}
+
+/* bank */
+#bankBox {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    background: #fff7ed;
+    border: 1px dashed #fb923c;
+    text-align: center;
+}
+
+/* button riêng */
+.payment-box button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.payment-box button:hover {
+    transform: translateY(-2px);
+}
+
+.payment-box button:disabled {
+    background: #ccc;
+}
+
+/* status */
+.status-paid {
+    color: green;
+}
+
+.status-unpaid {
+    color: red;
+}

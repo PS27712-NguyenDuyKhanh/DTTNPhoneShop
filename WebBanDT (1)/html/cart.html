@@ -76,11 +76,6 @@
     <!-- CART -->
     <div class="cart-wrapper">
 
-        <div class="cart-header">
-            <a href="home.html" class="back">‹ Về trang chủ PhoneShop</a>
-            <span class="title">Giỏ hàng của bạn</span>
-        </div>
-
         <!-- LIST -->
         <div class="cart-box">
 
@@ -93,6 +88,24 @@
 
             <!-- CHECKOUT FORM -->
             <div class="checkout-box">
+
+                <!-- VOUCHER -->
+                <div class="voucher-container">
+
+                    <div class="voucher-header" onclick="toggleVoucherBox()">
+                        <span><i class="fa-solid fa-ticket"></i> Sử dụng mã giảm giá</span>
+                        <i class="fa-solid fa-chevron-down" id="voucherIcon"></i>
+                    </div>
+
+                    <div class="voucher-content" id="voucherContent">
+
+                        <input id="voucher" placeholder="Nhập mã giảm giá / Phiếu mua hàng">
+
+                    </div>
+
+                    <div id="voucherList" class="voucher-list"></div>
+
+                </div>
 
                 <h3>Thông tin khách hàng</h3>
 
@@ -109,23 +122,12 @@
                 </div>
 
                 <h3>Địa chỉ nhận hàng</h3>
-<div class="form-group">
+                <div class="form-group">
                     <input type="text" id="address" placeholder="Số nhà, tên đường">
                     <small class="error" id="errAddress"></small>
                 </div>
 
                 <textarea id="note" placeholder="Ghi chú (nếu có)"></textarea>
-
-                <!-- VOUCHER -->
-                <div class="voucher-box">
-                    <input id="voucher" placeholder="Nhập mã giảm giá">
-
-                    <button type="button" onclick="toggleVoucherList()">
-                        Chọn mã
-                    </button>
-                </div>
-
-                <div id="voucherList" class="voucher-list"></div>
 
                 <!-- BUTTON -->
                 <button class="order-btn" id="orderBtn" onclick="checkout()" disabled>
@@ -138,6 +140,35 @@
 
     </div>
 
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="footer-grid">
+
+            <div>
+                <h4>PhoneShop</h4>
+                <p>Điện thoại chính hãng 100%</p>
+            </div>
+
+            <div>
+                <h4>Liên kết</h4>
+                <a href="#">Trang chủ</a>
+                <a href="#products">Sản phẩm</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
+            <div>
+                <h4>Liên hệ</h4>
+                <p>📞 0123 456 789</p>
+                <p>📍 TP. Hồ Chí Minh</p>
+            </div>
+
+        </div>
+
+        <p class="copyright">© 2026 PhoneShop</p>
+
+    </footer>
+
     <!-- JS -->
     <script src="../js/home.js"></script>
     <script src="../js/loadCategoriesUser.js"></script>
@@ -145,6 +176,7 @@
     <script src="../js/cart.js"></script>
 
 </body>
+
 </html>
 
 <script>
