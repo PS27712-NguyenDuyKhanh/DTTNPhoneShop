@@ -294,3 +294,12 @@ if (badge) {
         alert("Lỗi thêm giỏ hàng");
     }
 }
+
+function buyNow(){
+
+    // 🔥 gọi lại hàm thêm vào giỏ
+    addToCart();
+
+    // 🔥 chuyển sang trang giỏ hàng
+    window.location.href = "cart.html";
+}

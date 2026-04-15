@@ -1,3 +1,4 @@
+
 const API = "http://localhost:8081/api";
 const orderId = new URLSearchParams(window.location.search).get("orderId");
 
@@ -41,14 +42,8 @@ function renderOrder(o){
 
     const btn = document.getElementById("confirmBtn");
 
-    if(o.paid){
-        btn.disabled = false;
-        btn.innerText = "Hoàn tất";
-    } else {
-        // 🔥 KHÔNG disable nữa (fix lỗi VNPAY)
-        btn.disabled = false;
-        btn.innerText = "Thanh toán";
-    }
+    btn.disabled = false;
+    btn.innerText = o.paid ? "Hoàn tất" : "Thanh toán";
 }
 
 // ==========================
@@ -77,7 +72,6 @@ async function createBankPayment(){
 // ==========================
 async function handlePayment(){
 
-    // check order mới nhất
     const res = await fetch(`${API}/orders/${orderId}`, {
         headers:{
             "Authorization":"Bearer " + sessionStorage.getItem("token")
@@ -86,9 +80,8 @@ async function handlePayment(){
 
     const o = await res.json();
 
-    // nếu đã thanh toán
     if(o.paid){
-        window.location.href = `success.html?orderId=${orderId}`;
+        showSuccess();
         return;
     }
 
@@ -102,9 +95,9 @@ async function handlePayment(){
     const method = selected.value;
 
     // =========================
-    // COD / ZALOPAY
+    // COD
     // =========================
-    if(method === "COD" || method === "ZALOPAY"){
+    if(method === "COD"){
 
         const payRes = await fetch(`${API}/payments`, {
             method:"POST",
@@ -122,19 +115,21 @@ async function handlePayment(){
             return alert("Thanh toán thất bại!");
         }
 
-        window.location.href = `success.html?orderId=${orderId}`;
+        showSuccess();
     }
 
     // =========================
     // BANK
     // =========================
     else if(method === "BANK"){
-        alert("Vui lòng chuyển khoản. Admin sẽ xác nhận!");
-        startPolling();
+
+        showWaiting(); // 🔥 popup chờ
+
+        startPolling(); // check admin
     }
 
     // =========================
-    // 🔥 VNPAY
+    // VNPAY
     // =========================
     else if(method === "VNPAY"){
 
@@ -151,7 +146,6 @@ async function handlePayment(){
 
             const data = await res.json();
 
-            // redirect sang VNPAY
             window.location.href = data.url;
 
         } catch(err){
@@ -162,13 +156,13 @@ async function handlePayment(){
 }
 
 // ==========================
-// POLLING (BANK ONLY)
+// POLLING
 // ==========================
 let pollingInterval = null;
 
 function startPolling(){
 
-    if(pollingInterval) return; // tránh chạy nhiều lần
+    if(pollingInterval) return;
 
     pollingInterval = setInterval(async () => {
 
@@ -189,8 +183,8 @@ function startPolling(){
                 clearInterval(pollingInterval);
                 pollingInterval = null;
 
-                alert("Đã xác nhận thanh toán!");
-                window.location.href = `success.html?orderId=${orderId}`;
+                hideWaiting();   // 🔥 tắt chờ
+                showSuccess();   // 🔥 hiện success
             }
 
         } catch(err){
@@ -216,9 +210,8 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
 
             createBankPayment();
 
-            // 🔥 chỉ disable khi BANK
-            btn.disabled = true;
-            btn.innerText = "Chờ chuyển khoản...";
+            btn.disabled = false;
+            btn.innerText = "Thanh toán";
 
             document.getElementById("qrImg").src =
                 "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PAY-" + orderId;
@@ -227,15 +220,32 @@ document.querySelectorAll('input[name="method"]').forEach(radio => {
 
             bankBox.style.display = "none";
 
-            // 🔥 mở lại cho VNPAY / COD
-            btn.disabled = false;
             btn.innerText = "Thanh toán";
         }
     });
 });
 
 // ==========================
+// MODAL
+// ==========================
+function showWaiting(){
+    document.getElementById("waitingModal").style.display = "flex";
+}
+
+function hideWaiting(){
+    document.getElementById("waitingModal").style.display = "none";
+}
+
+function showSuccess(){
+    document.getElementById("successModal").style.display = "flex";
+}
+
+function goHome(){
+    window.location.href = "home.html";
+}
+
+// ==========================
 // INIT
 // ==========================
 loadOrder();
-startPolling();
+

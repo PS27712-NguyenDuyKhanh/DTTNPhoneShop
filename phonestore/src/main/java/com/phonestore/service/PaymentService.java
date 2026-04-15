@@ -41,8 +41,8 @@ public class PaymentService {
         if(req.getMethod().equals("COD")){
             payment.setStatus(PaymentStatus.SUCCESS);
             payment.setTransactionId("COD-" + UUID.randomUUID());
-            payment.setPaidAt(LocalDateTime.now());
-            order.setPaid(true);
+
+            order.setPaid(false);
         }
 
         // BANK

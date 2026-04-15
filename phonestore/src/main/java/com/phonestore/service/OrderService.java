@@ -25,6 +25,9 @@ public class OrderService {
     private final UserRepository userRepository;
     private final VoucherService voucherService;
 
+    // 🔥 THÊM DÒNG NÀY
+    private final VariantRepository variantRepository;
+
     // =========================
     // CHECKOUT (USER)
     // =========================
@@ -44,7 +47,6 @@ public class OrderService {
         }
 
         String code = request.getVoucherCode();
-
         double total = 0;
 
         // =========================
@@ -60,15 +62,29 @@ public class OrderService {
         order = orderRepository.save(order);
 
         // =========================
-        // 🔥 CREATE ITEMS + TÍNH TOTAL (SALE LOGIC)
+        // 🔥 CREATE ITEMS + TÍNH TOTAL + TRỪ KHO
         // =========================
         for (CartItem ci : cartItems) {
 
             Variant v = ci.getVariant();
 
+            // 🔥 CHECK HẾT HÀNG
+            if (v.getStock() <= 0) {
+                throw new RuntimeException("Sản phẩm đã hết hàng");
+            }
+
+            // 🔥 CHECK KHÔNG ĐỦ HÀNG
+            if (v.getStock() < ci.getQuantity()) {
+                throw new RuntimeException("Sản phẩm không đủ hàng");
+            }
+
+            // 🔥 TRỪ SỐ LƯỢNG
+            v.setStock(v.getStock() - ci.getQuantity());
+            variantRepository.save(v); // 🔥 QUAN TRỌNG
+
             double price;
 
-            // 🔥 LOGIC SALE CHUẨN
+            // 🔥 LOGIC SALE GIỮ NGUYÊN
             if (v.getSalePrice() != null &&
                     v.getSaleStart() != null &&
                     v.getSaleEnd() != null &&
@@ -84,7 +100,7 @@ public class OrderService {
             oi.setOrder(order);
             oi.setVariant(v);
             oi.setQuantity(ci.getQuantity());
-            oi.setPrice(price); // 🔥 CHỐT GIÁ
+            oi.setPrice(price);
 
             total += price * ci.getQuantity();
 
