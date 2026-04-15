@@ -1,0 +1,13 @@
+<h2>Thanh toán thành công 🎉</h2>
+<p id="order"></p>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("orderId");
+
+  document.getElementById("order").innerText = "Mã đơn: " + orderId;
+
+  setTimeout(() => {
+    window.location.href = "/html/home.html";
+  }, 3000);
+</script>

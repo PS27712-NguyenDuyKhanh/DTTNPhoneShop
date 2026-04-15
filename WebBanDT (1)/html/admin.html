@@ -6,9 +6,7 @@
     <title>Admin Dashboard</title>
 
     <link rel="stylesheet" href="../css/admin/admin.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 </head>
 
 <body>
@@ -16,11 +14,9 @@
 
         <!-- SIDEBAR -->
         <div class="sidebar">
-
             <h2 class="logo">PhoneShop</h2>
 
             <ul>
-
                 <li class="active">
                     <a href="/admin/admin.html">
                         <i class="fa fa-chart-line"></i>
@@ -28,170 +24,147 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="acount.html">
-                        <i class="fa fa-user"></i>
-                        Quản lý tài khoản
-                    </a>
-                </li>
-
-                <li>
-                    <a href="product.html">
-                        <i class="fa fa-mobile"></i>
-                        Quản lý sản phẩm
-                    </a>
-                </li>
-
-                <li>
-                    <a href="order.html">
-                        <i class="fa fa-box"></i>
-                        Quản lý đơn hàng
-                    </a>
-                </li>
-
-                <li>
-                    <a href="categories.html">
-                        <i class="fa fa-warehouse"></i>
-                        Quản lý danh mục
-                    </a>
-                </li>
-
-                <li>
-                    <a href="coupon.html">
-                        <i class="fa fa-ticket"></i>
-                        Mã giảm giá
-                    </a>
-                </li>
-
-                <li>
-                    <a href="review.html">
-                        <i class="fa-solid fa-star"></i>
-                        Đánh giá
-                    </a>
-                </li>
-
+                <li><a href="acount.html"><i class="fa fa-user"></i> Quản lý tài khoản</a></li>
+                <li><a href="product.html"><i class="fa fa-mobile"></i> Quản lý sản phẩm</a></li>
+                <li><a href="order.html"><i class="fa fa-box"></i> Quản lý đơn hàng</a></li>
+                <li><a href="categories.html"><i class="fa fa-warehouse"></i> Quản lý danh mục</a></li>
+                <li><a href="coupon.html"><i class="fa fa-ticket"></i> Mã giảm giá</a></li>
+                <li><a href="review.html"><i class="fa-solid fa-star"></i> Đánh giá</a></li>
             </ul>
 
             <button class="logout" id="btnLogout">
                 <i class="fa fa-sign-out"></i>
                 Đăng xuất
             </button>
-
         </div>
-
 
         <!-- MAIN -->
         <div class="main">
 
             <!-- TOPBAR -->
             <div class="topbar">
-
                 <input type="text" placeholder="Tìm kiếm...">
 
                 <div class="admin-user">
-
-    
-
-                    <!-- USER -->
                     <i class="fa-solid fa-user"></i>
                     <span id="adminName">Admin</span>
-
                 </div>
-
             </div>
-
 
             <!-- DASHBOARD CARDS -->
+
             <div class="cards">
-
                 <div class="card revenue">
-
-                    <div class="card-icon">
-                        <i class="fa fa-dollar-sign"></i>
-                    </div>
-
+                    <div class="card-icon"><i class="fa fa-dollar-sign"></i></div>
                     <div class="card-info">
                         <h3>Doanh thu</h3>
-                        <p>120.000.000đ</p>
+                        <p>0đ</p>
                     </div>
-
                 </div>
-
 
                 <div class="card orders">
-
-                    <div class="card-icon">
-                        <i class="fa fa-shopping-cart"></i>
-                    </div>
-
+                    <div class="card-icon"><i class="fa fa-shopping-cart"></i></div>
                     <div class="card-info">
                         <h3>Đơn hàng</h3>
-                        <p>350</p>
+                        <p>0</p>
                     </div>
-
                 </div>
-
 
                 <div class="card products">
-
-                    <div class="card-icon">
-                        <i class="fa fa-mobile"></i>
-                    </div>
-
+                    <div class="card-icon"><i class="fa fa-mobile"></i></div>
                     <div class="card-info">
                         <h3>Sản phẩm</h3>
-                        <p>120</p>
+                        <p>0</p>
                     </div>
-
                 </div>
 
-
-                <div class="card users">
-
-                    <div class="card-icon">
-                        <i class="fa fa-users"></i>
-                    </div>
-
+                <div class="card users users-card">
+                    <div class="card-icon"><i class="fa fa-users"></i></div>
                     <div class="card-info">
                         <h3>Khách hàng</h3>
-                        <p>85</p>
+                        <p>0</p>
                     </div>
-
                 </div>
 
             </div>
 
+            <!-- CHART -->
+            <div style="margin-bottom:10px;">
+                <button onclick="changeMode('day')">Ngày</button>
+                <button onclick="changeMode('month')">Tháng</button>
+                <button onclick="changeMode('year')">Năm</button>
+            </div>
+
+            <div style="margin-bottom:10px;">
+
+                <input type="date" id="datePicker">
+                <button onclick="filterDay()">Xem ngày</button>
+
+                <input type="month" id="monthPicker">
+                <button onclick="filterMonth()">Xem tháng</button>
+
+                <input type="number" id="yearPicker" placeholder="Nhập năm">
+                <button onclick="filterYear()">Xem năm</button>
+
+            </div>
             <div class="charts">
 
-                <!-- BIỂU ĐỒ DOANH THU -->
-                <div class="chart-box">
 
+                <!-- DOANH THU -->
+                <div class="chart-box">
                     <h2>Biểu đồ doanh thu theo tháng</h2>
-
                     <canvas id="revenueChart"></canvas>
-
                 </div>
 
-
-                <!-- BIỂU ĐỒ SẢN PHẨM -->
+                <!-- DANH MỤC -->
                 <div class="chart-box">
-
-                    <h2>Thống kê sản phẩm theo hãng</h2>
-
+                    <h2>Thống kê sản phẩm theo danh mục</h2>
                     <canvas id="productChart"></canvas>
-
                 </div>
+
+                <!-- TOP SẢN PHẨM -->
+                <div class="chart-box">
+                    <h2>Top sản phẩm bán chạy</h2>
+                    <ul id="topProducts"></ul>
+                </div>
+
+                <!-- TOP KHÁCH -->
+                <div class="chart-box">
+                    <h2>Top khách hàng</h2>
+                    <ul id="topCustomers"></ul>
+                </div>
+
+
+                <div class="chart-box">
+                    <h2>Thanh toán (COD vs VNPAY)</h2>
+                    <canvas id="paymentChart"></canvas>
+                </div>
+
+
+                <div class="chart-box">
+                        <h2>Danh sách khách hàng</h2>
+
+                        <table class="customer-table">
+                            <thead>
+                                <tr>
+                                    <th>Tên</th>
+                                    <th>Email</th>
+                                    <th>Tổng tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerTable"></tbody>
+                        </table>
+                    </div>
+
 
             </div>
 
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/admin/admin.js"></script>
     <script src="../js/auth-check.js"></script>
-
 
 </body>
 

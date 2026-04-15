@@ -39,7 +39,7 @@ public class PaymentService {
 
         // COD
         if(req.getMethod().equals("COD")){
-            payment.setStatus(PaymentStatus.SUCCESS);
+            payment.setStatus(PaymentStatus.PENDING);
             payment.setTransactionId("COD-" + UUID.randomUUID());
 
             order.setPaid(false);
