@@ -264,4 +264,36 @@ public class ProductService {
             }
         }
     }
+
+    private ProductDTO toDTO(Product p){
+
+        Double price = null;
+        String image = null;
+
+        if(p.getVariants() != null && !p.getVariants().isEmpty()){
+
+            Variant v = p.getVariants().get(0);
+
+            // 👉 lấy giá
+            price = v.getSalePrice() != null ? v.getSalePrice() : v.getPrice();
+
+            // 👉 lấy ảnh
+            if(v.getImages() != null && !v.getImages().isEmpty()){
+                image = v.getImages().get(0).getImageUrl(); // 🔥 sửa ở đây
+            }
+        }
+
+        return ProductDTO.builder()
+                .id(p.getId())
+                .name(p.getName())
+                .price(price)
+                .image(image)
+                .build();
+    }
+
+    public Page<ProductDTO> search(String keyword, int page, int size){
+        return productRepository
+                .findByNameContainingIgnoreCase(keyword, PageRequest.of(page, size))
+                .map(this::toDTO);
+    }
 }

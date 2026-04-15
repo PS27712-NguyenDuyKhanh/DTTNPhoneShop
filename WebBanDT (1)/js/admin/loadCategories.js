@@ -58,7 +58,7 @@ async function loadAdminCategories(page = 0) {
         table.innerHTML = "";
         parent.innerHTML = `<option value="">Danh mục cha</option>`;
 
-        if(categories.length === 0){
+        if (categories.length === 0) {
             table.innerHTML = `
                 <tr>
                     <td colspan="4" style="text-align:center">
@@ -116,7 +116,7 @@ async function loadAdminCategories(page = 0) {
     }
 }
 
-function renderPagination(data){
+function renderPagination(data) {
 
     const container = document.getElementById("pagination");
     if (!container) return;
@@ -134,7 +134,7 @@ function renderPagination(data){
     `;
 
     // Pages
-    for(let i = 0; i < data.totalPages; i++){
+    for (let i = 0; i < data.totalPages; i++) {
         container.innerHTML += `
             <button 
                 onclick="loadAdminCategories(${i})"
@@ -183,7 +183,7 @@ async function saveCategory() {
 
     const body = {
         name: name,
-parentId: parentId || null
+        parentId: parentId || null
     };
 
     try {
@@ -211,7 +211,16 @@ parentId: parentId || null
         }
 
         if (!res.ok) {
-            alert("Lỗi khi lưu danh mục!");
+
+            let errorMsg = "Tên danh mục đã tồn tại!";
+
+            try {
+                const data = await res.json(); // 👉 đọc JSON
+                errorMsg = data.message || errorMsg;
+            } catch (e) { }
+
+            alert(errorMsg); // 👉 hiện đúng message
+
             return;
         }
 

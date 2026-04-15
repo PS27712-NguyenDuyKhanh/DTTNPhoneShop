@@ -39,7 +39,7 @@ public class AdminUserController {
             user.setActive(true);
         }
 
-        user.setActive(!user.getActive()); // ✅ đúng
+        user.setActive(!user.getActive()); //
 
         return userRepository.save(user);
     }

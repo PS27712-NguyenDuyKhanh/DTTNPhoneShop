@@ -1,8 +1,14 @@
 package com.phonestore.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import java.util.List;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
 public class ProductDTO {
 
@@ -21,4 +27,7 @@ public class ProductDTO {
     private SpecificationDTO specification;
 
     private List<VariantDTO> variants;
+
+    private Double price;
+    private String image;
 }

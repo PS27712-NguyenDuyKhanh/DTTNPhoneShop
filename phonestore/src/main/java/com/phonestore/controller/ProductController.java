@@ -38,4 +38,13 @@ public class ProductController {
         return productService.getProductsByCategory(id, page, size);
     }
 
+    @GetMapping("/search")
+    public Page<ProductDTO> search(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return productService.search(keyword, page, size);
+    }
+
 }

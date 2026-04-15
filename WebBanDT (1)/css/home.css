@@ -96,27 +96,7 @@
 
 /* SEARCH */
 
-.search-box {
-    display: flex;
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-}
 
-.search-box input {
-    border: none;
-    outline: none;
-    padding: 6px 12px;
-    width: 180px;
-}
-
-.search-box button {
-    border: none;
-    background: #8b1d40;
-    color: #fff;
-    padding: 6px 12px;
-    cursor: pointer;
-}
 
 /* DROPDOWN */
 
@@ -275,7 +255,7 @@
 /* Chỉ hiển thị 6 sản phẩm đầu trên trang home */
 .product-list .product-card:nth-child(n+7){
     display:none;
-}s
+}
 
 .product-card:hover {
     transform: translateY(-5px);
@@ -289,8 +269,14 @@
 
 .product-card h4 {
     margin: 15px 0;
+    font-size: 18px;
+    color: #fff;
 }
-
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cột cho đẹp */
+    gap: 20px;
+}
 .price {
     color: #e74c3c;
     font-weight: bold;
@@ -973,7 +959,7 @@
 /* HERO */
 
 .hero {
-    height: 100vh;
+    height: 70vh;
     background:
         linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)),
         url("../img/hinhnen.jpg") center/cover no-repeat;
@@ -2229,4 +2215,39 @@ background:#ff453a;
 
 .discount {
     display: none;
+}
+.search-box {
+    position: relative;
+    z-index: 2000;
+}
+
+.search-result {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ddd;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 2000;
+    border-radius: 10px;
+}
+
+.search-item {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.search-item:hover {
+    background: #f5f5f5;
+}
+
+.search-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }
